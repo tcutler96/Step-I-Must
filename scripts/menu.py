@@ -116,6 +116,7 @@ class Menu:
                         self.main.transition.start(response=['level', selected_element[1], 'level', None, None], queue=(True, 'fade', (0, 0), 1))
 
     def draw(self, displays):
+        pass
         if self.scrollbar:
             self.scrollbar.draw(displays=displays, scroll=self.scroll, offset=self.offset)
         for _, element in self.menu.items():

@@ -1,7 +1,7 @@
 #version 330 core
 
 uniform sampler2D background;
-uniform sampler2D menu;
+uniform sampler2D menu[2];
 uniform sampler2D level;
 uniform sampler2D steps;
 uniform sampler2D map;
@@ -9,13 +9,12 @@ uniform sampler2D level_editor;
 uniform sampler2D ui;
 uniform sampler2D transition;
 uniform sampler2D background_buffer;
-//uniform sampler2D noise;
 uniform vec2 resolution;
 uniform vec2 pixel;
 uniform float time;
 uniform bool shader;
 uniform bool draw_background;
-uniform bool gol_tick;
+uniform bool gol_tick[2];
 
 in vec2 uv;
 out vec4 out_colour;
@@ -71,7 +70,7 @@ void main() {
         vec4 colour1 = get_colour(uv, background);
         vec4 colour2 = get_colour(uv_flipped, background_buffer);
         int current = int(check_colour(colour1)) | int(check_colour(colour2));
-        if (gol_tick) {
+        if (gol_tick[0]) {
             int surround = -current;
             for (float i = -1.0; i < 2.0; i++) {
                 for (float j = -1.0; j < 2.0; j++) {
@@ -98,7 +97,7 @@ void main() {
 //        vec4 background_colour = get_colour(uv_flipped, background_buffer);
         vec4 background_colour = get_colour(uv, background);
         out_colour = mix(out_colour, background_colour, background_colour.a);
-        vec4 menu_colour = get_colour(uv, menu);
+        vec4 menu_colour = get_colour(uv, menu[0]);
 //        if (shader) {
 //            menu_colour = vec4(1.0 - menu_colour.r, 1.0 - menu_colour.g, 1.0 - menu_colour.b, menu_colour.a);
 //        }

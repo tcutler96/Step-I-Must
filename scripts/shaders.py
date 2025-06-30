@@ -17,6 +17,7 @@ class Shaders:
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
         self.apply_shader = False
         self.gol_tick = self.main.fps
+        # programatically draw display layers in shader so we dont have to manually add them each time...
 
     def set_uniforms(self, uniforms):
         for uniform, value in uniforms.items():
@@ -34,7 +35,7 @@ class Shaders:
             if display_layer != 'background_buffer':
                 texture.swizzle = 'BGRA'
             texture.use(location=location)
-            self.set_uniforms(uniforms={f'{display_layer}': location})
+            self.set_uniforms(uniforms={f'{display_layer}': [location, 0] if display_layer == 'menu' else location})
             textures[display_layer] = texture
         return textures
 
@@ -47,7 +48,7 @@ class Shaders:
         if self.gol_tick == 0:
             self.gol_tick = self.main.fps
         self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_posistion': mouse_position, 'mouse_active': self.main.events.mouse_active,
-                                    'shader': self.apply_shader, 'gol_tick': self.gol_tick == self.main.fps})
+                                    'shader': self.apply_shader, 'gol_tick': [self.gol_tick == self.main.fps, 0]})
 
     def draw(self, displays):
         for display_layer, display_surface in displays.items():

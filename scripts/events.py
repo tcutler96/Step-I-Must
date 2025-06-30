@@ -27,13 +27,11 @@ class Events:
         self.mouse_moved = False
         self.mouse_movement = [0, 0]
         for event in pg.event.get():
-            if event.type == self.custom_events['music_end']:
-                print('play music...')
-                self.main.audio.play_music()
-
             if event.type == pg.QUIT:
                 self.main.audio.quit()
                 self.main.transition.start(response=['game_state', 'quit'])
+            if event.type == list(self.custom_events.values()):
+                pass  # trigger custom event...
             if event.type == pg.KEYDOWN:
                 input = pg.key.name(event.key)
                 self.add_key(key=input, action='pressed')

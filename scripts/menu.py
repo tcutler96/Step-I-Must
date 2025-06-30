@@ -112,7 +112,6 @@ class Menu:
                         self.main.game_states['game'].map.show_map = False
                         self.main.transition.start(style='circle', centre=element.centre, response=['level', self.main.game_states['game'].level.name, 'original', None, None], queue=(True, 'circle', 'player', 1))
                     elif self.main.game_state == 'level_editor':
-                        print(1)
                         self.main.transition.start(response=['level', selected_element[1], 'level', None, None], queue=(True, 'fade', (0, 0), 1))
 
     def draw(self, displays):

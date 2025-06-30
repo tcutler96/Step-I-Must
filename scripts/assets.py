@@ -19,6 +19,7 @@ class Assets:
         #                  'audio': {'master_volume': 1.0, 'music_volume': 1.0, 'sound_volume': 1.0},
         #                  'gameplay': {'hold_to_move': 5, 'hold_to_undo': 5}}
         self.update_choose_level_menu()
+        self.music_themes = {'game': 'game', 'level_editor': 'main_menu', 'main_menu': 'main_menu', 'quit': None}
         self.colours = {'white': (230, 230, 230),
                         'black': (25, 25, 25),
                         'true_white': (255, 255, 255),
@@ -139,7 +140,7 @@ class Assets:
             data = json.load(file_data)
         return data
 
-    def change_setting(self, group, name, option):  # save setting changes straight away so that we dont lose them in the event of a crash...
+    def change_setting(self, group, name, option):  # save setting changes to file when we leave setting menu so that we dont lose them in the event of a crash...
         if name in self.option_to_setting[group] and option in self.option_to_setting[group][name]:
             option = self.option_to_setting[group][name][option]
         self.settings[group][name] = option
@@ -161,9 +162,8 @@ class Assets:
                 self.main.display.change_resolution(scale_factor=option)
             elif name == 'screen_shake':  # reference game class
                 pass
-        elif group == 'audio':  # change audio volumes straightaway
-            # self.main.audio.change_volume(audio_type=name, volume=option)
-            pass
+        elif group == 'audio':
+            self.main.audio.change_volume(audio_type=name)
         elif group == 'gameplay':
             if name == 'hold_to_move':
                 self.main.game_states['game'].move_delay = option

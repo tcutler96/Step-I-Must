@@ -1321,7 +1321,7 @@
     "11:8": {
       "tile": {
         "name": "wall",
-        "state": "up down"
+        "state": "top bottom"
       },
       "object": null,
       "player": null,
@@ -1448,7 +1448,7 @@
     "11:9": {
       "tile": {
         "name": "wall",
-        "state": "up down"
+        "state": "top bottom"
       },
       "object": null,
       "player": null,

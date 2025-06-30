@@ -699,7 +699,7 @@
     "8:4": {
       "tile": {
         "name": "wall",
-        "state": "up down"
+        "state": "top bottom"
       },
       "object": null,
       "player": null,

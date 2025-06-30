@@ -1820,7 +1820,7 @@
     "9:11": {
       "tile": {
         "name": "wall",
-        "state": "up down"
+        "state": "top bottom"
       },
       "object": null,
       "player": null,
@@ -1977,7 +1977,7 @@
     "9:12": {
       "tile": {
         "name": "wall",
-        "state": "down end"
+        "state": "bottom end"
       },
       "object": null,
       "player": null,

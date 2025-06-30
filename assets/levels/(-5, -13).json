@@ -1885,7 +1885,7 @@
     "2:12": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,
@@ -1905,7 +1905,7 @@
     "4:12": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,

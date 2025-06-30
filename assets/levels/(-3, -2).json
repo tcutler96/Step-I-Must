@@ -224,7 +224,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "down end"
+        "state": "bottom end"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -241,7 +241,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "down end"
+        "state": "bottom end"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -272,7 +272,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "down end"
+        "state": "bottom end"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null

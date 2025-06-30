@@ -839,7 +839,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -994,7 +994,7 @@
     "5:6": {
       "tile": {
         "name": "wall",
-        "state": "down end"
+        "state": "bottom end"
       },
       "object": null,
       "player": null,

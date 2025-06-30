@@ -1903,7 +1903,7 @@
     "3:14": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,
@@ -1920,7 +1920,7 @@
     "5:14": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,
@@ -1937,7 +1937,7 @@
     "7:14": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,
@@ -1957,7 +1957,7 @@
     "9:14": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,
@@ -1974,7 +1974,7 @@
     "11:14": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,
@@ -1991,7 +1991,7 @@
     "13:14": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,

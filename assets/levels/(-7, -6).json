@@ -1209,7 +1209,7 @@
     "6:7": {
       "tile": {
         "name": "wall",
-        "state": "down end"
+        "state": "bottom end"
       },
       "object": null,
       "player": null,
@@ -1400,7 +1400,7 @@
     "10:8": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,
@@ -1417,7 +1417,7 @@
     "12:8": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,
@@ -1832,7 +1832,7 @@
     "7:11": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,

@@ -371,7 +371,7 @@
     "4:2": {
       "tile": {
         "name": "wall",
-        "state": "up down"
+        "state": "top bottom"
       },
       "object": null,
       "player": null,
@@ -519,7 +519,7 @@
     "4:3": {
       "tile": {
         "name": "wall",
-        "state": "down end"
+        "state": "bottom end"
       },
       "object": null,
       "player": null,
@@ -2127,7 +2127,7 @@
     "12:13": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,

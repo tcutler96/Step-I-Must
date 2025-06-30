@@ -1092,7 +1092,7 @@
     "13:6": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,

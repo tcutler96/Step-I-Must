@@ -372,7 +372,7 @@
     "5:2": {
       "tile": {
         "name": "wall",
-        "state": "up end"
+        "state": "top end"
       },
       "object": null,
       "player": null,
@@ -526,7 +526,7 @@
     "5:3": {
       "tile": {
         "name": "wall",
-        "state": "up down"
+        "state": "top bottom"
       },
       "object": null,
       "player": null,
@@ -682,7 +682,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "up down"
+        "state": "top bottom"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -827,7 +827,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "up down"
+        "state": "top bottom"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -970,7 +970,7 @@
     "5:6": {
       "tile": {
         "name": "wall",
-        "state": "up down"
+        "state": "top bottom"
       },
       "object": null,
       "player": null,
@@ -1129,7 +1129,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "up down"
+        "state": "top bottom"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null

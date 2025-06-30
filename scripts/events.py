@@ -28,7 +28,7 @@ class Events:
         self.mouse_movement = [0, 0]
         for event in pg.event.get():
             if event.type == self.custom_events['music_end']:
-                print('play music')
+                print('play music...')
                 self.main.audio.play_music()
 
             if event.type == pg.QUIT:

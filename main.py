@@ -32,6 +32,8 @@ import os
 # spawning ontop of a collectable (seting respawn while in debug mode and so not collecting collectable) breaks the level loading, steps arent set properly...
 # loading game in debug mode crashes when you try to take a step...
 # temp flags are not drawn when on death screen, they invert to dark colour that blends into the background (invert the background as well?)
+# clicking window x does not close window while mid transition...
+# cant click on map text when the pause menu is open...
 
 
 class Main:
@@ -119,8 +121,6 @@ class Main:
         self.display.update()
         self.transition.update()
         self.shaders.update(mouse_position=mouse_position)
-        if self.events.check_key(key='enter'):
-            self.shaders.apply_shader = not self.shaders.apply_shader
 
     def draw(self):
         if self.debug:

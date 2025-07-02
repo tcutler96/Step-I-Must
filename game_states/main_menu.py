@@ -35,3 +35,5 @@ class MainMenu:
         if self.conway:  # move circles around screen
             pg.draw.circle(surface=displays['background'], color=self.main.assets.colours['cream'], center=(100, 45), radius=24, width=1)
             pg.draw.circle(surface=displays['background'], color=self.main.assets.colours['cream'], center=(self.main.display.width - 100, 45), radius=24, width=1)
+        if self.main.events.check_key('c'):
+            pg.draw.circle(surface=displays['background'], color=self.main.assets.colours['cream'], center=self.main.display.centre, radius=1, width=1)

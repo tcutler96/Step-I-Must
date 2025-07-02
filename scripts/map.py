@@ -21,6 +21,7 @@ class Map:
                                 'cheeses': {'name': 'collectable', 'state': 'cheese', 'sprite': None}}}
         self.levels = self.load_levels()
         self.map = self.load_map()
+        # apply gentle blur shader to game layer when map is open...
         # have map icons fade in and out...
         # reduce each level down to a 16x16 map tile representing it (ie green dot for a wall, empty/ dark purple dot for free space)
 
@@ -138,6 +139,7 @@ class Map:
             else:
                 self.offset_dict['current'] = self.offset_dict[self.offset_dict['target']]
         if self.show_map:
+            self.main.shaders.apply_effect(dispay_layer='level', effect='pixel')
             self.update_icons()
             selected_level = None
             for level_name, map_cell in self.map.items():
@@ -160,10 +162,7 @@ class Map:
                                                   position=(self.collectables['position'][0] + (x + 0.5) * self.main.sprite_size, self.collectables['position'][1] + (collectable_count + 3.5) * self.main.sprite_size // 4))
 
     def draw(self, displays):
-        self.main.shaders.apply_shader = False
         if self.show_map:
-            # apply gentle blur shader to game layer when map is open...
-            self.main.shaders.apply_shader = True
             for map_cell in self.map.values():
                 map_cell.draw(displays=displays, icons=self.icons['icons'], offset=self.offset_dict['current'])
             self.draw_collectables(displays=displays)

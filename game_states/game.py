@@ -767,6 +767,9 @@ class Game:
     def update(self, mouse_position):
         if self.main.menu_state:
             self.main.display.set_cursor(cursor='arrow')
+            self.main.shaders.apply_effect(dispay_layer='level', effect='blur')
+            self.main.shaders.apply_effect(dispay_layer='steps', effect='blur')
+            self.main.shaders.apply_effect(dispay_layer='map', effect='blur')
         else:
             if self.main.debug or self.map.show_map:
                 self.main.display.set_cursor(cursor='arrow')
@@ -839,28 +842,29 @@ class Game:
                                         self.level.load_level(name=self.level.name, load_respawn='current')
 
     def draw(self, displays):
-        if not self.main.menu_state:  # blur game background if menu/ map is open or if game in fail state... blur step count and fail message...
-            self.level.draw(displays=displays)
-            self.cutscene.draw(displays=displays)
-            self.map.draw(displays=displays)
-            for position, cell in self.player_cells.items():
-                if self.main.debug:
-                    if (self.teleporter_data['standing'] or self.teleporter_data['setting']) and not self.map.show_map:
-                        self.main.text_handler.activate_text(text_group='game', text_id='set_warp')
-                else:
-                    self.main.text_handler.activate_text(text_group='steps', text_id=self.level.steps)
-                    if not self.map.show_map:
-                        self.main.shaders.apply_shader = False
-                        if self.no_players:
-                            self.main.shaders.apply_shader = True
-                            self.main.text_handler.activate_text(text_group='game', text_id='reset')
-                        if cell.check_element(name='sign'):
-                            self.main.text_handler.activate_text(text_group='signs', text_id=self.level.name + ' - ' + str(cell.position))
-                        if self.teleporter_data['standing']:
-                            if isinstance(self.teleporter_data['standing'], list):
-                                self.main.text_handler.activate_text(text_group='game', text_id='warp?')
-                            else:
-                                self.main.text_handler.activate_text(text_group='game', text_id='warp')
-                        if self.lock_data:
-                            self.main.text_handler.activate_text(text_group='locks', text_id=self.lock_data)
+        # if not self.main.menu_state:  # blur game background if menu/ map is open or if game in fail state... blur step count and fail message...
+        # we need to draw all level elements regardless of whether the map or the menu is open, so that we can properpy apply shader effects to them in the background...
+        # draw all game text onto the level display layer so that they are effected by shader effects...
+        self.level.draw(displays=displays)
+        self.cutscene.draw(displays=displays)
+        self.map.draw(displays=displays)
+        for position, cell in self.player_cells.items():
+            if self.main.debug:
+                if (self.teleporter_data['standing'] or self.teleporter_data['setting']) and not self.map.show_map:
+                    self.main.text_handler.activate_text(text_group='game', text_id='set_warp')
+            else:
+                self.main.text_handler.activate_text(text_group='steps', text_id=self.level.steps)
+                if not self.map.show_map:
+                    if self.no_players:
+                        # apply slight distort to level when no players are alive, need to apply effect in update function, not draw function...
+                        self.main.text_handler.activate_text(text_group='game', text_id='reset')
+                    if cell.check_element(name='sign'):
+                        self.main.text_handler.activate_text(text_group='signs', text_id=self.level.name + ' - ' + str(cell.position))
+                    if self.teleporter_data['standing']:
+                        if isinstance(self.teleporter_data['standing'], list):
+                            self.main.text_handler.activate_text(text_group='game', text_id='warp?')
+                        else:
+                            self.main.text_handler.activate_text(text_group='game', text_id='warp')
+                    if self.lock_data:
+                        self.main.text_handler.activate_text(text_group='locks', text_id=self.lock_data)
 

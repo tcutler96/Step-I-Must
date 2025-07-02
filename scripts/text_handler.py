@@ -14,9 +14,9 @@ class TextHandler:
         self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', interactable=True)
         self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', interactable=True)
         self.add_text(text_group='game', text_id='warp?', text=f"¡ ¿ ? !  press 'e' to warp  ! ? ¿ ¡", position='top', interactable=True)
-        self.add_text(text_group='map', text_id='toggle', text="toggle map: 'tab'", position='bottom_left', shadow_offset=(2, 2), alignment=('l', 'c'), outline_size=0, size=14, interactable=True, hovered_outline_size=1)
-        self.add_text(text_group='map', text_id='switch', text="switch map: 'space'", position='bottom_right', shadow_offset=(2, 2), alignment=('r', 'c'), outline_size=0, size=14, interactable=True, hovered_outline_size=1)
-        self.add_text(text_group='map', text_id='collectables', text='collectables', position=(424, 40), shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14)
+        self.add_text(text_group='map', text_id='toggle', text="toggle map: 'tab'", position='bottom_left', shadow_offset=(2, 2), alignment=('l', 'c'), outline_size=0, size=14, interactable=True, hovered_outline_size=1, display_layer='map')
+        self.add_text(text_group='map', text_id='switch', text="switch map: 'space'", position='bottom_right', shadow_offset=(2, 2), alignment=('r', 'c'), outline_size=0, size=14, interactable=True, hovered_outline_size=1, display_layer='map')
+        self.add_text(text_group='map', text_id='collectables', text='collectables', position=(424, 40), shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
         for steps in range(-9, 10):
             self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='steps')
         for collectable in self.main.assets.data['game']['collectables']:

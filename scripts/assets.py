@@ -34,8 +34,8 @@ class Assets:
                         'green': (77, 102, 96),
                         'light_green': (142, 184, 158),
                         'bright_green': (127, 255, 127)}
-        self.option_to_setting = {'video': {'button_prompt': {'enabled': True, 'disabled': False}, 'hrt_shader': {'enabled': True, 'disabled': False}, 'particles': {'enabled': True, 'disabled': False},
-                                            'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4}, 'screen_shake': {'enabled': True, 'disabled': False}},
+        self.option_to_setting = {'video': {'background': {'game_of_life': 'gol', 'disabled': None}, 'button_prompt': {'enabled': True, 'disabled': False}, 'hrt_shader': {'enabled': True, 'disabled': False},
+                                            'particles': {'enabled': True, 'disabled': False}, 'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4}, 'screen_shake': {'enabled': True, 'disabled': False}},
                                  'audio': {'master_volume': {'100%': 1.0, '75%': 0.75, '50%': 0.5, '25%': 0.25, 'disabled': 0.0}, 'music_volume': {'100%': 1.0, '75%': 0.75, '50%': 0.5, '25%': 0.25, 'disabled': 0.0},
                                            'sound_volume': {'100%': 1.0, '75%': 0.75, '50%': 0.5, '25%': 0.25, 'disabled': 0.0}},
                                  'gameplay': {'hold_to_move': {'fast': 5, 'slow': 15, 'disabled': -1}, 'hold_to_undo': {'fast': 5, 'slow': 15, 'disabled': -1}}}

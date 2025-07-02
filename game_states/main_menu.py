@@ -31,7 +31,10 @@ class MainMenu:
         if self.clear_background:
             displays['background'].fill(color=self.main.assets.colours['purple'])
         if self.draw_circle:
-            pg.draw.circle(surface=displays['background'], color=self.main.assets.colours['cream'], center=self.main.events.mouse_display_position, radius=24, width=1)
+            pg.draw.circle(surface=displays['background'], color=self.main.assets.colours['cream'], center=self.main.events.mouse_display_position, radius=8, width=1)
+            # pg.draw.rect(surface=displays['background'], color=self.main.assets.colours['cream'], rect=pg.Rect(self.main.events.mouse_display_position, (2, 2)), width=0)
+            # pg.draw.line(surface=displays['background'], color=self.main.assets.colours['cream'], start_pos=self.main.events.mouse_display_position,
+            #              end_pos=(self.main.events.mouse_display_position[0] + 2, self.main.events.mouse_display_position[1]))
         if self.conway:  # move circles around screen
             pg.draw.circle(surface=displays['background'], color=self.main.assets.colours['cream'], center=(100, 45), radius=24, width=1)
             pg.draw.circle(surface=displays['background'], color=self.main.assets.colours['cream'], center=(self.main.display.width - 100, 45), radius=24, width=1)

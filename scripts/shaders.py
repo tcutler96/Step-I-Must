@@ -15,11 +15,9 @@ class Shaders:
         self.textures = self.create_textures()
         self.render_buffer = self.context.renderbuffer(size=self.main.display.size)
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
-        self.gol_tick = self.main.fps
-        self.shaders = self.load_shaders(effects={'grey': {}, 'invert': {}, 'blur': {'blur_amount': 5, 'blur_fraction': 0}, 'pixelate': {'pixelate_amount': 1.6},
+        self.shaders = self.load_shaders(effects={'grey': {}, 'invert': {}, 'blur': {'blur_amount': 3, 'blur_fraction': 0}, 'pixelate': {'pixelate_amount': 1.6},
                                                   'test': {}, 'gol': {'gol_tick': False, 'gol_counter': self.main.fps}})
-        # pass in shader effect data (ie default blur amount)
-        # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn...
+        # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
 
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)
@@ -49,13 +47,23 @@ class Shaders:
         shaders = {'display_layers': {display_layer + '_effect': 0 for display_layer in self.main.display.display_layers}, 'effects': {}}
         for index, (effect, data) in enumerate(effects.items()):
             shaders['effects'][effect] = {'index': index + 1, 'data': data}
+            self.set_uniforms(uniforms={f'{effect}_index': index + 1})
         return shaders
 
-    def apply_effect(self, dispay_layer, effect):  # accept list of display_layers and effect?
+    def apply_effect(self, dispay_layer, effect):
+        # accept list of display_layers and effect
+        # accept 'all' as a input?
+        # applying an effect to a display layer that already has an effect applied to it should combine the two, make combined effect in fragment shader...
         if dispay_layer in self.main.display.display_layers and effect in self.shaders['effects']:
             self.shaders['display_layers'][dispay_layer + '_effect'] = self.shaders['effects'][effect]['index']
+        elif dispay_layer not in self.main.display.display_layers:
+            print(f'{dispay_layer} display layer not found...')
+        elif effect not in self.shaders['effects']:
+            print(f'{effect} effect not found...')
 
     def update_effect_data(self):
+        # add scales to all shader effects so that they come into effect gradually...
+        # greyscale fades in and out etc...
         for effect, data in self.shaders['effects'].items():
             data = data['data']
             if effect == 'blur':  # only increase if blur is active in a display layer...
@@ -64,8 +72,8 @@ class Shaders:
                 # data['blur_amount'] = int(data['blur_fraction'])
             elif effect == 'gol':
                 data['gol_tick'] = False
-                data['gol_counter'] -= 1
-                if data['gol_counter'] == 0:
+                data['gol_counter'] -= 20
+                if data['gol_counter'] <= 0:
                     data['gol_tick'] = True
                     data['gol_counter'] = self.main.fps
 
@@ -77,10 +85,11 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('e', 'held'):
-            self.apply_effect(dispay_layer='background', effect='test')
+            self.apply_effect(dispay_layer='menu', effect='grey')
         self.update_effect_data()
-        self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_position': mouse_position,
-                                    'gol_tick': self.gol_tick == self.main.fps} | self.get_effect_data())
+        if self.main.assets.settings['video']['background'] in self.shaders['effects']:
+            self.apply_effect(dispay_layer='background', effect=self.main.assets.settings['video']['background'])
+        self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_position': mouse_position} | self.get_effect_data())
 
     def reset_effects(self):
         for display_layer in self.shaders['display_layers']:
@@ -89,13 +98,14 @@ class Shaders:
     def draw(self, displays):
         for display_layer, display_surface in displays.items():
             self.textures[display_layer].write(data=display_surface.get_view('1'))
-        self.frame_buffer.use()  # we only need to use frame buffer render pass when background is set to gol...
-        self.frame_buffer.clear()
-        self.set_uniforms(uniforms={'draw_background': True})
-        self.render_object.render()
-        self.context.copy_framebuffer(dst=self.textures['background_buffer'], src=self.frame_buffer)
-        self.context.screen.use()
-        self.set_uniforms(uniforms={'draw_background': False})
+        if self.main.assets.settings['video']['background'] == 'gol':
+            self.frame_buffer.use()
+            self.frame_buffer.clear()
+            self.set_uniforms(uniforms={'draw_background': True})
+            self.render_object.render()
+            self.context.copy_framebuffer(dst=self.textures['background_buffer'], src=self.frame_buffer)
+            self.context.screen.use()
+            self.set_uniforms(uniforms={'draw_background': False})
         self.render_object.render()
         self.reset_effects()
 

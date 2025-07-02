@@ -90,7 +90,6 @@ class Menu:
                         self.main.menu_states['choose_level'].menu['Back'].button_response = 'main_menu'
                         self.main.change_game_state(game_state='level_editor')
                     elif self.main.game_state == 'game' and selected_element[1] == 'main_menu':
-                        self.main.shaders.apply_shader = False
                         self.main.transition.start(response=['game_state', 'main_menu'], queue=(True, 'fade', (0, 0), 1))
                     elif self.main.game_state == 'game' and selected_element[1] == 'level_editor':
                         self.main.transition.start(response=['game_state', 'level_editor'], queue=(True, 'fade', (0, 0), 1))

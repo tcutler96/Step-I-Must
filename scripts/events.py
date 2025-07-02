@@ -7,11 +7,11 @@ class Events:
         self.keys = {'pressed': [], 'held': [], 'unpressed': [], 'last_pressed': []}
         self.last_pressed_amount = 25
         self.modifier_keys = {'left shift': False, 'left ctrl': False, 'left alt': False}
-        self.mouse_window_position = [0, 0]
-        self.mouse_display_position = [0, 0]
+        self.mouse_active = False
         self.mouse_moved = False
         self.mouse_movement = [0, 0]
-        self.mouse_active = False
+        self.mouse_window_position = [0, 0]
+        self.mouse_display_position = [0, 0]
         self.custom_events = self.load_custom_events(events=['music_end'])
 
     def load_custom_events(self, events):
@@ -49,12 +49,12 @@ class Events:
                 self.add_key(key=input, action='unpressed')
                 self.remove_key(key=input, action='held')
             if event.type == pg.MOUSEMOTION:
-                mouse_position = list(pg.mouse.get_pos())
+                self.mouse_active = pg.mouse.get_focused()
                 self.mouse_moved = True
+                mouse_position = list(pg.mouse.get_pos())
                 self.mouse_movement = [mouse_position[0] - self.mouse_window_position[0], mouse_position[1] - self.mouse_window_position[1]]
                 self.mouse_window_position = mouse_position
                 self.mouse_display_position = [mouse_position[0] // self.main.display.scale_factor, mouse_position[1] // self.main.display.scale_factor]
-                self.mouse_active = pg.mouse.get_focused()
 
     def add_key(self, key, action='pressed'):
         if key in self.modifier_keys:

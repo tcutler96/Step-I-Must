@@ -15,9 +15,8 @@ class Shaders:
         self.textures = self.create_textures()
         self.render_buffer = self.context.renderbuffer(size=self.main.display.size)
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
-        self.apply_shader = False  # replace with new system...
         self.gol_tick = self.main.fps
-        self.shaders = self.load_shaders(effects={'grey': {}, 'invert': {}, 'blur': {'blur_amount': 1, 'blur_fraction': 0}, 'pixelate': {'pixelate_amount': 1.6},
+        self.shaders = self.load_shaders(effects={'grey': {}, 'invert': {}, 'blur': {'blur_amount': 5, 'blur_fraction': 0}, 'pixelate': {'pixelate_amount': 1.6},
                                                   'test': {}, 'gol': {'gol_tick': False, 'gol_counter': self.main.fps}})
         # pass in shader effect data (ie default blur amount)
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn...
@@ -54,7 +53,6 @@ class Shaders:
 
     def apply_effect(self, dispay_layer, effect):  # accept list of display_layers and effect?
         if dispay_layer in self.main.display.display_layers and effect in self.shaders['effects']:
-            # print(dispay_layer, effect)
             self.shaders['display_layers'][dispay_layer + '_effect'] = self.shaders['effects'][effect]['index']
 
     def update_effect_data(self):
@@ -79,9 +77,9 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('e', 'held'):
-            self.apply_effect(dispay_layer='menu', effect='test')
+            self.apply_effect(dispay_layer='background', effect='test')
         self.update_effect_data()
-        self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_posistion': mouse_position,
+        self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_position': mouse_position,
                                     'gol_tick': self.gol_tick == self.main.fps} | self.get_effect_data())
 
     def reset_effects(self):
@@ -91,7 +89,7 @@ class Shaders:
     def draw(self, displays):
         for display_layer, display_surface in displays.items():
             self.textures[display_layer].write(data=display_surface.get_view('1'))
-        self.frame_buffer.use()
+        self.frame_buffer.use()  # we only need to use frame buffer render pass when background is set to gol...
         self.frame_buffer.clear()
         self.set_uniforms(uniforms={'draw_background': True})
         self.render_object.render()

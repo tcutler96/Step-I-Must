@@ -106,7 +106,8 @@ class Main:
             self.runtime_frames += 1
             self.runtime_seconds = self.runtime_seconds + 1 / self.true_fps
         self.events.update()
-        mouse_position = self.events.mouse_display_position if self.events.mouse_active else (999, 999)
+        mouse_position = self.events.mouse_display_position
+        # mouse_position = self.events.mouse_display_position if self.events.mouse_active else [0, 0]  # what is this needed for, menu element hover detection?
         if self.events.check_key(key='w', modifier='ctrl'):
             self.quit()
         if self.events.check_key(key='b', modifier='ctrl'):

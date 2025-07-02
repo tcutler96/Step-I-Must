@@ -22,8 +22,8 @@ uniform int fps;
 uniform vec2 resolution;
 uniform vec2 pixel;
 uniform float time;
-uniform vec2 mouse_active;
-uniform vec2 mouse_posistion;
+uniform bool mouse_active;
+uniform vec2 mouse_position;
 
 uniform int blur_amount;
 int blur_length = blur_amount * 2 + 1;
@@ -32,6 +32,9 @@ uniform bool draw_background;
 uniform bool gol_tick;
 const vec4 on_colour = vec4(0.96, 0.95, 0.76, 1.0);
 const vec4 off_colour = vec4(0.19, 0.16, 0.24, 1.0);
+
+const vec4 start_colour = vec4(0.35, 0.6, 0.65, 1.0);
+const vec4 end_colour = vec4(0.65, 0.4, 0.35, 1.0);
 
 in vec2 uv;
 out vec4 out_colour;
@@ -78,7 +81,17 @@ vec4 pixelate(sampler2D display_layer) {
 }
 
 vec4 test(sampler2D display_layer) {
-    vec4 colour = texture(display_layer, vec2(fract(uv.x * 3), fract(uv.y * 2)));
+    vec4 colour;
+//    vec4 colour = texture(display_layer, vec2(fract(uv.x * 3), fract(uv.y * 2)));  // tile effect
+    if (mouse_active) {
+        vec2 Z, R = vec2(2.0 + 1.0 * (mouse_position.x / resolution.x), 1.0 + 100.0 * mouse_position.x / resolution.x);  // mandelbrot effect
+        for (colour *= 0.0; colour.a++ < 1e2 && dot(Z, Z) < 4.0;
+             Z = (2 * uv - R.xy) / R.y + mat2(Z, -Z.y, Z.x) * Z);
+        colour += colour.a / 1e2;
+        colour = mix(off_colour, on_colour, colour.r);
+    } else {
+        colour = texture(display_layer, uv);
+    }
     return colour;
 }
 
@@ -123,6 +136,7 @@ void main() {
 
 //    out_colour = texture(unscaled, uv);
     if (draw_background) {  // is there an easier way to combine the new background frame with the last one
+
         vec4 colour1 = texture(background, uv);
         vec4 colour2 = texture(background_buffer, uv);
         int current = int(check_colour(colour1)) | int(check_colour(colour2));

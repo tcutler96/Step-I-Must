@@ -91,7 +91,7 @@ class Shaders:
             self.apply_effect(dispay_layer='background', effect=self.main.assets.settings['video']['background'])
         self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_position': mouse_position} | self.get_effect_data())
 
-    def reset_effects(self):
+    def reset_effects(self):  # maybe we dont automatically reset all layers, if a layer is currently transitioning in or out of an effect...
         for display_layer in self.shaders['display_layers']:
             self.shaders['display_layers'][display_layer] = 0
 

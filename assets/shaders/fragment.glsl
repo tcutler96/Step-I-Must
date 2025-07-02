@@ -1,5 +1,12 @@
 #version 330 core
 
+uniform int fps;
+uniform vec2 resolution;
+uniform vec2 pixel;
+uniform float time;
+uniform bool mouse_active;
+uniform vec2 mouse_position;
+
 uniform sampler2D background;
 uniform int background_effect;
 uniform sampler2D level;
@@ -24,13 +31,6 @@ uniform int blur_index;
 uniform int pixelate_index;
 uniform int test_index;
 uniform int gol_index;
-
-uniform int fps;
-uniform vec2 resolution;
-uniform vec2 pixel;
-uniform float time;
-uniform bool mouse_active;
-uniform vec2 mouse_position;
 
 uniform int blur_amount;
 int blur_length = blur_amount * 2 + 1;
@@ -124,7 +124,7 @@ vec4 gol(sampler2D display_layer) {
 }
 
 vec4 get_colour(sampler2D display_layer, int effect_index, vec4 out_colour) {
-    vec4 colour;  // we could pass in the indexes for each shader effect...
+    vec4 colour;
     if (effect_index==grey_index) {
         colour = grey(display_layer);
     } else if (effect_index==invert_index) {

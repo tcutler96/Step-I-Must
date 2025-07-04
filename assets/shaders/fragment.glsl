@@ -7,35 +7,33 @@ uniform float time;
 uniform bool mouse_active;
 uniform vec2 mouse_position;
 
-uniform sampler2D background;
-uniform int background_effect;
-uniform sampler2D level;
-uniform int level_effect;
-uniform sampler2D steps;
-uniform int steps_effect;
-uniform sampler2D map;
-uniform int map_effect;
-uniform sampler2D level_editor;
-uniform int level_editor_effect;
-uniform sampler2D menu;
-uniform int menu_effect;
-uniform sampler2D ui;
-uniform int ui_effect;
-uniform sampler2D transition;
-uniform int transition_effect;
-uniform sampler2D background_buffer;
+const int effect_data_length = 5;
+uniform sampler2D background_display;
+uniform float background_effect[effect_data_length];
+uniform sampler2D level_display;
+uniform float level_effect[effect_data_length];
+uniform sampler2D steps_display;
+uniform float steps_effect[effect_data_length];
+uniform sampler2D map_display;
+uniform float map_effect[effect_data_length];
+uniform sampler2D level_editor_display;
+uniform float level_editor_effect[effect_data_length];
+uniform sampler2D menu_display;
+uniform float menu_effect[effect_data_length];
+uniform sampler2D ui_display;
+uniform float ui_effect[effect_data_length];
+uniform sampler2D transition_display;
+uniform float transition_effect[effect_data_length];
+uniform sampler2D buffer_display;
 
-uniform int grey_index;
-uniform int invert_index;
-uniform int blur_index;
-uniform int pixelate_index;
-uniform int test_index;
-uniform int gol_index;
+uniform float grey_index;
+uniform float invert_index;
+uniform float blur_index;
+uniform float pixelate_index;
+uniform float test_index;
+uniform float gol_index;
 
-uniform int blur_amount;
-int blur_length = blur_amount * 2 + 1;
-uniform float pixelate_amount;
-uniform bool draw_background;
+uniform bool draw_buffer;
 uniform bool gol_tick;
 const vec4 on_colour = vec4(0.96, 0.95, 0.76, 1.0);
 const vec4 off_colour = vec4(0.19, 0.16, 0.24, 1.0);
@@ -51,7 +49,8 @@ bool check_colour(vec4 colour) {
 }
 
 int get_current(vec2 offset) {
-    return int(check_colour(texture(background, uv + pixel * offset))) | int(check_colour(texture(background_buffer, uv_flipped + pixel * offset)));
+    return int(check_colour(texture(background_display, uv + pixel * offset))) |
+    int(check_colour(texture(buffer_display, uv_flipped + pixel * offset)));
 }
 
 vec4 game_of_life() {
@@ -73,37 +72,37 @@ vec4 game_of_life() {
     return colour;
 }
 
-vec4 grey(sampler2D display_layer) {
+vec4 grey(sampler2D display_layer, float effect[effect_data_length]) {
     vec4 colour = texture(display_layer, uv);
     colour.rgb = vec3(colour.r * 0.2126 + colour.r * 0.7152 + colour.b * 0.0722);
     return colour;
 }
 
-vec4 invert(sampler2D display_layer) {
+vec4 invert(sampler2D display_layer, float effect[effect_data_length]) {
     vec4 colour = texture(display_layer, uv);
     colour = vec4(vec3(1.0) - colour.rgb, colour.a);
     return colour;
 }
 
-vec4 blur(sampler2D display_layer) {
+vec4 blur(sampler2D display_layer, float effect[effect_data_length]) {
     vec4 colour;
-    for (float i = 0.0; i < blur_length; i++) {
-            for (float j = 0.0; j < blur_length; j++) {
-                colour += texture(display_layer, uv + pixel * (vec2(i, j) - blur_amount));
+    for (float i = 0.0; i < effect[2]; i++) {
+            for (float j = 0.0; j < effect[2]; j++) {
+                colour += texture(display_layer, uv + pixel * (vec2(i, j) - effect[1]));
             }
         }
-    colour /= pow(blur_length, 2.0);
+    colour /= pow(effect[2], 2.0);
     return colour;
 }
 
-vec4 pixelate(sampler2D display_layer) {
-    float dx = pixelate_amount * pixel[0];
-    float dy = pixelate_amount * pixel[1];
-    vec4 colour = texture(display_layer, vec2(dx * ceil(uv.x / dx), dy * ceil(uv.y / dy)));
+vec4 pixelate(sampler2D display_layer, float effect[effect_data_length]) {
+    float dx = effect[1] * pixel[0];
+    float dy = effect[1] * pixel[1];
+    vec4 colour = texture(display_layer, vec2(dx * (floor(uv.x / dx) + 0.5), dy * (floor(uv.y / dy) + 0.5)));
     return colour;
 }
 
-vec4 test(sampler2D display_layer) {
+vec4 test(sampler2D display_layer, float effect[effect_data_length]) {
     vec4 colour;
 //    vec4 colour = texture(display_layer, vec2(fract(uv.x * 3), fract(uv.y * 2)));  // tile effect
     if (mouse_active) {
@@ -118,25 +117,25 @@ vec4 test(sampler2D display_layer) {
     return colour;
 }
 
-vec4 gol(sampler2D display_layer) {
+vec4 gol(sampler2D display_layer, float effect[effect_data_length]) {
     vec4 colour = texture(display_layer, uv_flipped);
     return colour;
 }
 
-vec4 get_colour(sampler2D display_layer, int effect_index, vec4 out_colour) {
+vec4 get_colour(sampler2D display_layer, float effect[effect_data_length], vec4 out_colour) {
     vec4 colour;
-    if (effect_index==grey_index) {
-        colour = grey(display_layer);
-    } else if (effect_index==invert_index) {
-        colour = invert(display_layer);
-    } else if (effect_index==blur_index) {
-        colour = blur(display_layer);
-    } else if (effect_index==pixelate_index) {
-        colour = pixelate(display_layer);
-    } else if (effect_index==test_index) {
-        colour = test(display_layer);
-    } else if (effect_index==gol_index) {
-        colour = gol(display_layer);
+    if (effect[0]==grey_index) {
+        colour = grey(display_layer, effect);
+    } else if (effect[0]==invert_index) {
+        colour = invert(display_layer, effect);
+    } else if (effect[0]==blur_index) {
+        colour = blur(display_layer, effect);
+    } else if (effect[0]==pixelate_index) {
+        colour = pixelate(display_layer, effect);
+    } else if (effect[0]==test_index) {
+        colour = test(display_layer, effect);
+    } else if (effect[0]==gol_index) {
+        colour = gol(display_layer, effect);
     } else {
         colour = texture(display_layer, uv);
     }
@@ -145,21 +144,21 @@ vec4 get_colour(sampler2D display_layer, int effect_index, vec4 out_colour) {
 }
 
 void main() {
-    if (draw_background) {
+    if (draw_buffer) {
         out_colour = game_of_life();
     } else {
         out_colour = vec4(0.0);
-        if (background_effect==6) {
-            out_colour = get_colour(background_buffer, background_effect, out_colour);
+        if (background_effect[0]==6) {
+            out_colour = get_colour(buffer_display, background_effect, out_colour);
         } else {
-            out_colour = get_colour(background, background_effect, out_colour);
+            out_colour = get_colour(background_display, background_effect, out_colour);
         }
-        out_colour = get_colour(level, level_effect, out_colour);
-        out_colour = get_colour(steps, steps_effect, out_colour);
-        out_colour = get_colour(map, map_effect, out_colour);
-        out_colour = get_colour(level_editor, level_editor_effect, out_colour);
-        out_colour = get_colour(menu, menu_effect, out_colour);
-        out_colour = get_colour(ui, ui_effect, out_colour);
-        out_colour = get_colour(transition, transition_effect, out_colour);
+        out_colour = get_colour(level_display, level_effect, out_colour);
+        out_colour = get_colour(steps_display, steps_effect, out_colour);
+        out_colour = get_colour(map_display, map_effect, out_colour);
+        out_colour = get_colour(level_editor_display, level_editor_effect, out_colour);
+        out_colour = get_colour(menu_display, menu_effect, out_colour);
+        out_colour = get_colour(ui_display, ui_effect, out_colour);
+        out_colour = get_colour(transition_display, transition_effect, out_colour);
     }
 }

@@ -34,6 +34,7 @@ import os
 # temp flags are not drawn when on death screen, they invert to dark colour that blends into the background (invert the background as well?)
 # clicking window x does not close window while mid transition...
 # cant click on map text when the pause menu is open...
+# draw sign test as pixelated until it can be decoded?
 
 
 class Main:

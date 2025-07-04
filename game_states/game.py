@@ -767,9 +767,9 @@ class Game:
     def update(self, mouse_position):
         if self.main.menu_state:
             self.main.display.set_cursor(cursor='arrow')
-            self.main.shaders.apply_effect(dispay_layer='level', effect='blur')
-            self.main.shaders.apply_effect(dispay_layer='steps', effect='blur')
-            self.main.shaders.apply_effect(dispay_layer='map', effect='blur')
+            self.main.shaders.apply_effect(display_layer='level', effect='blur')
+            self.main.shaders.apply_effect(display_layer='steps', effect='blur')
+            self.main.shaders.apply_effect(display_layer='map', effect='blur')
         else:
             if self.main.debug or self.map.show_map:
                 self.main.display.set_cursor(cursor='arrow')

@@ -33,8 +33,6 @@ uniform float pixelate_index;
 uniform float test_index;
 uniform float gol_index;
 
-uniform bool draw_buffer;
-uniform bool gol_tick;
 const vec4 on_colour = vec4(0.96, 0.95, 0.76, 1.0);
 const vec4 off_colour = vec4(0.19, 0.16, 0.24, 1.0);
 
@@ -55,7 +53,7 @@ int get_current(vec2 offset) {
 
 vec4 game_of_life() {
         int current = get_current(vec2(0.0));
-        if (gol_tick) {
+        if (bool(background_effect[1])) {
             int surround = -current;
             for (float i = -1.0; i < 2.0; i++) {
                 for (float j = -1.0; j < 2.0; j++) {
@@ -74,13 +72,13 @@ vec4 game_of_life() {
 
 vec4 grey(sampler2D display_layer, float effect[effect_data_length]) {
     vec4 colour = texture(display_layer, uv);
-    colour.rgb = vec3(colour.r * 0.2126 + colour.r * 0.7152 + colour.b * 0.0722);
+    colour.rgb = mix(colour.rgb, vec3(colour.r * 0.2126 + colour.r * 0.7152 + colour.b * 0.0722), effect[1]);
     return colour;
 }
 
 vec4 invert(sampler2D display_layer, float effect[effect_data_length]) {
     vec4 colour = texture(display_layer, uv);
-    colour = vec4(vec3(1.0) - colour.rgb, colour.a);
+    colour = vec4(vec3(1.0) - colour.rgb, colour.a);  // add scale to invert colour...
     return colour;
 }
 
@@ -144,11 +142,11 @@ vec4 get_colour(sampler2D display_layer, float effect[effect_data_length], vec4 
 }
 
 void main() {
-    if (draw_buffer) {
+    if (background_effect[0]==gol_index && bool(background_effect[4])) {  // this doesnt work as intended, gol cells linger while gol effect is not selected...
         out_colour = game_of_life();
     } else {
         out_colour = vec4(0.0);
-        if (background_effect[0]==6) {
+        if (background_effect[0]==gol_index) {
             out_colour = get_colour(buffer_display, background_effect, out_colour);
         } else {
             out_colour = get_colour(background_display, background_effect, out_colour);

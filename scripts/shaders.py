@@ -17,8 +17,8 @@ class Shaders:
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
         self.effect_data_length = 5
         self.empty_effect_data = [0] * self.effect_data_length
-        self.shaders = self.load_shaders(effects={'grey': {'scale': 0, 'step': 1 / self.main.fps}, 'invert': {'scale': 0, 'step': 1 / self.main.fps}, 'blur': {'size': 3, 'length': 7},
-                                                  'pixelate': {'size': 3.5},  # play around with this value to get cool low poly effects...
+        self.shaders = self.load_shaders(effects={'grey': {'scale': 0, 'step': 1 / self.main.fps}, 'invert': {'scale': 0, 'step': 1 / self.main.fps}, 'blur': {'size': 1, 'length': 3, 'counter': self.main.fps},
+                                                  'pixelate': {'size': 16, 'counter': self.main.fps},  # play around with this value to get cool low poly effects...
                                                   'test': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5}})
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
 
@@ -72,24 +72,36 @@ class Shaders:
         effect_data = self.shaders['display_layers']
         for effect in self.shaders['effects'].values():
             effect_data = effect_data | effect['data']
-        print(effect_data)
+        # print(effect_data)
         return effect_data
 
     def update_effect_data(self):
+        blur = 5
         # add scales to all shader effects so that they come into effect gradually...
         # loop over each display layer, and if they have an active effect or active data (ie effect turned off but still transitioning to off state), then change variables...
         # need to have controls for each effects min, max, and step, and whether we want to increase or decrease effect variable...
         for display_layer, effect_data in self.shaders['display_layers'].items():
             if effect_data[0] == self.shaders['effects']['grey']['index']:  # this doesnt turn off once it has been turned on...
-                effect_data[1] += effect_data[2]  # effects are no longer being reset...
+                effect_data[1] += effect_data[2]  # effects are no longer being reset, need to be able to detect when an effect has been turned off/ is no longer being applied and then automatically fade it out/ off...
                 if effect_data[1] <= 0 or effect_data[1] >= 1:
                     effect_data[2] *= -1
             elif effect_data[0] == self.shaders['effects']['invert']['index']:
-                pass
+                effect_data[1] += effect_data[2]
+                if effect_data[1] <= 0 or effect_data[1] >= 1:
+                    effect_data[2] *= 0
             elif effect_data[0] == self.shaders['effects']['blur']['index']:
-                pass
+                effect_data[3] -= blur  # add utility function to handle effect variables...
+                if effect_data[3] <= 0:
+                    effect_data[1] = min(blur, effect_data[1] + 1)
+                    effect_data[2] = effect_data[1] * 2 + 1
+                    effect_data[3] = self.main.fps
             elif effect_data[0] == self.shaders['effects']['pixelate']['index']:
-                pass
+                effect_data[3] -= 30
+                if effect_data[3] <= 0:
+                    # effect_data[1] = min(16, effect_data[1] + 0.1)
+                    effect_data[1] = max(1, effect_data[1] -0.1)
+                    effect_data[2] = effect_data[1] * 2 + 1
+                    effect_data[3] = self.main.fps
             elif effect_data[0] == self.shaders['effects']['test']['index']:
                 pass
             elif effect_data[0] == self.shaders['effects']['gol']['index']:
@@ -102,7 +114,7 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('e', 'held'):
-            self.apply_effect(display_layer='menu', effect='grey')
+            self.apply_effect(display_layer='menu', effect='pixelate')
             self.apply_effect(display_layer='level', effect='pixelate')
         self.apply_effect(display_layer='background', effect=self.main.assets.settings['video']['background'])
         self.update_effect_data()

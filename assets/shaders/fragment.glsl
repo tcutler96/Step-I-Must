@@ -78,18 +78,19 @@ vec4 grey(sampler2D display_layer, float effect[effect_data_length]) {
 
 vec4 invert(sampler2D display_layer, float effect[effect_data_length]) {
     vec4 colour = texture(display_layer, uv);
-    colour = vec4(vec3(1.0) - colour.rgb, colour.a);  // add scale to invert colour...
+//    colour = vec4(vec3(1.0) - colour.rgb, colour.a);  // add scale to invert colour, use mix function again...
+    colour.rgb = mix(colour.rgb, vec3(1.0) - colour.rgb, effect[1]);
     return colour;
 }
 
 vec4 blur(sampler2D display_layer, float effect[effect_data_length]) {
     vec4 colour;
-    for (float i = 0.0; i < effect[2]; i++) {
-            for (float j = 0.0; j < effect[2]; j++) {
-                colour += texture(display_layer, uv + pixel * (vec2(i, j) - effect[1]));
+    for (float i = 0.0; i < int(effect[2]); i++) {
+            for (float j = 0.0; j < int(effect[2]); j++) {
+                colour += texture(display_layer, uv + pixel * (vec2(i, j) - int(effect[1])));
             }
         }
-    colour /= pow(effect[2], 2.0);
+    colour /= pow(int(effect[2]), 2.0);
     return colour;
 }
 

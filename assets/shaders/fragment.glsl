@@ -70,40 +70,48 @@ vec4 game_of_life() {
     return colour;
 }
 
-vec4 grey(sampler2D display_layer, float effect[effect_data_length]) {
+vec4 grey(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec4 colour = texture(display_layer, uv);
-    colour.rgb = mix(colour.rgb, vec3(colour.r * 0.2126 + colour.r * 0.7152 + colour.b * 0.0722), effect[1]);
+    colour.rgb = mix(colour.rgb, vec3(colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722), effect_data[1]);
     return colour;
 }
 
-vec4 invert(sampler2D display_layer, float effect[effect_data_length]) {
+vec4 invert(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec4 colour = texture(display_layer, uv);
-//    colour = vec4(vec3(1.0) - colour.rgb, colour.a);  // add scale to invert colour, use mix function again...
-    colour.rgb = mix(colour.rgb, vec3(1.0) - colour.rgb, effect[1]);
+    colour.rgb = mix(colour.rgb, vec3(1.0) - colour.rgb, effect_data[1]);
     return colour;
 }
 
-vec4 blur(sampler2D display_layer, float effect[effect_data_length]) {
+vec4 blur(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec4 colour;
-    for (float i = 0.0; i < int(effect[2]); i++) {
-            for (float j = 0.0; j < int(effect[2]); j++) {
-                colour += texture(display_layer, uv + pixel * (vec2(i, j) - int(effect[1])));
+    for (float i = 0.0; i < int(effect_data[2]); i++) {
+            for (float j = 0.0; j < int(effect_data[2]); j++) {
+                colour += texture(display_layer, uv + pixel * (vec2(i, j) - int(effect_data[1])));
             }
         }
-    colour /= pow(int(effect[2]), 2.0);
+    colour /= pow(int(effect_data[2]), 2.0);
     return colour;
 }
 
-vec4 pixelate(sampler2D display_layer, float effect[effect_data_length]) {
-    float dx = effect[1] * pixel[0];
-    float dy = effect[1] * pixel[1];
+vec4 pixelate(sampler2D display_layer, float effect_data[effect_data_length]) {
+    float dx = effect_data[1] * pixel[0];
+    float dy = effect_data[1] * pixel[1];
     vec4 colour = texture(display_layer, vec2(dx * (floor(uv.x / dx) + 0.5), dy * (floor(uv.y / dy) + 0.5)));
     return colour;
 }
 
-vec4 test(sampler2D display_layer, float effect[effect_data_length]) {
+vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
+//    vec4 colour = texture(display_layer, uv);
+//    colour.rgb = vec3(colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722);
+//    colour.rgb = vec3(1.0) - colour.rgb, effect_data[1];
+//    (1.0, 0.0, 0.0);
+//    (0.0, 1.0, 1.0);
+//    (1.0, 1.0, 1.0, 1.0)
+//    (red, green, blue, alpha)
+//    0.0-1.0
+//    0-255
     vec4 colour;
-//    vec4 colour = texture(display_layer, vec2(fract(uv.x * 3), fract(uv.y * 2)));  // tile effect
+//    vec4 colour = texture(display_layer, vec2(fract(uv.x * 30), fract(uv.y * 12)));  // tile effect
     if (mouse_active) {
         vec2 Z, R = vec2(2.0 + 1.0 * (mouse_position.x / resolution.x), 1.0 + 100.0 * mouse_position.x / resolution.x);  // mandelbrot effect
         for (colour *= 0.0; colour.a++ < 1e2 && dot(Z, Z) < 4.0;
@@ -116,25 +124,25 @@ vec4 test(sampler2D display_layer, float effect[effect_data_length]) {
     return colour;
 }
 
-vec4 gol(sampler2D display_layer, float effect[effect_data_length]) {
+vec4 gol(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec4 colour = texture(display_layer, uv_flipped);
     return colour;
 }
 
-vec4 get_colour(sampler2D display_layer, float effect[effect_data_length], vec4 out_colour) {
+vec4 get_colour(sampler2D display_layer, float effect_data[effect_data_length], vec4 out_colour) {
     vec4 colour;
-    if (effect[0]==grey_index) {
-        colour = grey(display_layer, effect);
-    } else if (effect[0]==invert_index) {
-        colour = invert(display_layer, effect);
-    } else if (effect[0]==blur_index) {
-        colour = blur(display_layer, effect);
-    } else if (effect[0]==pixelate_index) {
-        colour = pixelate(display_layer, effect);
-    } else if (effect[0]==test_index) {
-        colour = test(display_layer, effect);
-    } else if (effect[0]==gol_index) {
-        colour = gol(display_layer, effect);
+    if (effect_data[0]==grey_index) {
+        colour = grey(display_layer, effect_data);
+    } else if (effect_data[0]==invert_index) {
+        colour = invert(display_layer, effect_data);
+    } else if (effect_data[0]==blur_index) {
+        colour = blur(display_layer, effect_data);
+    } else if (effect_data[0]==pixelate_index) {
+        colour = pixelate(display_layer, effect_data);
+    } else if (effect_data[0]==test_index) {
+        colour = test(display_layer, effect_data);
+    } else if (effect_data[0]==gol_index) {
+        colour = gol(display_layer, effect_data);
     } else {
         colour = texture(display_layer, uv);
     }

@@ -18,7 +18,7 @@ class Shaders:
         self.effect_data_length = 5
         self.empty_effect_data = [0] * self.effect_data_length
         self.shaders = self.load_shaders(effects={'grey': {'scale': 0, 'step': 1 / self.main.fps}, 'invert': {'scale': 0, 'step': 1 / self.main.fps}, 'blur': {'size': 1, 'length': 3, 'counter': self.main.fps},
-                                                  'pixelate': {'size': 16, 'counter': self.main.fps},  # play around with this value to get cool low poly effects...
+                                                  'pixelate': {'size': 1, 'counter': self.main.fps},  # play around with this value to get cool low poly effects...
                                                   'test': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5}})
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
 
@@ -52,32 +52,40 @@ class Shaders:
             self.set_uniforms(uniforms={f'{effect}_index': index + 1})
         return shaders
 
-    def apply_effect(self, display_layer, effect):
-        # accept list of display_layers and effect
-        # accept 'all' as a input?
-        # trying to apply an effect while the same effect is currently fading out wil not trigger until fade is finished (shouldnt be a big problem if the fade length is short, ie 1 second)...
-        # do we clear the buffer texture whenever gol is first activated?
-        if display_layer in self.main.display.display_layers and (not effect or effect in self.shaders['effects']):
-            display_layer += '_effect'
-            if not effect:
-                self.shaders['display_layers'][display_layer] = self.empty_effect_data
-            elif not self.shaders['display_layers'][display_layer][0]:
-                effect_data = list(self.shaders['effects'][effect]['data'].values())
-                if len(effect_data) >= self.effect_data_length:
-                    print(f'increase shader effect size (by at least {len(effect_data) + 1 - self.effect_data_length})...')
-                effect_data2 = [self.shaders['effects'][effect]['index']] + effect_data + [0] * (self.effect_data_length - 1 - len(effect_data))
-                self.shaders['display_layers'][display_layer] = effect_data2
+    def clear_gol(self):
+        self.textures['buffer'].release()
+        buffer = self.context.texture(size=self.main.display.size, components=4)
+        buffer.filter = (mgl.NEAREST, mgl.NEAREST)
+        buffer.use(location=len(self.textures) - 1)
+        self.textures['buffer'] = buffer
 
-    def get_effect_data(self):
-        effect_data = self.shaders['display_layers']
-        for effect in self.shaders['effects'].values():
-            effect_data = effect_data | effect['data']
-        # print(effect_data)
-        return effect_data
+    def apply_effect(self, display_layer, effect):
+        # trying to apply an effect while the same effect is currently fading out wil not trigger until fade is finished (shouldnt be a big problem if the fade length is short, ie 1 second)...
+        # need a variable to keep track of whether an effect has been/ is being applied and another to keep track of whether it is currently active (no longer being applied but 'fading' out)...
+        # effect_data [applied, active, data...(scale, counter)]
+        # if effect is applied, then active is true
+        # if applied and active, then increase variables (fade in)
+        # if not applied but active, then decrease variables (fade out)
+        display_layers = self.main.display.display_layers if display_layer == 'all' else [display_layer] if not isinstance(display_layer, list) else display_layer
+        # maybe dont include transition display layer in 'all', transition display layer is always last so just use display_layers[:-1], need to test applying effect to all display layers...
+        for display_layer in display_layers:
+            if display_layer in self.main.display.display_layers and (not effect or effect in self.shaders['effects']):
+                display_layer += '_effect'
+                if not effect:
+                    self.shaders['display_layers'][display_layer] = self.empty_effect_data
+                elif not self.shaders['display_layers'][display_layer][0]:
+                    if effect == 'gol':
+                        self.clear_gol()
+                    effect_data = list(self.shaders['effects'][effect]['data'].values())
+                    if len(effect_data) >= self.effect_data_length:
+                        print(f'increase shader effect size (by at least {len(effect_data) + 1 - self.effect_data_length})...')
+                    effect_data2 = [self.shaders['effects'][effect]['index']] + effect_data + [0] * (self.effect_data_length - 1 - len(effect_data))
+                    self.shaders['display_layers'][display_layer] = effect_data2
+            else:
+                print(f"either '{display_layer}' display layer does not exist or '{effect}' effect does not exist...")
 
     def update_effect_data(self):
         blur = 5
-        # add scales to all shader effects so that they come into effect gradually...
         # loop over each display layer, and if they have an active effect or active data (ie effect turned off but still transitioning to off state), then change variables...
         # need to have controls for each effects min, max, and step, and whether we want to increase or decrease effect variable...
         for display_layer, effect_data in self.shaders['display_layers'].items():
@@ -90,18 +98,16 @@ class Shaders:
                 if effect_data[1] <= 0 or effect_data[1] >= 1:
                     effect_data[2] *= 0
             elif effect_data[0] == self.shaders['effects']['blur']['index']:
-                effect_data[3] -= blur  # add utility function to handle effect variables...
+                effect_data[3] -= blur
                 if effect_data[3] <= 0:
                     effect_data[1] = min(blur, effect_data[1] + 1)
                     effect_data[2] = effect_data[1] * 2 + 1
                     effect_data[3] = self.main.fps
             elif effect_data[0] == self.shaders['effects']['pixelate']['index']:
-                effect_data[3] -= 30
-                if effect_data[3] <= 0:
-                    # effect_data[1] = min(16, effect_data[1] + 0.1)
-                    effect_data[1] = max(1, effect_data[1] -0.1)
-                    effect_data[2] = effect_data[1] * 2 + 1
-                    effect_data[3] = self.main.fps
+                effect_data[2] -= 30
+                if effect_data[2] <= 0:
+                    effect_data[1] = min(6.4, effect_data[1] + 0.25)
+                    effect_data[2] = self.main.fps
             elif effect_data[0] == self.shaders['effects']['test']['index']:
                 pass
             elif effect_data[0] == self.shaders['effects']['gol']['index']:
@@ -114,17 +120,17 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('e', 'held'):
-            self.apply_effect(display_layer='menu', effect='pixelate')
-            self.apply_effect(display_layer='level', effect='pixelate')
+            self.apply_effect(display_layer=['menu', 'level'], effect='test')
         self.apply_effect(display_layer='background', effect=self.main.assets.settings['video']['background'])
         self.update_effect_data()
-        self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_position': mouse_position} | self.get_effect_data())
+        self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_position': mouse_position} | self.shaders['display_layers'])
 
     def reset_effects(self):
         # dont automatically reset all layers, if a layer is currently transitioning in or out of an effect then leave it to finish...
         # we can handle this functionality in the update function i think...
         for display_layer, effect_data in self.shaders['display_layers'].items():
-            self.shaders['display_layers'][display_layer] = self.empty_effect_data
+            # self.shaders['display_layers'][display_layer] = self.empty_effect_data
+            self.shaders['display_layers'][display_layer][0] = 0
 
     def draw(self, displays):
         for display_layer, display_surface in displays.items():

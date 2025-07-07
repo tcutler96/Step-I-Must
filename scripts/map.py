@@ -139,8 +139,7 @@ class Map:
             else:
                 self.offset_dict['current'] = self.offset_dict[self.offset_dict['target']]
         if self.show_map:
-            self.main.shaders.apply_effect(display_layer='level', effect='blur')
-            self.main.shaders.apply_effect(display_layer='steps', effect='blur')
+            self.main.shaders.apply_effect(display_layer=['level', 'steps'], effect='blur')
             self.update_icons()
             selected_level = None
             for level_name, map_cell in self.map.items():

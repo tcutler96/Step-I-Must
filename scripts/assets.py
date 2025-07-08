@@ -43,51 +43,54 @@ class Assets:
     def post_load(self):
         self.images = self.load_images()
 
+    def list_directory(self, path):
+        for f in os.listdir(path):
+            if not f.startswith('.'):
+                yield f
+
     def load_audio(self):
         path = os.path.join(self.assets_path, 'audio')
         audio = {}
-        for folder in os.listdir(path):
-            folder_path = os.path.join(path, folder)
-            folder_audio = {}
-            for file in os.listdir(folder_path):
-                if folder == 'music':
-                    folder_audio[file.split('.')[0]] = os.path.join(folder_path, file)
-                else:
-                    folder_audio[file.split('.')[0]] = pg.mixer.Sound(file=os.path.join(folder_path, file))
-                # folder_audio[file.split('.')[0]] = pg.mixer.Sound(file=os.path.join(folder_path, file))
-            audio[folder] = folder_audio
+        for folder in self.list_directory(path=path):
+            if folder in ['music', 'sound']:
+                folder_path = os.path.join(path, folder)
+                folder_audio = {}
+                for file in self.list_directory(path=folder_path):
+                    folder_audio[file.split('.')[0]] = os.path.join(folder_path, file) if folder == 'music' else pg.mixer.Sound(file=os.path.join(folder_path, file))
+                audio[folder] = folder_audio
         return audio
 
     def load_fonts(self):
         path = os.path.join(self.assets_path, 'fonts')
         fonts = {}
-        for file in os.listdir(path):
-            fonts[file.split('.')[0]] = pg.freetype.Font(file=os.path.join(path, file), size=0)
+        for file in self.list_directory(path=path):
+            if file.endswith('.ttf'):
+                fonts[file.split('.')[0]] = pg.freetype.Font(file=os.path.join(path, file), size=0)
         return fonts
 
     def load_images(self):
         path = os.path.join(self.assets_path, 'images')
         images = {}
-        for folder in os.listdir(path):
+        for folder in self.list_directory(path=path):
             folder_path = os.path.join(path, folder)
             if os.path.isdir(folder_path):
                 if folder in ['cursor', 'map', 'other', 'scrollbar', 'toolbar']:
                     folder_images = {}
-                    for image in os.listdir(folder_path):
+                    for image in self.list_directory(path=folder_path):
                         folder_images[image.split('.')[0]] = self.main.utilities.load_image(path=os.path.join(folder_path, image))
                     images[folder] = folder_images
                 elif folder == 'sprites':
                     sprites = {}
                     sprites_data = {}
-                    for sprite_type in os.listdir(folder_path):
+                    for sprite_type in self.list_directory(path=folder_path):
                         sprite_type_path = os.path.join(folder_path, sprite_type)
-                        for sprite_folder_name in os.listdir(sprite_type_path):
+                        for sprite_folder_name in self.list_directory(path=sprite_type_path):
                             sprite_name = sprite_folder_name.split('_')[-1]
                             sprite_name_path = os.path.join(sprite_type_path, sprite_folder_name)
                             if os.path.isdir(sprite_name_path):
                                 sprite = {}
                                 frame_data = {}
-                                for sprite_file in os.listdir(sprite_name_path):
+                                for sprite_file in self.list_directory(path=sprite_name_path):
                                     frames = []
                                     sprite_info = sprite_file[:-4].split(' - ')
                                     sprite_sheet = self.main.utilities.load_image(path=os.path.join(sprite_name_path, sprite_file))
@@ -114,7 +117,7 @@ class Assets:
     def load_levels(self):
         path = os.path.join(self.assets_path, 'levels')
         levels = {}
-        for file in os.listdir(path):
+        for file in self.list_directory(path=path):
             if file.endswith('.json'):
                 with open(os.path.join(path, file), 'r') as file_data:
                     levels[file.split('.')[0]] = json.load(file_data)
@@ -123,7 +126,7 @@ class Assets:
     def load_shaders(self):
         path = os.path.join(self.assets_path, 'shaders')
         shaders = {}
-        for file in os.listdir(path):
+        for file in self.list_directory(path=path):
             with open(os.path.join(path, file), 'r') as file_data:
                 shaders[file.split('.')[0]] = file_data.read()
         return shaders

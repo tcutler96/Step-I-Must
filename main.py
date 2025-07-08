@@ -39,11 +39,12 @@ import os
 # draw sign test as pixelated until it can be decoded?
 # add pixelate effect when we teleport, pixelates with in transition and unpixelates with out transition...
 # map transition should centre on the map cell element...
+# dont close map straight away when we restart level from game menu, set show_map to False on level load...
 
 
 class Main:
     def __init__(self):
-        pg.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=4096)
+        # pg.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
         pg.init()
         self.fps = 60
         self.true_fps = self.fps

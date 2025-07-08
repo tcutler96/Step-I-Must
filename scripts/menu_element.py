@@ -45,12 +45,11 @@ class MenuElement:
                     return self.button_type, self.button_response, self.name
                 if self.main.text_handler.text_elements[self.menu_name][self.name].selected:
                     return self.button_type, self.button_response, self.name
-                if self.button_type == 'option':
-                    if self.main.text_handler.text_elements[self.menu_name][self.name + self.button_response[0]].selected:
-                        self.offset = self.offset_start.copy()
-                        self.button_response.append(self.button_response.pop(0))
-                        self.option_centres.append(self.option_centres.pop(0))
-                        return self.button_type, self.button_response, self.name
+                if self.button_type == 'option' and self.main.text_handler.text_elements[self.menu_name][self.name + self.button_response[0]].selected:
+                    self.offset = self.offset_start.copy()
+                    self.button_response.append(self.button_response.pop(0))
+                    self.option_centres.append(self.option_centres.pop(0))
+                    return self.button_type, self.button_response, self.name
 
     def draw(self, offset):
         self.main.text_handler.activate_text(text_group=self.menu_name, text_id=self.name, offset=offset)

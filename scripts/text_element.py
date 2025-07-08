@@ -34,6 +34,7 @@ class TextElement:
         self.hovered_position = hovered_position
         self.hovered_shadow_offset = hovered_shadow_offset
         self.hovered = False
+        self.was_hovered = False
         self.selected = False
 
     def activate(self, delay, duration, offset):
@@ -53,6 +54,7 @@ class TextElement:
         self.active = False
 
     def update(self, mouse_position):
+        self.was_hovered = self.hovered
         self.hovered = False
         self.selected = False
         # control shadow offset here, add sin sway option for titles etc...
@@ -73,6 +75,8 @@ class TextElement:
                 elif (self.interactable and self.offset == (0, 0) and self.main.display.cursor.cursor and
                       self.rect.collidepoint((mouse_position[0], mouse_position[1] + self.scroll))):
                     self.hovered = True
+                    if not self.was_hovered:
+                        self.main.audio.play_sound(name='menu_highlight')
                     self.main.display.set_cursor(cursor='hand')
                     if self.main.events.check_key(key='mouse_1'):
                         self.selected = True

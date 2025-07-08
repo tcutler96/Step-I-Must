@@ -1,7 +1,6 @@
 from scripts.cursor import Cursor
 import pygame as pg
 import platform
-from sys import platform as platform2
 
 
 class Display:
@@ -16,14 +15,11 @@ class Display:
         self.window_centre = self.window_half_width, self.window_half_height = self.window_width // 2, self.window_height // 2
         self.display_layers = ['background', 'level', 'steps', 'map', 'level_editor', 'menu', 'ui', 'transition']
         self.displays = self.load_displays()
-        print(platform.system())
-        print(platform2)
-        print(pg.display.get_driver())
-        # only do this if on a mac?
-        pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
-        pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
-        pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
-        pg.display.gl_set_attribute(pg.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
+        if platform.system() == 'Darwin':
+            pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
+            pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
+            pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
+            pg.display.gl_set_attribute(pg.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
         self.window = pg.display.set_mode(size=self.window_size, flags=pg.OPENGL | pg.DOUBLEBUF)
         self.main.assets.post_load()
         pg.display.set_caption('Slime Stepper')

@@ -7,7 +7,7 @@ uniform float time;
 uniform bool mouse_active;
 uniform vec2 mouse_position;
 
-const int effect_data_length = 5;
+const int effect_data_length = 6;
 uniform sampler2D background_display;
 uniform float background_effect[effect_data_length];
 uniform sampler2D level_display;
@@ -53,7 +53,7 @@ int get_current(vec2 offset) {
 
 vec4 game_of_life() {
         int current = get_current(vec2(0.0));
-        if (bool(background_effect[1])) {
+        if (bool(background_effect[3])) {
             int surround = -current;
             for (float i = -1.0; i < 2.0; i++) {
                 for (float j = -1.0; j < 2.0; j++) {
@@ -72,13 +72,13 @@ vec4 game_of_life() {
 
 vec4 grey(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec4 colour = texture(display_layer, uv);
-    colour.rgb = mix(colour.rgb, vec3(colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722), effect_data[1]);
+    colour.rgb = mix(colour.rgb, vec3(colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722), effect_data[2]);
     return colour;
 }
 
 vec4 invert(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec4 colour = texture(display_layer, uv);
-    colour.rgb = mix(colour.rgb, vec3(1.0) - colour.rgb, effect_data[1]);
+    colour.rgb = mix(colour.rgb, vec3(1.0) - colour.rgb, effect_data[2]);
     return colour;
 }
 
@@ -94,9 +94,9 @@ vec4 blur(sampler2D display_layer, float effect_data[effect_data_length]) {
 }
 
 vec4 pixelate(sampler2D display_layer, float effect_data[effect_data_length]) {
-    float dx = effect_data[1] * pixel[0];
-    float dy = effect_data[1] * pixel[1];
-    vec4 colour = texture(display_layer, vec2(dx * (floor(uv.x / dx) + 0.5), dy * (floor(uv.y / dy) + 0.5)));
+    float pixel_width = effect_data[2] * pixel[0];
+    float pixel_height = effect_data[2] * pixel[1];
+    vec4 colour = texture(display_layer, vec2(pixel_width * (floor(uv.x / pixel_width) + 0.5), pixel_height * (floor(uv.y / pixel_height) + 0.5)));
     return colour;
 }
 
@@ -131,17 +131,17 @@ vec4 gol(sampler2D display_layer, float effect_data[effect_data_length]) {
 
 vec4 get_colour(sampler2D display_layer, float effect_data[effect_data_length], vec4 out_colour) {
     vec4 colour;
-    if (effect_data[0]==grey_index) {
+    if (effect_data[1]==grey_index) {
         colour = grey(display_layer, effect_data);
-    } else if (effect_data[0]==invert_index) {
+    } else if (effect_data[1]==invert_index) {
         colour = invert(display_layer, effect_data);
     } else if (effect_data[1]==blur_index) {
         colour = blur(display_layer, effect_data);
-    } else if (effect_data[0]==pixelate_index) {
+    } else if (effect_data[1]==pixelate_index) {
         colour = pixelate(display_layer, effect_data);
-    } else if (effect_data[0]==test_index) {
+    } else if (effect_data[1]==test_index) {
         colour = test(display_layer, effect_data);
-    } else if (effect_data[0]==gol_index) {
+    } else if (effect_data[1]==gol_index) {
         colour = gol(display_layer, effect_data);
     } else {
         colour = texture(display_layer, uv);
@@ -151,7 +151,7 @@ vec4 get_colour(sampler2D display_layer, float effect_data[effect_data_length], 
 }
 
 void main() {
-    if (background_effect[0]==gol_index && bool(background_effect[4])) {  // this doesnt work as intended, gol cells linger while gol effect is not selected...
+    if (background_effect[0]==gol_index && bool(background_effect[5])) {
         out_colour = game_of_life();
     } else {
         out_colour = vec4(0.0);

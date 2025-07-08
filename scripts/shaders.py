@@ -15,11 +15,12 @@ class Shaders:
         self.textures = self.create_textures()
         self.render_buffer = self.context.renderbuffer(size=self.main.display.size)
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
-        self.effect_data_length = 5
+        self.effect_data_length = 6
         self.empty_effect_data = [0] * self.effect_data_length
-        self.shaders = self.load_shaders(effects={'grey': {'scale': 0, 'step': 1 / self.main.fps}, 'invert': {'scale': 0, 'step': 1 / self.main.fps}, 'blur': {'size': 1, 'length': 3, 'counter': self.main.fps},
-                                                  'pixelate': {'size': 1, 'counter': self.main.fps},  # play around with this value to get cool low poly effects, can switch between 12 - 16...
-                                                  'test': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5}})
+        self.shaders = self.load_shaders(effects={'grey': {'scale': 0, 'step': 1}, 'invert': {'scale': 0, 'step': 1},
+                                                  'blur': {'size': 1, 'length': 3, 'counter': self.main.fps},
+                                                  'pixelate': {'size': 1, 'counter': self.main.fps},  # play around with this value to get cool low poly effects, can switch between 12 - 16, can have diffent values for x and y...
+                                                  'test': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False}})
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
 
     def change_resolution(self):
@@ -52,7 +53,7 @@ class Shaders:
             self.set_uniforms(uniforms={f'{effect}_index': index + 1})
         return shaders
 
-    def clear_gol(self):
+    def clear_gol(self):  # gol background cycles through 4 versions of texture for some reason, could leave it as is as a cool quirk...
         self.textures['buffer'].release()
         buffer = self.context.texture(size=self.main.display.size, components=4)
         buffer.filter = (mgl.NEAREST, mgl.NEAREST)
@@ -66,9 +67,10 @@ class Shaders:
             if display_layer in self.main.display.display_layers and (not effect or effect in self.shaders['effects']):
                 display_layer += '_effect'
                 if not effect:  # if None effect passed in, then force effect data to be empty (maybe just set the first two indexes to zero and let the update function naturally fade out current effect)...
-                    self.shaders['display_layers'][display_layer] = self.empty_effect_data
+                    # self.shaders['display_layers'][display_layer] = self.empty_effect_data
+                    self.shaders['display_layers'][display_layer][0:2] = [0] * 2
                 elif not self.shaders['display_layers'][display_layer][1]:
-                    if effect == 'gol':  # gol background reappears after being turned off and on 4 times...
+                    if effect == 'gol':
                         self.clear_gol()
                     effect_data = list(self.shaders['effects'][effect]['data'].values())
                     if len(effect_data) >= self.effect_data_length:
@@ -80,17 +82,33 @@ class Shaders:
                 print(f"either '{display_layer}' display layer does not exist or '{effect}' effect does not exist...")
 
     def update_effect_data(self):
-        blur = 6
-        # need to have controls for each effects min, max, and step, and whether we want to increase or decrease effect variable...
-        for display_layer, effect_data in self.shaders['display_layers'].items():
-            if self.shaders['effects']['blur']['index'] in effect_data[0:2]:
+        blur = 6  # add max blur variable in blur effect data...
+        for display_layer, effect_data in self.shaders['display_layers'].items():  # dont need display_layer in the end, just use .values...
+            if effect_data[1] == self.shaders['effects']['grey']['index']:
+                if effect_data[0]:
+                    effect_data[2] = min(1, effect_data[2] + effect_data[3] / self.main.fps)
+                else:
+                    effect_data[2] = max(0, effect_data[2] - effect_data[3] / self.main.fps)
+                    if effect_data[2] == 0:
+                        effect_data[1] = 0
+            elif effect_data[1] == self.shaders['effects']['invert']['index']:
+                if effect_data[0]:
+                    effect_data[2] = min(1, effect_data[2] + effect_data[3] / self.main.fps)
+                else:
+                    effect_data[2] = max(0, effect_data[2] - effect_data[3] / self.main.fps)
+                    if effect_data[2] == 0:
+                        effect_data[1] = 0
+            elif effect_data[1] == self.shaders['effects']['blur']['index']:
+                # can we make a universal function to handle changing effect values, or is it not needed?
+                # might need to have all effect datas follow the same default layout...
+                # effect_data = [applied bool, active bool, counter, ]
                 if effect_data[0]:  # increase values
-                    effect_data[4] -= 30
-                    if effect_data[4] <= 0:
-                        effect_data[2] = min(blur, effect_data[2] + 1)
-                        effect_data[3] = effect_data[2] * 2 + 1
-                        effect_data[4] = self.main.fps  # need to check if max value reached to stop endless increasing value...
-                        if effect_data[2] >= blur:  # max value
+                    effect_data[4] -= 30  # count down counter (-1 or -1/fps each time)
+                    if effect_data[4] <= 0:  # counter hits zero, value change triggered
+                        effect_data[2] = min(blur, effect_data[2] + 1)  # add step value, use min and max function with value min and max
+                        effect_data[3] = effect_data[2] * 2 + 1  # extra effect values
+                        effect_data[4] = self.main.fps  # set counter to default value
+                        if effect_data[2] >= blur:  # max value, stop endless loop
                             pass
                 else:  # decrease values
                     effect_data[4] -= 30
@@ -100,38 +118,34 @@ class Shaders:
                         effect_data[4] = self.main.fps
                         if effect_data[2] <= 0:  # min value
                             effect_data[1] = 0  # reset reset of effect data here or in reset_effects function?
-
-
-
-            # if effect_data[0] == self.shaders['effects']['grey']['index']:  # this doesnt turn off once it has been turned on...
-            #     effect_data[1] += effect_data[2]  # effects are no longer being reset, need to be able to detect when an effect has been turned off/ is no longer being applied and then automatically fade it out/ off...
-            #     if effect_data[1] <= 0 or effect_data[1] >= 1:
-            #         effect_data[2] *= -1
-            # elif effect_data[0] == self.shaders['effects']['invert']['index']:
-            #     effect_data[1] += effect_data[2]
-            #     if effect_data[1] <= 0 or effect_data[1] >= 1:
-            #         effect_data[2] *= 0
-            # elif effect_data[1] == self.shaders['effects']['blur']['index']:  # if index 0 and 1 true/ not zero, then increase values, if index 0 false but 1 true, then decrease values...
-            #     print(0, effect_data)
-            #     effect_data[4] -= blur
-            #     if effect_data[4] <= 0:
-            #         effect_data[2] = min(blur, effect_data[2] + 1)
-            #         effect_data[3] = effect_data[2] * 2 + 1
-            #         effect_data[4] = self.main.fps
-            # elif effect_data[0] == self.shaders['effects']['pixelate']['index']:
-            #     effect_data[2] -= 30
-            #     if effect_data[2] <= 0:
-            #         effect_data[1] = min(6.4, effect_data[1] + 0.25)
-            #         effect_data[2] = self.main.fps
-            # elif effect_data[0] == self.shaders['effects']['test']['index']:
-            #     pass
-            # elif effect_data[0] == self.shaders['effects']['gol']['index']:
-            #     effect_data[1] = False
-            #     effect_data[2] -= (self.main.fps // effect_data[3])
-            #     if effect_data[2] <= 0:
-            #         effect_data[1] = True
-            #         effect_data[2] = self.main.fps
-            #     effect_data[4] = True
+            elif effect_data[1] == self.shaders['effects']['pixelate']['index']:
+                if effect_data[0]:
+                    effect_data[3] -= 30
+                    if effect_data[3] <= 0:
+                        effect_data[2] = min(6.4, effect_data[2] + 0.2)
+                        effect_data[3] = self.main.fps
+                else:
+                    effect_data[3] -= 30
+                    if effect_data[3] <= 0:
+                        effect_data[2] = max(0, effect_data[2] - 0.2)
+                        effect_data[3] = self.main.fps
+                        if effect_data[2] <= 0:
+                            effect_data[1] = 0
+            elif effect_data[1] == self.shaders['effects']['test']['index']:
+                if effect_data[0]:
+                    pass
+                else:
+                    effect_data[1] = 0
+            elif effect_data[1] == self.shaders['effects']['gol']['index']:
+                if effect_data[0]:
+                    effect_data[2] = False
+                    effect_data[3] -= (self.main.fps // effect_data[4])
+                    if effect_data[3] <= 0:
+                        effect_data[2] = True
+                        effect_data[3] = self.main.fps
+                    effect_data[5] = True
+                else:
+                    effect_data[1] = 0
 
     def update(self, mouse_position):
         if self.main.events.check_key('e', 'held'):
@@ -153,7 +167,7 @@ class Shaders:
             self.render_object.render()
             self.context.copy_framebuffer(dst=self.textures['buffer'], src=self.frame_buffer)
             self.context.screen.use()
-            self.shaders['display_layers']['background_effect'][4] = False
+            self.shaders['display_layers']['background_effect'][5] = False
             self.set_uniforms(uniforms={'background_effect': self.shaders['display_layers']['background_effect']})
         self.render_object.render()
         self.reset_effects()

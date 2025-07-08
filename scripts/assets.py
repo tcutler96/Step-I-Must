@@ -127,8 +127,9 @@ class Assets:
         path = os.path.join(self.assets_path, 'shaders')
         shaders = {}
         for file in self.list_directory(path=path):
-            with open(os.path.join(path, file), 'r') as file_data:
-                shaders[file.split('.')[0]] = file_data.read()
+            if file.endswith('.glsl'):
+                with open(os.path.join(path, file), 'r') as file_data:
+                    shaders[file.split('.')[0]] = file_data.read()
         return shaders
 
     def load_settings(self):

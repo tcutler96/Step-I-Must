@@ -1,18 +1,18 @@
 {
   "video": {
-    "background": "disabled",
+    "background": null,
     "button_prompt": true,
     "cursor_type": "sprite",
     "hrt_shader": false,
     "map_colour": "green",
     "particles": false,
-    "resolution": 3,
+    "resolution": 1,
     "screen_shake": false
   },
   "audio": {
     "master_volume": 1.0,
-    "music_volume": 1.0,
-    "sound_volume": 0.0
+    "music_volume": 0.0,
+    "sound_volume": 1.0
   },
   "gameplay": {
     "hold_to_move": 5,
@@ -126,10 +126,10 @@
         "button",
         "option",
         [
-          "(1344, 960)",
-          "(1792, 1280)",
           "(448, 320)",
-          "(896, 640)"
+          "(896, 640)",
+          "(1344, 960)",
+          "(1792, 1280)"
         ]
       ],
       "Screen Shake": [
@@ -163,22 +163,22 @@
         "button",
         "option",
         [
+          "Disabled",
           "100%",
           "75%",
           "50%",
-          "25%",
-          "Disabled"
+          "25%"
         ]
       ],
       "Sound Volume": [
         "button",
         "option",
         [
-          "Disabled",
           "100%",
           "75%",
           "50%",
-          "25%"
+          "25%",
+          "Disabled"
         ]
       ],
       "Back": [

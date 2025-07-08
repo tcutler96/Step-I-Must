@@ -84,12 +84,12 @@ vec4 invert(sampler2D display_layer, float effect_data[effect_data_length]) {
 
 vec4 blur(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec4 colour;
-    for (float i = 0.0; i < int(effect_data[2]); i++) {
-            for (float j = 0.0; j < int(effect_data[2]); j++) {
-                colour += texture(display_layer, uv + pixel * (vec2(i, j) - int(effect_data[1])));
+    for (float i = 0.0; i < int(effect_data[3]); i++) {
+            for (float j = 0.0; j < int(effect_data[3]); j++) {
+                colour += texture(display_layer, uv + pixel * (vec2(i, j) - int(effect_data[2])));
             }
         }
-    colour /= pow(int(effect_data[2]), 2.0);
+    colour /= pow(int(effect_data[3]), 2.0);
     return colour;
 }
 
@@ -135,7 +135,7 @@ vec4 get_colour(sampler2D display_layer, float effect_data[effect_data_length], 
         colour = grey(display_layer, effect_data);
     } else if (effect_data[0]==invert_index) {
         colour = invert(display_layer, effect_data);
-    } else if (effect_data[0]==blur_index) {
+    } else if (effect_data[1]==blur_index) {
         colour = blur(display_layer, effect_data);
     } else if (effect_data[0]==pixelate_index) {
         colour = pixelate(display_layer, effect_data);

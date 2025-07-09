@@ -22,6 +22,7 @@ class Shaders:
                                                   'pixelate': {'size': 1, 'counter': self.main.fps},  # play around with this value to get cool low poly effects, can switch between 12 - 16, can have diffent values for x and y...
                                                   'test': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False}})
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
+        # how inefficient is it to have one fragment shader, would we get better frames from individual shaders?
 
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)

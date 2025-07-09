@@ -14,21 +14,27 @@ class MapCell:
         self.teleporter = teleporter
         self.collectables = collectables
         self.hovered = False
+        self.was_hovered = False
         self.main.text_handler.add_text(text_group='map', text_id=self.level_name, text=self.level_name, position='top_right', alignment=('r', 'c'), display_layer='map')
 
     def update_rect(self, offset):
         self.rect = pg.Rect((self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]), (self.cell_size, self.cell_size))
 
     def update(self, mouse_position, offset, interpolating):
+        self.was_hovered = self.hovered
         self.hovered = False
         if interpolating:
             self.update_rect(offset=offset)
         if mouse_position and (self.discovered or self.main.debug) and self.rect.collidepoint(mouse_position):
             self.hovered = True
             if self.teleporter or self.main.debug:
+                if not self.was_hovered:  # play sound when interactable map cell is highlighted
+                    self.main.audio.play_sound(name='map_highlight_teleporter')
                 self.main.display.set_cursor(cursor='hand')
                 if self.main.events.check_key(key='mouse_1'):
                     return True
+            elif not self.was_hovered:  # play sound when non-interactable map cell is highlighted
+                self.main.audio.play_sound(name='map_highlight')
 
     def draw_cell(self, displays, sprite, offset):
         displays['map'].blit(source=sprite, dest=(self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]))

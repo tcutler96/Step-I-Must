@@ -32,6 +32,9 @@ class Audio:
     def play_sound(self, name, loops=0, fade=0):
         if name in self.audio['sound']:
             self.audio['sound'][name].play(loops=loops, fade_ms=self.get_fade_ms(fade=fade))
+        else:  # temporary for testing...
+            # print(f"'{name}' sound file not found...")
+            self.audio['sound']['menu_select'].play(loops=loops, fade_ms=self.get_fade_ms(fade=fade))
 
     def stop_sound(self, name, fade=1):
         if name in self.audio['sound']:

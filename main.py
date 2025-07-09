@@ -40,6 +40,7 @@ import os
 # add pixelate effect when we teleport, pixelates with in transition and unpixelates with out transition...
 # map transition should centre on the map cell element...
 # dont close map straight away when we restart level from game menu, set show_map to False on level load...
+# opening map from reciever teleporter should trigger map_open sound...
 
 
 class Main:
@@ -96,7 +97,7 @@ class Main:
                 if self.menu_state in self.menu_states:
                     self.menu_states[self.menu_state].start_up()
 
-    def update_choose_leve2l_menu(self):
+    def update_choose_level_menu(self):
         self.assets.update_choose_level_menu()
         self.menu_states['choose_level'] = Menu(main=self, menu_name='choose_level', menu_data=self.assets.settings['menus']['choose_level'])
 

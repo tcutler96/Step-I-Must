@@ -52,10 +52,14 @@ class Menu:
             self.scrollbar.start_up()
 
     def scroll_up(self):
-        self.scroll = max(0, self.scroll - self.scroll_step)
+        if self.scroll > 0:
+            self.main.audio.play_sound(name='menu_scroll')
+            self.scroll = max(0, self.scroll - self.scroll_step)
 
     def scroll_down(self):
-        self.scroll = min(self.max_scroll, self.scroll + self.scroll_step)
+        if self.scroll < self.max_scroll:
+            self.main.audio.play_sound(name='menu_scroll')
+            self.scroll = min(self.max_scroll, self.scroll + self.scroll_step)
 
     def update(self, mouse_position):
         if self.scrollbar:

@@ -777,6 +777,7 @@ class Game:
                 self.update_blit_positions()
             if not self.main.transition.transitioning:
                 if self.main.events.check_key(key='escape'):
+                    self.main.audio.play_sound(name='menu_select')
                     self.main.change_menu_state(menu_state='game_paused')
                 self.update_map(mouse_position=mouse_position)
                 if not self.update_cutscene():

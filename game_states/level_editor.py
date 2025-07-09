@@ -79,6 +79,7 @@ class LevelEditor:
         if self.level.position_on_grid(position=position):
             cell = self.level.level[position]
             if not cell.is_empty():
+                self.main.audio.play_sound(name='level_editor_clear_cell')
                 cell.elements = {'object': None, 'player': None, 'tile': None, 'vertical_barrier': None, 'horizontal_barrier': None}
             if self.level.current_respawn and cell.position in self.level.current_respawn[0]:
                 self.level.current_respawn = None
@@ -93,6 +94,7 @@ class LevelEditor:
                 if cell.is_empty():
                     self.clear_cell(position=cell.position)
                 else:
+                    self.main.audio.play_sound(name='level_editor_set_cell')
                     self.check_unique_elements(cell=cell)
                     self.level.level[cell.position].set_elements(elements=deepcopy(cell.elements))
             elif cell.is_empty() and self.level.current_respawn and cell.position in self.level.current_respawn[0]:
@@ -114,6 +116,7 @@ class LevelEditor:
             self.mouse_cell.position = self.level.display_to_grid(position=mouse_position)
             selected_element = self.toolbar.update(mouse_position=mouse_position)
             if selected_element:
+                self.main.audio.play_sound(name='level_editor_select')
                 if selected_element[0] == 'button':
                     if selected_element[1] == 'Play Level':
                         self.reset_toolbar(hovered=True, selected=True)
@@ -148,6 +151,7 @@ class LevelEditor:
             if not self.toolbar.hovered_element[0]:
                 if self.main.events.check_key(key='mouse_2'):
                     if self.level.position_on_grid(position=self.mouse_cell.position):
+                        self.main.audio.play_sound(name='level_editor_copy_cell')
                         self.mouse_cell.empty()
                         if self.level.current_respawn and self.mouse_cell.position in self.level.current_respawn[0]:
                             self.mouse_cell.elements['player'] = {'name': 'player', 'state': 'idle'}

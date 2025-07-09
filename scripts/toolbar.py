@@ -17,6 +17,7 @@ class Toolbar:
         self.button_choices = {'top': {'Reset Level': 'reset', 'Toggle Grid': 'grid', 'Play Level': 'play'}, 'right': {'Save Level': 'save', 'Load Level': 'load', 'Quit to Main Menu': 'quit'}}
         self.toolbar = self.get_toolbar()
         self.hovered_element = [None, None]
+        self.last_hovered_element = [None, None]
         self.selected_object = ['no object', 0]
         self.selected_tile = ['no tile', 0]
 
@@ -76,22 +77,26 @@ class Toolbar:
 
 
     def update(self, mouse_position):
-        hovered_element = self.hovered_element
-        selected_elememt = None
+        self.last_hovered_element = self.hovered_element
         self.hovered_element = [None, None]
+        selected_elememt = None
         for button_name, button_data in self.toolbar['buttons'].items():
             if button_data['rect'].collidepoint(mouse_position):
                 self.main.display.set_cursor(cursor='hand')
                 self.hovered_element = button_name
+                if self.hovered_element != self.last_hovered_element:
+                    self.main.audio.play_sound(name='level_editor_highlight')
                 if self.main.events.check_key(key='mouse_1'):
                     selected_elememt = ['button', button_name]
         if not selected_elememt:
             for element_name, element_data in self.toolbar['elements'].items():
                 for count, rect in enumerate(element_data['rects']):
-                    if count and element_name != hovered_element[0]:
+                    if count and element_name != self.last_hovered_element[0]:
                         break
                     if rect.collidepoint(mouse_position):
                         self.hovered_element = [element_name, count]
+                        if self.hovered_element != self.last_hovered_element:
+                            self.main.audio.play_sound(name='level_editor_highlight')
                         self.main.display.set_cursor(cursor='hand')
                         if self.main.events.check_key(key='mouse_1'):
                             if element_data['element_type'] == 'object':

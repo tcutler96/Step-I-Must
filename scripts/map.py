@@ -121,12 +121,15 @@ class Map:
         if not active_cutscene and (self.main.text_handler.text_elements['map']['toggle'].selected or self.main.events.check_key(key='tab')):
             self.show_map = not self.show_map
             if not self.show_map:  # map turned off
+                self.main.audio.play_sound(name='map_close')
                 # set map cell alpha step to negative value...
                 self.set_target(target=self.offset_dict['target'])
             else:  # map turned on
+                self.main.audio.play_sound(name='map_open')
                 # set map cell alpha step to positive value...
                 self.icons['alpha'] = self.icons['alpha_default'].copy()
         if not active_cutscene and self.show_map and (self.main.text_handler.text_elements['map']['switch'].selected or self.main.events.check_key(key='space')):
+            self.main.audio.play_sound(name='map_switch')
             self.offset_dict['target'] = '1' if self.offset_dict['target'] == '2' else '2'
             mouse_position = None
         interpolating = False

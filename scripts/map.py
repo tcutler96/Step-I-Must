@@ -21,9 +21,6 @@ class Map:
                                 'cheeses': {'name': 'collectable', 'state': 'cheese', 'sprite': None}}}
         self.levels = self.load_levels()
         self.map = self.load_map()
-        # apply gentle blur shader to game layer when map is open...
-        # have map icons fade in and out...
-        # reduce each level down to a 16x16 map tile representing it (ie green dot for a wall, empty/ dark purple dot for free space)
 
     def load_levels(self):
         levels = {}
@@ -59,7 +56,8 @@ class Map:
                                             collectables={'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []})
         return map_cells
 
-    def reset_map(self):
+    def reset_map(self):  # reset map here whenever we restart level or quit and re enter game...
+        print(0)
         self.show_map = False
         self.icons['alpha'] = self.icons['alpha_default'].copy()
         self.update_icons()
@@ -144,12 +142,13 @@ class Map:
         if self.show_map:
             self.main.shaders.apply_effect(display_layer=['level', 'steps'], effect='blur')
             self.update_icons()
-            selected_level = None
+            selected_level = [None, None]
             for level_name, map_cell in self.map.items():
-                if map_cell.update(mouse_position=mouse_position, offset=self.offset_dict['current'], interpolating=interpolating):
-                    selected_level = level_name
-            if selected_level:
-                self.set_target(target=self.get_target(level=selected_level))
+                selected = map_cell.update(mouse_position=mouse_position, offset=self.offset_dict['current'], interpolating=interpolating)
+                if selected:
+                    selected_level = [level_name, selected]
+            if selected_level[0]:
+                self.set_target(target=self.get_target(level=selected_level[0]))
                 return selected_level
 
     def draw_collectables(self, displays):
@@ -161,8 +160,11 @@ class Map:
                     sprite = self.main.utilities.get_sprite(name='collectable', state=collectable_type[:-1])
                     displays['map'].blit(source=sprite, dest=(self.collectables['position'][0] + x * self.main.sprite_size, self.collectables['position'][1] + y * self.main.sprite_size // 4))
                 if collectable_count:
-                    self.main.utilities.draw_text(text=str(collectable_count), surface=displays['map'], alignment=('c', 't'), shadow_offset=(2, 2), outline_size=0, size=14, max_width=self.main.sprite_size * 0.8,
-                                                  position=(self.collectables['position'][0] + (x + 0.5) * self.main.sprite_size, self.collectables['position'][1] + (collectable_count + 3.5) * self.main.sprite_size // 4))
+                    if not self.main.text_handler.check_text_element(text_group='map', text_id=f'{collectable_type}_{collectable_count}'):
+                        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_{collectable_count}', text=str(collectable_count), alignment=('c', 't'),
+                                                        shadow_offset=(2, 2), outline_size=0, size=14, max_width=self.main.sprite_size * 0.8, display_layer='map',
+                                                        position=(self.collectables['position'][0] + (x + 0.5) * self.main.sprite_size, self.collectables['position'][1] + (collectable_count + 3.5) * self.main.sprite_size // 4))
+                    self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_{collectable_count}')
 
     def draw(self, displays):
         if self.show_map:

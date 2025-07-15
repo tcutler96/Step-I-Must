@@ -11,7 +11,6 @@ class Audio:
         self.music_volume = self.get_volume(audio_type='music')
         self.music_volume_current = self.music_volume
         self.music_volume_step = 0.005
-        self.played_sounds = []
 
     def load_audio(self):
         audio = self.main.assets.audio
@@ -27,30 +26,27 @@ class Audio:
         if audio_type in ['sound', 'music']:
             return self.main.assets.settings['audio'][audio_type + '_volume'] * self.main.assets.settings['audio']['master_volume']
 
-    def get_fade_ms(self, fade):
-        return int(fade * 1000)
-
-    def play_sound(self, name, loops=0, fade=0):
-        if name in self.audio['sound'] and name not in self.played_sounds:
-            self.audio['sound'][name].play(loops=loops, fade_ms=self.get_fade_ms(fade=fade))
-            self.played_sounds.append(name)
-        else:  # temporary for testing...
-            print(f"'{name}' sound file not found...")
-            self.audio['sound']['menu_select'].play(loops=loops, fade_ms=self.get_fade_ms(fade=fade))
+    def play_sound(self, name, loops=0, fade=0, overlap=False):
+        if name in self.audio['sound']:
+            if not self.audio['sound'][name].get_num_channels() or overlap:
+                self.audio['sound'][name].play(loops=loops, fade_ms=self.main.utilities.s_to_ms(s=fade))
+        elif self.main.testing:
+            # print(f"'{name}' sound file not found...")
+            self.audio['sound']['menu_select'].play(loops=loops, fade_ms=self.main.utilities.s_to_ms(s=fade))
 
     def stop_sound(self, name, fade=1):
         if name in self.audio['sound']:
-            self.audio['sound'][name].fadeout(self.get_fade_ms(fade=fade))
+            self.audio['sound'][name].fadeout(self.main.utilities.s_to_ms(s=fade))
 
     def play_music(self, music_theme=None, fade=1):
         if music_theme != self.music_theme and music_theme in self.audio['music']:
             self.music_theme = music_theme
             self.music.load(filename=self.audio['music'][self.music_theme])
-            self.music.play(loops=-1, fade_ms=self.get_fade_ms(fade=fade))
+            self.music.play(loops=-1, fade_ms=self.main.utilities.s_to_ms(s=fade))
 
     def stop_music(self, fade=1):
         self.music_theme = None
-        self.music.fadeout(self.get_fade_ms(fade=fade))
+        self.music.fadeout(self.main.utilities.s_to_ms(s=fade))
 
     def change_volume(self, audio_type):
         if audio_type in ['sound_volume', 'master_volume']:
@@ -66,9 +62,8 @@ class Audio:
                 self.music_volume_current = self.music_volume
             if self.music_volume_current:
                 self.music.set_volume(self.music_volume_current)
-        self.played_sounds = []
 
 
     def quit(self):
-        self.mixer.fadeout(self.get_fade_ms(fade=1))
-        self.music.fadeout(self.get_fade_ms(fade=1))
+        self.mixer.fadeout(self.main.utilities.s_to_ms(s=1))
+        self.music.fadeout(self.main.utilities.s_to_ms(s=1))

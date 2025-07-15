@@ -11,6 +11,7 @@ class TextHandler:
         self.add_text(text_group='main', text_id='conway', text="conway's game of life", position='top', colour='cream', shadow_colour=None, outline_colour=None, display_layer='background')
         self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_step=8.5, colour='purple', size=24)
         self.add_text(text_group='splash', text_id='hoolioes', text='with hoolioes audio', position='centre', alpha_step=8.5, colour='purple', size=24)
+        self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_step=8.5, colour='purple', size=24)
         self.add_text(text_group='level_editor', text_id='reset', text='level reset', position='bottom')
         self.add_text(text_group='level_editor', text_id='saved', text='level saved', position='bottom')
         self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', display_layer='level')
@@ -35,7 +36,7 @@ class TextHandler:
         return text_group in self.text_elements and text_id in self.text_elements[text_group]
 
     def add_text(self, text_group, text_id, text, position, alpha_step=25.5, alignment=('c', 'c'), colour='light_green', bg_colour=None, shadow_colour='dark_purple', shadow_offset=(4, 4),
-                 outline_colour='dark_purple', outline_size=1, size=20, max_width=0, max_height=0, font='Alagard', style=None, display_layer='ui', active=False, delay=0, duration=0,
+                 outline_colour='dark_purple', outline_size=1, size=20, max_width=0, max_height=0, font='Alagard', style=None, display_layer='ui', menu_state=None, active=False, delay=0, duration=0,
                  interactable=False, hovered_colour='green', hovered_bg_colour=None, hovered_shadow_colour=None, hovered_shadow_offset=None, hovered_outline_colour='dark_purple', hovered_outline_size=2):
         position = self.main.utilities.convert_position(position=position)
         colour, bg_colour, shadow_colour, hovered_colour, hovered_bg_colour, hovered_shadow_colour = (
@@ -50,8 +51,8 @@ class TextHandler:
         if text_group not in self.text_elements:
             self.text_elements[text_group] = {}
         self.text_elements[text_group][text_id] = TextElement(main=self.main, text=text, surface=surface, position=alligned_position, alpha_step=alpha_step, shadow_offset=shadow_offset,
-                                                              display_layer=display_layer, active=active, delay=delay * self.main.fps, duration=duration * self.main.fps, interactable=interactable,
-                                                              hovered_surface=hovered_surface, hovered_position=alligned_position, hovered_shadow_offset=hovered_shadow_offset)
+                                                              display_layer=display_layer, menu_state=menu_state, active=active, delay=delay * self.main.fps, duration=duration * self.main.fps,
+                                                              interactable=interactable,  hovered_surface=hovered_surface, hovered_position=alligned_position, hovered_shadow_offset=hovered_shadow_offset)
 
     def activate_text(self, text_group, text_id, delay=0, duration=0, offset=(0, 0)):
         if self.check_text_element(text_group=text_group, text_id=text_id):

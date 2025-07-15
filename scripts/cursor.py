@@ -6,7 +6,7 @@ class Cursor:
         self.main = main
         self.cursor_type = self.main.assets.settings['video']['cursor_type']
         self.show_cursor = True
-        self.cursor = 'default'
+        self.cursor = 'arrow'
         self.cursors = self.load_cursors()
         self.set_cursors = []
         self.cursor_offsets = {'arrow': 0, 'hand': 2}

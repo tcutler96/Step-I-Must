@@ -35,13 +35,10 @@ import os
 # spawning ontop of a collectable (seting respawn while in debug mode and so not collecting collectable) breaks the level loading, steps arent set properly...
 # loading game in debug mode crashes when you try to take a step...
 # clicking window x does not close window while mid transition...
-# cant click on map text when the pause menu is open...
 # draw sign test as pixelated until it can be decoded?
-# add pixelate effect when we teleport, pixelates with in transition and unpixelates with out transition...
-# map transition should centre on the map cell element...
-# dont close map straight away when we restart level from game menu, set show_map to False on level load...
-# opening map from reciever teleporter should trigger map_open sound...
-# add testing variable so that we can only do certain commands (ie ctrl+w to close) when testing, not in actual release...
+# separate level into distinct display layers that can be controlled individually (level, player, text?)
+# restarting level or quitting game while map is switching breaks it...
+# in the game, always draw things to the screen whether the map or menu is open, so that can see them when the level is blurred...
 
 
 class Main:
@@ -69,6 +66,7 @@ class Main:
         self.game_states = {'splash': Splash(main=self), 'main_menu': MainMenu(main=self), 'game': Game(main=self), 'level_editor': LevelEditor(main=self)}
         self.game_states[self.game_state].start_up()
         self.debug = False
+        self.testing = True
         self.draw_gol = False
         self.clear_gol = False
         self.conway = 0
@@ -113,12 +111,13 @@ class Main:
             self.clock.tick(self.fps)
 
     def update_game_of_life(self):
-        self.draw_gol = self.display.cursor.show_cursor and self.events.check_key(key='mouse_3', action='held') and not self.transition.transitioning
-        self.clear_gol = self.events.check_key(key='escape') and self.game_state != 'game'
-        if self.conway:
-            self.conway -= 1
-        if self.events.check_key(key='conway', action='last_pressed'):
-            self.conway = self.fps * 2
+        if self.shaders.background_effect == 'gol':
+            self.draw_gol = self.display.cursor.show_cursor and self.events.check_key(key='mouse_3', action='held') and not self.transition.transitioning
+            self.clear_gol = self.events.check_key(key='escape') and self.game_state != 'game'
+            if self.conway:
+                self.conway -= 1
+            if self.events.check_key(key='conway', action='last_pressed'):
+                self.conway = self.fps * 2
 
     def update(self):
         self.true_fps = self.clock.get_fps()
@@ -130,10 +129,11 @@ class Main:
                 self.low_fps = True
         self.events.update()
         mouse_position = self.events.mouse_display_position
-        if self.events.check_key(key='w', modifier='ctrl'):  # temporary for testing
-            self.quit()
-        if self.events.check_key(key='b', modifier='ctrl'):
-            self.debug = not self.debug
+        if self.testing:
+            if self.events.check_key(key='w', modifier='ctrl'):
+                self.quit()
+            if self.events.check_key(key='b', modifier='ctrl'):
+                self.debug = not self.debug
         if self.menu_state:
             self.menu_states[self.menu_state].update(mouse_position=mouse_position)
         elif self.game_state in ['game', 'level_editor']:
@@ -147,15 +147,16 @@ class Main:
         self.shaders.update(mouse_position=mouse_position)
 
     def draw_game_of_life(self):
-        if self.clear_gol:
-            self.shaders.clear_gol()
-        if self.draw_gol:
-            pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=8, width=1, draw_bottom_left=True)
-            pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=12, width=1, draw_top_left=True)
-            pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=16, width=1, draw_top_right=True)
-            pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=20, width=1, draw_bottom_right=True)
-        if self.conway:
-            self.text_handler.activate_text(text_group='main', text_id='conway')
+        if self.shaders.background_effect == 'gol':
+            if self.clear_gol:
+                self.shaders.clear_gol()
+            if self.draw_gol:
+                pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=8, width=1, draw_bottom_left=True)
+                pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=12, width=1, draw_top_left=True)
+                pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=16, width=1, draw_top_right=True)
+                pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=20, width=1, draw_bottom_right=True)
+            if self.conway:
+                self.text_handler.activate_text(text_group='main', text_id='conway')
 
     def draw(self):
         if self.debug:
@@ -171,7 +172,6 @@ class Main:
         pg.display.flip()
 
     def quit(self):
-        self.assets.quit()
         self.shaders.quit()
         pg.mixer.quit()
         pg.quit()

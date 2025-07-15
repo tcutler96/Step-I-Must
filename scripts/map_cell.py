@@ -32,7 +32,7 @@ class MapCell:
                     self.main.audio.play_sound(name='map_highlight_teleporter')
                 self.main.display.set_cursor(cursor='hand')
                 if self.main.events.check_key(key='mouse_1'):
-                    return True
+                    return self.rect.center
             elif not self.was_hovered:  # play sound when non-interactable map cell is highlighted
                 self.main.audio.play_sound(name='map_highlight')
 

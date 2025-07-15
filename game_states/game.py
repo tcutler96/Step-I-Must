@@ -149,8 +149,6 @@ class Game:
         # still need proper sprites for splitter, barriers, flags
         # add short teleporting animation to player that is triggered whenever we teleport via tile or when we first enter game one/ two...
         # add percentage tracker in map
-        # have a display surface for the game, the map, and menus...
-        # once we add a way to apply shader effects to certain draw layers, the map can use a bit more of the screen...
         # (-3, -12), object conflict on ice...
         # (-3, -13), sliding into a wall trigger bump a bunch of times...
         # (-3, -14), rocks dont behave properly when they meet in the middle...
@@ -159,7 +157,6 @@ class Game:
         # need to add a tile that resets level and collected star in the level (remove specific gem from game collectable data...), (4, -6)(4, 13), (5, -6)(10, 1), manually add data to game data...
         # when we step on a gem reseter tile, look up in data which gem to reset, then remove that gem from collected collectables, map collection, ass back to cached levels...
         # cryptids: big finale room, teleports to (13, 3)/ (7, -18) here which leads to (13, 4)/ (7, -17) with portal that leads to (11, 10)/
-        # teleporting via map while in debug mode should send player to centre of room, not to reciever
         # when last player is turned to stone, fail text does not pop up...
         # add arrow keys to movement input...
         # delay conveyor (and maybe splitter) triggered animations by a couple frames?
@@ -175,7 +172,7 @@ class Game:
         elif teleport:
             new_level = teleport[0]
             respawn = [[tuple(teleport[1])], [tuple(teleport[1])], [True]]
-            centre = self.main.display.centre
+            centre = teleport[2]
             bump = None
         else:
             current_level = self.main.utilities.position_str_to_tuple(position=self.level.name)
@@ -217,10 +214,11 @@ class Game:
                 self.map.transition_level(old_level=self.level.name, new_level=new_level)
                 self.main.assets.data['game']['level'] = new_level
                 self.main.assets.data['game']['respawn'] = respawn
+                self.main.assets.save_date()
             self.level.name = new_level
             self.level.orignal_respawn = respawn
             self.main.transition.start(style='circle', centre=centre, response=['level', self.level.name, 'original', bump],
-                                       queue=(True, 'circle', self.level.grid_to_display(position=respawn[0][0], centre=True), 1))
+                                       queue=(True, 'circle', self.level.grid_to_display(position=respawn[0][0], centre=True)))
             if self.main.debug and self.teleporter_data['setting']:
                 self.teleporter_data['setting']['new_level'] = new_level
                 self.teleporter_data['setting']['new_position'] = respawn[0][0]
@@ -612,11 +610,9 @@ class Game:
                             print('warp destination set')
                     elif self.teleporter_data['setting']['stage'] == 'warp activation':
                         activation = level_and_position
-                        self.main.assets.data['teleporters']['activations'][activation] = {'position': self.teleporter_data['setting']['new_position'],
-                                                                                           'portals': [self.teleporter_data['setting']['level_and_position']],
-                                                                                           'two_players': self.main.events.check_key(key='e', modifier='ctrl'),
-                                                                                           'activated': False}
-                        if 'paired' in self.teleporter_data['setting']:  # print message concerning two player activation...
+                        self.main.assets.data['teleporters']['activations'][activation] = {'position': self.teleporter_data['setting']['new_position'], 'portals': [self.teleporter_data['setting']['level_and_position']],
+                                                                                           'two_players': self.main.events.check_key(key='e', modifier='ctrl'), 'activated': False}
+                        if 'paired' in self.teleporter_data['setting']:
                             self.main.assets.data['teleporters']['activations'][activation]['portals'].append(self.teleporter_data['setting']['paired'])
                             print('warp pair activation set')
                         else:
@@ -675,6 +671,7 @@ class Game:
                             if not cryptid_warp:
                                 print('cryptid warp not set')
                         elif self.teleporter_data['standing']['state'] == 'reciever':
+                            self.main.audio.play_sound(name='map_open')
                             self.map.show_map = True
                         else:
                             teleporter_data = self.main.assets.data['teleporters'][self.teleporter_data['standing']['state'] + 's'][self.teleporter_data['standing']['level_and_position']]
@@ -685,19 +682,21 @@ class Game:
                             else:
                                 print(f'warp not set')
 
-    def update_map(self, mouse_position):
+    def update_map(self, mouse_position):  # game blur shader is turned off when we teleport using the map, want it to stay while transition happens...
         if self.level.name != 'custom':
             selected_level = self.map.update(mouse_position=mouse_position if (self.map.show_map and not self.cutscene.timer) else None, active_cutscene=self.cutscene.active_cutscene)
             if selected_level:
-                self.map.show_map = False
-                if selected_level != self.level.name:
+                if selected_level[0] == self.level.name:
+                    self.main.audio.play_sound(name='map_close')
+                    self.map.show_map = False
+                else:
                     self.teleporter_data['standing'] = None
                     position = (7, 7)
                     if not self.main.debug:
                         for reciever in self.main.assets.data['teleporters']['recievers']:
-                            if selected_level in reciever:
+                            if selected_level[0] in reciever:
                                 position = tuple(self.main.assets.data['teleporters']['recievers'][reciever]['position'])
-                    self.transition_level(teleport=[selected_level, position])
+                    self.transition_level(teleport=[selected_level[0], position, selected_level[1]])
 
     def update_cutscene(self):
         response = self.cutscene.update(level=self.level)
@@ -750,6 +749,10 @@ class Game:
         self.resolve_standing()
         self.map.update_player(level_name=self.level.name)
 
+    def load_level(self, name='empty', load_respawn=None, bump_player=None):
+        self.map.show_map = False
+        self.level.load_level(name=name, load_respawn=load_respawn, bump_player=bump_player)
+
     def reset_level(self):
         self.last_movement = None
         self.no_movement = False
@@ -777,7 +780,7 @@ class Game:
         self.main.audio.play_music(music_theme='game', fade=self.main.transition.length)
         self.reset_level()
         self.level.name = self.main.assets.data['game']['level'] if previous_game_state == 'main_menu' else 'custom'
-        self.level.load_level(name=self.level.name, load_respawn='setting' if previous_game_state == 'main_menu' and self.main.assets.data['game']['respawn'] else 'level')
+        self.load_level(name=self.level.name, load_respawn='setting' if previous_game_state == 'main_menu' and self.main.assets.data['game']['respawn'] else 'level')
 
     def update(self, mouse_position):
         if self.main.menu_state:
@@ -850,34 +853,41 @@ class Game:
                                                     if self.movement_held[key] > self.hold_move_delay:
                                                         self.move_players(movement=self.movement_directions[key])
                                 else:
+                                    self.main.shaders.apply_effect(display_layer=['level', 'steps'], effect='grey')
+                                    # self.main.shaders.apply_effect(display_layer=['level'], effect='pixelate')
                                     if keys_pressed:
                                         self.game_over = False
                                         self.stored_movement = None
-                                        self.level.load_level(name=self.level.name, load_respawn='current')
+                                        self.load_level(name=self.level.name, load_respawn='current')
+            else:
+                if not self.main.transition.fade_in:  # activating another shader effect doesnt allow the old effect to fade out...
+                    # teleporting via a sender applies pixelate effect but it just looks like a blur?
+                    # blur must be getting triggered somewhere first, and then them value are being modified in shader update...
+                    print(0)
+                    self.main.shaders.apply_effect(display_layer=['level', 'steps', 'map'], effect='pixelate')
 
     def draw(self, displays):
-        # if not self.main.menu_state:  # blur game background if menu/ map is open or if game in fail state... blur step count and fail message...
-        # we need to draw all level elements regardless of whether the map or the menu is open, so that we can properpy apply shader effects to them in the background...
-        # draw all game text onto the level display layer so that they are effected by shader effects...
         self.level.draw(displays=displays)
         self.cutscene.draw(displays=displays)
         self.map.draw(displays=displays)
-        for position, cell in self.player_cells.items():
-            if self.main.debug:
-                if (self.teleporter_data['standing'] or self.teleporter_data['setting']) and not self.map.show_map:
-                    self.main.text_handler.activate_text(text_group='game', text_id='set_warp')
-            else:
-                self.main.text_handler.activate_text(text_group='steps', text_id=self.level.steps)
-                if not self.map.show_map:
-                    if self.game_over:
-                        # apply slight distort to level when no players are alive, need to apply effect in update function, not draw function...
-                        self.main.text_handler.activate_text(text_group='game', text_id='reset')
-                    if cell.check_element(name='sign'):
-                        self.main.text_handler.activate_text(text_group='signs', text_id=self.level.name + ' - ' + str(cell.position))
-                    if self.teleporter_data['standing']:
-                        if isinstance(self.teleporter_data['standing'], list):
-                            self.main.text_handler.activate_text(text_group='game', text_id='warp?')
-                        else:
-                            self.main.text_handler.activate_text(text_group='game', text_id='warp')
-                    if self.lock_data:
-                        self.main.text_handler.activate_text(text_group='locks', text_id=self.lock_data)
+        if not self.player_cells:
+            self.main.text_handler.activate_text(text_group='game', text_id='reset')
+        else:
+            for position, cell in self.player_cells.items():
+                if self.main.debug:
+                    if (self.teleporter_data['standing'] or self.teleporter_data['setting']) and not self.map.show_map:
+                        self.main.text_handler.activate_text(text_group='game', text_id='set_warp')
+                else:
+                    self.main.text_handler.activate_text(text_group='steps', text_id=self.level.steps)
+                    if not self.map.show_map:
+                        if self.game_over:
+                            self.main.text_handler.activate_text(text_group='game', text_id='reset')
+                        if cell.check_element(name='sign'):
+                            self.main.text_handler.activate_text(text_group='signs', text_id=self.level.name + ' - ' + str(cell.position))
+                        if self.teleporter_data['standing']:
+                            if isinstance(self.teleporter_data['standing'], list):
+                                self.main.text_handler.activate_text(text_group='game', text_id='warp?')
+                            else:
+                                self.main.text_handler.activate_text(text_group='game', text_id='warp')
+                        if self.lock_data:
+                            self.main.text_handler.activate_text(text_group='locks', text_id=self.lock_data)

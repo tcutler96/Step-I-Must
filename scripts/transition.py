@@ -8,6 +8,7 @@ class Transition:
         self.transition_surface = pg.Surface(size=self.main.display.size, flags=pg.SRCALPHA)
         self.transition_surface2 = pg.Surface(size=self.main.display.size)
         self.transitioning = False
+        self.fade_in = False
         self.transition_style = 'fade'
         self.transition_centre = (0, 0)
         self.max_distance = 0
@@ -18,10 +19,12 @@ class Transition:
         self.transition_ratio = 0
         self.response = None
         self.queue = None
-        self.start(fade_in=True)
+        self.start(fade_in=True, length=2)
         # add another transition style that is a black square moves from one side of the screen to the other relative to player movement, triggered whenever we exit/ enter a new level...
 
     def start(self, fade_in=False, style='fade', centre=(0, 0), length=1, response=None, queue=None):
+        # if transitioning to quit game state then overide current transition...
+        # need to take current screen and fade it to black...
         if not self.transitioning:
             self.transitioning = True
             self.transition_style = style
@@ -34,6 +37,7 @@ class Transition:
             self.max_distance = math.sqrt(self.max_distance[0] ** 2 + self.max_distance[1] ** 2)
             self.length = length
             self.transition_length = length * self.main.fps
+            self.fade_in = fade_in
             if fade_in:
                 self.transition_current = 0
                 self.transition_step = 1
@@ -61,7 +65,7 @@ class Transition:
                         self.main.change_menu_state(menu_state=self.response[1])
                     elif self.response[0] == 'level':
                         self.main.menu_state = None
-                        self.main.game_states[self.main.game_state].level.load_level(name=self.response[1], load_respawn=self.response[2], bump_player=self.response[3])
+                        self.main.game_states[self.main.game_state].load_level(name=self.response[1], load_respawn=self.response[2], bump_player=self.response[3])
                     self.response = None
                 if self.queue:
                     self.start(*self.queue)

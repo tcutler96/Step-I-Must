@@ -15,6 +15,9 @@ class Utilities:
         self.corner_offsets = [(-1, -1), (1, -1), (1, 1), (-1, 1)]
         self.corner_auto_tile_map = {(-1, -1): 'tl', (1, -1): 'tr', (1, 1): 'br', (-1, 1): 'bl'}
 
+    def s_to_ms(self, s):
+        return int(s * 1000)
+
     def position_str_to_tuple(self, position):
         return tuple([int(number) for number in position.replace('(', '').replace(')', '').split(', ')])
 

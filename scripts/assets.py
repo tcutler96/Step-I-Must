@@ -19,7 +19,7 @@ class Assets:
         #                  'audio': {'master_volume': 1.0, 'music_volume': 1.0, 'sound_volume': 1.0},
         #                  'gameplay': {'hold_to_move': 5, 'hold_to_undo': 5}}
         self.update_choose_level_menu()
-        self.music_themes = {'game': 'game', 'level_editor': 'main_menu', 'main_menu': 'main_menu', 'quit': None}
+        self.music_themes = {'splash': None, 'game': 'game', 'level_editor': 'main_menu', 'main_menu': 'main_menu', 'quit': None}
         self.colours = {'white': (230, 230, 230),
                         'black': (25, 25, 25),
                         'true_white': (255, 255, 255),
@@ -34,8 +34,10 @@ class Assets:
                         'green': (77, 102, 96),
                         'light_green': (142, 184, 158),
                         'bright_green': (127, 255, 127)}
+        self.settings_changed = False
         self.option_to_setting = {'video': {'background': {'game_of_life': 'gol', 'disabled': None}, 'button_prompt': {'enabled': True, 'disabled': False}, 'hrt_shader': {'enabled': True, 'disabled': False},
-                                            'particles': {'enabled': True, 'disabled': False}, 'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4}, 'screen_shake': {'enabled': True, 'disabled': False}},
+                                            'particles': {'enabled': True, 'disabled': False}, 'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4},
+                                            'screen_shake': {'enabled': True, 'disabled': False}, 'shaders': {'enabled': True, 'disabled': False}},
                                  'audio': {'master_volume': {'100%': 1.0, '75%': 0.75, '50%': 0.5, '25%': 0.25, 'disabled': 0.0}, 'music_volume': {'100%': 1.0, '75%': 0.75, '50%': 0.5, '25%': 0.25, 'disabled': 0.0},
                                            'sound_volume': {'100%': 1.0, '75%': 0.75, '50%': 0.5, '25%': 0.25, 'disabled': 0.0}},
                                  'gameplay': {'hold_to_move': {'fast': 5, 'slow': 15, 'disabled': -1}, 'hold_to_undo': {'fast': 5, 'slow': 15, 'disabled': -1}}}
@@ -144,14 +146,14 @@ class Assets:
             data = json.load(file_data)
         return data
 
-    def change_setting(self, group, name, option):  # save setting changes to file when we leave setting menu so that we dont lose them in the event of a crash...
+    def change_setting(self, group, name, option):
+        self.settings_changed = True
         if name in self.option_to_setting[group] and option in self.option_to_setting[group][name]:
             option = self.option_to_setting[group][name][option]
         self.settings[group][name] = option
         if group == 'video':
             if name == 'background':
-                # self.main.shaders.background = option
-                pass
+                self.main.shaders.background_effect = option
             elif name == 'button_prompt':
                 # self.main.game_states['game'].show_button_prompt = option
                 pass
@@ -166,6 +168,8 @@ class Assets:
                 self.main.display.change_resolution(scale_factor=option)
             elif name == 'screen_shake':  # reference game class
                 pass
+            elif name == 'shaders':
+                self.main.shaders.apply_shaders = option
         elif group == 'audio':
             self.main.audio.change_volume(audio_type=name)
         elif group == 'gameplay':
@@ -174,6 +178,16 @@ class Assets:
             elif name == 'hold_to_undo':
                 self.main.game_states['game'].level.undo_redo_delay = option
                 self.main.game_states['level_editor'].level.undo_redo_delay = option
+
+    def save_settings(self):
+        if self.settings_changed:
+            self.settings_changed = False
+            with open(os.path.join(self.assets_path, 'settings.json'), 'w') as file:
+                json.dump(obj=self.settings, fp=file, indent=2)
+
+    def save_date(self):
+        with open(os.path.join(self.assets_path, 'data.json'), 'w') as file:
+            json.dump(obj=self.data, fp=file, indent=2)
 
     def reset_game_data(self):
         self.data['game'] = {'level': '(0, 0)', 'respawn': [[[12, 2]], [[12, 2]], [False]], 'part_one': False, 'part_two': False,
@@ -208,10 +222,3 @@ class Assets:
                             if state_data['frame_index'] >= state_data['num_frames']:
                                 state_data['frame_index'] = 0
                                 state_data['loops'] += 1
-
-    def quit(self):
-        del self.settings['menus']['choose_level']
-        with open(os.path.join(self.assets_path, 'settings.json'), 'w') as file:
-            json.dump(obj=self.settings, fp=file, indent=2)
-        with open(os.path.join(self.assets_path, 'data.json'), 'w') as file:
-            json.dump(obj=self.data, fp=file, indent=2)

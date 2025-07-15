@@ -2,7 +2,7 @@ import pygame as pg
 
 
 class TextElement:
-    def __init__(self, main, text, surface, position, alpha_step, shadow_offset, display_layer, active, delay, duration, interactable, hovered_surface, hovered_position, hovered_shadow_offset):
+    def __init__(self, main, text, surface, position, alpha_step, shadow_offset, display_layer, menu_state, active, delay, duration, interactable, hovered_surface, hovered_position, hovered_shadow_offset):
         self.main = main
         self.text = text
         if isinstance(surface, tuple):
@@ -20,6 +20,7 @@ class TextElement:
         self.scroll = 0
         self.rect = pg.Rect(self.position, self.size)
         self.display_layer = display_layer if display_layer in self.main.display.display_layers else 'ui'
+        self.menu_state = menu_state
         self.active = active
         self.timer = 0
         self.delay = delay
@@ -72,10 +73,10 @@ class TextElement:
                     self.surface.set_alpha(self.alpha)
                     if self.shadow_surface:
                         self.shadow_surface.set_alpha(self.alpha)
-                elif (self.interactable and self.offset == (0, 0) and self.main.display.cursor.cursor and
+                elif (self.interactable and self.offset == (0, 0) and self.main.display.cursor.cursor and (self.menu_state == self.main.menu_state) and
                       self.rect.collidepoint((mouse_position[0], mouse_position[1] + self.scroll))):
                     self.hovered = True
-                    if not self.last_hovered:
+                    if not self.last_hovered:  # check if this text is a part of a menu, and whether that menu is currently active or not...
                         self.main.audio.play_sound(name='menu_highlight')
                     self.main.display.set_cursor(cursor='hand')
                     if self.main.events.check_key(key='mouse_1'):

@@ -107,12 +107,12 @@ class Menu:
                         elif self.main.game_state == 'game':
                             self.main.menu_states['options'].menu['Back'].button_type = 'menu_state'
                             self.main.menu_states['options'].menu['Back'].button_response = 'game_paused'
+                        self.main.assets.save_settings()
                     self.main.change_menu_state(menu_state=selected_element[1])
                 elif selected_element[0] == 'option':
                     self.main.assets.change_setting(group=self.menu_name, name=selected_element[2].lower().replace(' ', '_'), option=selected_element[1][0].lower().replace(' ', '_'))
                 elif selected_element[0] == 'level':
                     if self.main.game_state == 'game' and selected_element[2] == 'Restart Level':
-                        self.main.game_states['game'].map.show_map = False
                         self.main.transition.start(style='circle', centre=element.centre, response=['level', self.main.game_states['game'].level.name, 'original', None, None], queue=(True, 'circle', 'player', 1))
                     elif self.main.game_state == 'level_editor':
                         self.main.transition.start(response=['level', selected_element[1], 'level', None, None], queue=(True, 'fade', (0, 0), 1))

@@ -105,7 +105,7 @@ class LevelEditor:
             self.main.change_menu_state(menu_state='choose_level')
             self.reset_toolbar(hovered=True, selected=True)
         elif previous_game_state == 'game':
-            self.main.change_menu_state(menu_state=None)
+            self.main.change_menu_state()
             del self.main.assets.levels['custom']
         self.main.audio.play_music(music_theme='main_menu')
 

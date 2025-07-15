@@ -8,14 +8,19 @@ class TextHandler:
         # and way to move text elements so that they bounce up and down with the game cycle...
         self.text_elements = {}
         self.add_text(text_group='main', text_id='debug', text='debug mode', position='top', colour='purple', size=16)
+        self.add_text(text_group='main', text_id='conway', text="conway's game of life", position='top', colour='cream', shadow_colour=None, outline_colour=None, display_layer='background')
+        self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_step=8.5, colour='purple', size=24)
+        self.add_text(text_group='splash', text_id='hoolioes', text='with hoolioes audio', position='centre', alpha_step=8.5, colour='purple', size=24)
         self.add_text(text_group='level_editor', text_id='reset', text='level reset', position='bottom')
         self.add_text(text_group='level_editor', text_id='saved', text='level saved', position='bottom')
-        self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', interactable=True)
-        self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', interactable=True)
-        self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', interactable=True)
-        self.add_text(text_group='game', text_id='warp?', text=f"¡ ¿ ? !  press 'e' to warp  ! ? ¿ ¡", position='top', interactable=True)
-        self.add_text(text_group='map', text_id='toggle', text="toggle map: 'tab'", position='bottom_left', shadow_offset=(2, 2), alignment=('l', 'c'), outline_size=0, size=14, interactable=True, hovered_outline_size=1, display_layer='map')
-        self.add_text(text_group='map', text_id='switch', text="switch map: 'space'", position='bottom_right', shadow_offset=(2, 2), alignment=('r', 'c'), outline_size=0, size=14, interactable=True, hovered_outline_size=1, display_layer='map')
+        self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', display_layer='level')
+        self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', display_layer='level')
+        self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', display_layer='level')
+        self.add_text(text_group='game', text_id='warp?', text=f"¡ ¿ ? !  press 'e' to warp  ! ? ¿ ¡", position='top', display_layer='level')
+        self.add_text(text_group='map', text_id='toggle', text="toggle map: 'tab'", position='bottom_left', shadow_offset=(2, 2),
+                      alignment=('l', 'c'), outline_size=0, size=14, interactable=True, hovered_outline_size=1, display_layer='map')
+        self.add_text(text_group='map', text_id='switch', text="switch map: 'space'", position='bottom_right', shadow_offset=(2, 2),
+                      alignment=('r', 'c'), outline_size=0, size=14, interactable=True, hovered_outline_size=1, display_layer='map')
         self.add_text(text_group='map', text_id='collectables', text='collectables', position=(424, 40), shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
         for steps in range(-9, 10):
             self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='steps')
@@ -24,12 +29,12 @@ class TextHandler:
         self.add_text(text_group='signs', text_id='(-2, 2) - (6, 8)', text='this is a sign text test', position='centre', size=10, outline_size=1, display_layer='level')
         self.game_state_text_groups = {'game': ['game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],
-                                       'main_menu': ['title_screen', 'options', 'video', 'audio', 'gameplay', 'new_game', 'are_you_sure', 'choose_level']}
+                                       'main_menu': ['title_screen', 'options', 'video', 'audio', 'gameplay', 'new_game', 'are_you_sure', 'choose_level'], 'splash': ['splash']}
 
     def check_text_element(self, text_group, text_id):
         return text_group in self.text_elements and text_id in self.text_elements[text_group]
 
-    def add_text(self, text_group, text_id, text, position, alignment=('c', 'c'), colour='light_green', bg_colour=None, shadow_colour='dark_purple', shadow_offset=(4, 4),
+    def add_text(self, text_group, text_id, text, position, alpha_step=25.5, alignment=('c', 'c'), colour='light_green', bg_colour=None, shadow_colour='dark_purple', shadow_offset=(4, 4),
                  outline_colour='dark_purple', outline_size=1, size=20, max_width=0, max_height=0, font='Alagard', style=None, display_layer='ui', active=False, delay=0, duration=0,
                  interactable=False, hovered_colour='green', hovered_bg_colour=None, hovered_shadow_colour=None, hovered_shadow_offset=None, hovered_outline_colour='dark_purple', hovered_outline_size=2):
         position = self.main.utilities.convert_position(position=position)
@@ -44,8 +49,8 @@ class TextHandler:
         # alligned_hovered_position = (alligned_position[0] - outline_difference, alligned_position[1] - outline_difference)
         if text_group not in self.text_elements:
             self.text_elements[text_group] = {}
-        self.text_elements[text_group][text_id] = TextElement(main=self.main, text=text, surface=surface, position=alligned_position, shadow_offset=shadow_offset, display_layer=display_layer,
-                                                              active=active, delay=delay * self.main.fps, duration=duration * self.main.fps, interactable=interactable,
+        self.text_elements[text_group][text_id] = TextElement(main=self.main, text=text, surface=surface, position=alligned_position, alpha_step=alpha_step, shadow_offset=shadow_offset,
+                                                              display_layer=display_layer, active=active, delay=delay * self.main.fps, duration=duration * self.main.fps, interactable=interactable,
                                                               hovered_surface=hovered_surface, hovered_position=alligned_position, hovered_shadow_offset=hovered_shadow_offset)
 
     def activate_text(self, text_group, text_id, delay=0, duration=0, offset=(0, 0)):

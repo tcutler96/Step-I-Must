@@ -7,6 +7,7 @@ from scripts.events import Events
 from scripts.transition import Transition
 from scripts.text_handler import TextHandler
 from scripts.menu import Menu
+from game_states.splash import Splash
 from game_states.main_menu import MainMenu
 from game_states.game import Game
 from game_states.level_editor import LevelEditor
@@ -33,7 +34,6 @@ import os
 # have collectable text move upwards on the screen and dont limit player movement...
 # spawning ontop of a collectable (seting respawn while in debug mode and so not collecting collectable) breaks the level loading, steps arent set properly...
 # loading game in debug mode crashes when you try to take a step...
-# temp flags are not drawn when on death screen, they invert to dark colour that blends into the background (invert the background as well?)
 # clicking window x does not close window while mid transition...
 # cant click on map text when the pause menu is open...
 # draw sign test as pixelated until it can be decoded?
@@ -41,6 +41,7 @@ import os
 # map transition should centre on the map cell element...
 # dont close map straight away when we restart level from game menu, set show_map to False on level load...
 # opening map from reciever teleporter should trigger map_open sound...
+# add testing variable so that we can only do certain commands (ie ctrl+w to close) when testing, not in actual release...
 
 
 class Main:
@@ -49,6 +50,7 @@ class Main:
         pg.init()
         self.fps = 60
         self.true_fps = self.fps
+        self.low_fps = False
         self.clock = pg.time.Clock()
         self.runtime_frames = 0
         self.runtime_seconds = 0
@@ -63,10 +65,13 @@ class Main:
         self.text_handler = TextHandler(main=self)
         self.menu_state = 'title_screen'
         self.menu_states = {menu_name: Menu(main=self, menu_name=menu_name, menu_data=menu_data) for menu_name, menu_data in self.assets.settings['menus'].items()}
-        self.game_state = 'main_menu'
-        self.game_states = {'main_menu': MainMenu(main=self), 'game': Game(main=self), 'level_editor': LevelEditor(main=self)}
+        self.game_state = 'splash'
+        self.game_states = {'splash': Splash(main=self), 'main_menu': MainMenu(main=self), 'game': Game(main=self), 'level_editor': LevelEditor(main=self)}
         self.game_states[self.game_state].start_up()
         self.debug = False
+        self.draw_gol = False
+        self.clear_gol = False
+        self.conway = 0
         # self.update_levels()
 
 
@@ -90,7 +95,7 @@ class Main:
                 self.game_state = game_state
                 self.game_states[game_state].start_up(previous_game_state=previous_game_state)
 
-    def change_menu_state(self, menu_state):
+    def change_menu_state(self, menu_state=None):
         if menu_state != self.menu_state:
             if menu_state is None or menu_state in self.menu_states:
                 self.menu_state = menu_state
@@ -107,15 +112,25 @@ class Main:
             self.draw()
             self.clock.tick(self.fps)
 
+    def update_game_of_life(self):
+        self.draw_gol = self.display.cursor.show_cursor and self.events.check_key(key='mouse_3', action='held') and not self.transition.transitioning
+        self.clear_gol = self.events.check_key(key='escape') and self.game_state != 'game'
+        if self.conway:
+            self.conway -= 1
+        if self.events.check_key(key='conway', action='last_pressed'):
+            self.conway = self.fps * 2
+
     def update(self):
         self.true_fps = self.clock.get_fps()
         if self.true_fps:
             self.runtime_frames += 1
             self.runtime_seconds = self.runtime_seconds + 1 / self.true_fps
+            self.low_fps = False
+            if self.true_fps < 0.5 * self.fps:
+                self.low_fps = True
         self.events.update()
         mouse_position = self.events.mouse_display_position
-        # mouse_position = self.events.mouse_display_position if self.events.mouse_active else [0, 0]  # what is this needed for, menu element hover detection?
-        if self.events.check_key(key='w', modifier='ctrl'):
+        if self.events.check_key(key='w', modifier='ctrl'):  # temporary for testing
             self.quit()
         if self.events.check_key(key='b', modifier='ctrl'):
             self.debug = not self.debug
@@ -125,10 +140,22 @@ class Main:
             self.assets.update()
         self.game_states[self.game_state].update(mouse_position=mouse_position)
         self.text_handler.update(mouse_position=mouse_position)
+        self.update_game_of_life()
         self.audio.update()
         self.display.update()
         self.transition.update()
         self.shaders.update(mouse_position=mouse_position)
+
+    def draw_game_of_life(self):
+        if self.clear_gol:
+            self.shaders.clear_gol()
+        if self.draw_gol:
+            pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=8, width=1, draw_bottom_left=True)
+            pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=12, width=1, draw_top_left=True)
+            pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=16, width=1, draw_top_right=True)
+            pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=20, width=1, draw_bottom_right=True)
+        if self.conway:
+            self.text_handler.activate_text(text_group='main', text_id='conway')
 
     def draw(self):
         if self.debug:
@@ -137,6 +164,7 @@ class Main:
         if self.menu_state:
             self.menu_states[self.menu_state].draw(displays=self.display.displays)
         self.text_handler.draw(displays=self.display.displays)
+        self.draw_game_of_life()
         self.display.draw()
         self.transition.draw(displays=self.display.displays)
         self.shaders.draw(displays=self.display.displays)
@@ -152,5 +180,5 @@ class Main:
 
 if __name__ == '__main__':
     if sys.version_info[0:3] != (3, 13, 5):
-        raise Exception('Requires python 3.13.5')
+        raise Exception('Python version 3.13.5 required')
     Main().run()

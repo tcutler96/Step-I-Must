@@ -2,7 +2,7 @@ import pygame as pg
 
 
 class TextElement:
-    def __init__(self, main, text, surface, position, shadow_offset, display_layer, active, delay, duration, interactable, hovered_surface, hovered_position, hovered_shadow_offset):
+    def __init__(self, main, text, surface, position, alpha_step, shadow_offset, display_layer, active, delay, duration, interactable, hovered_surface, hovered_position, hovered_shadow_offset):
         self.main = main
         self.text = text
         if isinstance(surface, tuple):
@@ -12,9 +12,9 @@ class TextElement:
             self.surface = surface
             self.shadow_surface = None
         self.size = self.surface.get_size()
-        self.alpha = 0.0
-        self.alpha_step = 25.5
         self.position = position
+        self.alpha = 0.0
+        self.alpha_step = alpha_step
         self.shadow_offset = shadow_offset
         self.offset = [0, 0]
         self.scroll = 0

@@ -11,6 +11,7 @@ class Audio:
         self.music_volume = self.get_volume(audio_type='music')
         self.music_volume_current = self.music_volume
         self.music_volume_step = 0.005
+        self.played_sounds = []
 
     def load_audio(self):
         audio = self.main.assets.audio
@@ -30,10 +31,11 @@ class Audio:
         return int(fade * 1000)
 
     def play_sound(self, name, loops=0, fade=0):
-        if name in self.audio['sound']:
+        if name in self.audio['sound'] and name not in self.played_sounds:
             self.audio['sound'][name].play(loops=loops, fade_ms=self.get_fade_ms(fade=fade))
+            self.played_sounds.append(name)
         else:  # temporary for testing...
-            # print(f"'{name}' sound file not found...")
+            print(f"'{name}' sound file not found...")
             self.audio['sound']['menu_select'].play(loops=loops, fade_ms=self.get_fade_ms(fade=fade))
 
     def stop_sound(self, name, fade=1):
@@ -64,6 +66,7 @@ class Audio:
                 self.music_volume_current = self.music_volume
             if self.music_volume_current:
                 self.music.set_volume(self.music_volume_current)
+        self.played_sounds = []
 
 
     def quit(self):

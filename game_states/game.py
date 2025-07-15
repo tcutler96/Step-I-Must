@@ -29,7 +29,7 @@ class Game:
         self.interpolating = False
         self.players_exited = None
         self.player_cells = None
-        self.no_players = False
+        self.game_over = False
         self.teleporter_data = None
         self.lock_data = None
 
@@ -65,6 +65,8 @@ class Game:
                     object_data['split'] = False
 
     def collect_collectable(self, cell):
+        # self.main.audio.play_sound(name='collectable')
+        self.main.audio.play_sound(name=f'collectable_{cell.elements['object']['state'].replace(' ', '_')}')
         collectable_type = cell.elements['object']['state'] + 's'
         if self.level.name != 'custom':
             self.main.assets.data['game']['collectables'][collectable_type].append(self.main.utilities.level_and_position(level=self.level.name, position=cell.object_data['object']['original_position']))
@@ -121,6 +123,7 @@ class Game:
 
     def bump_object(self, cell, object_type, movement, bump_amount=None):
         if not bump_amount:
+            self.main.audio.play_sound(name='bump')
             bump_amount = self.bump_amount
         if not cell.object_data[object_type]['bumped']:
             cell.object_data[object_type]['bumped'] = True
@@ -241,7 +244,7 @@ class Game:
             steps_updated = False
             respawn_updated = False
             self.player_cells = {}
-            self.no_players = True
+            self.game_over = True
             self.teleporter_data['standing'] = []
             self.lock_data = None
             for cell in self.level.get_cells():
@@ -249,7 +252,7 @@ class Game:
                     self.player_cells[cell.position] = cell
                     level_and_position = self.main.utilities.level_and_position(level=self.level.name, position=cell.position)
                     if self.main.debug:
-                        self.no_players = False
+                        self.game_over = False
                         if cell.check_element(name='teleporter'):
                             self.teleporter_data['standing'] = [{'state': cell.elements['tile']['state'].split(' ')[0], 'level_and_position': level_and_position}]
                     else:
@@ -257,10 +260,13 @@ class Game:
                             steps_updated = True
                             steps = max(steps, int(cell.elements['object']['state']))
                             if cell.check_element(name='permanent flag'):
+                                self.main.audio.play_sound(name='permanent_flag')
                                 respawn_updated = True
                                 respawn[0].append(cell.object_data['object']['original_position'])
                                 respawn[1].append(cell.position)
                                 respawn[2].append(True)
+                            else:
+                                self.main.audio.play_sound(name='temporary_flag')
                             if cell.check_element(name='player', state='dead') and not cell.check_element(name=['permanent flag', 'temporary flag'], state='0'):
                                 cell.elements['player']['state'] = 'idle'
 
@@ -268,7 +274,7 @@ class Game:
                             self.collect_collectable(cell=cell)
 
                         if not cell.check_element(name='player', state='dead'):  # players
-                            self.no_players = False
+                            self.game_over = False
 
                         for direction in cell.adjacent_directions:  # locks
                             new_cell = self.level.get_new_cell(position=cell.position, movement=direction)
@@ -313,7 +319,8 @@ class Game:
                 elif new_level:
                     self.set_steps(steps=5)
                 if not new_level and self.level.steps == 0:
-                    self.no_players = True
+                    self.main.audio.play_sound(name='game_over')
+                    self.game_over = True
                     for cell in self.player_cells.values():
                         cell.elements['player']['state'] = 'dead'
                 if respawn_updated:
@@ -367,6 +374,7 @@ class Game:
                 self.no_movement = False
                 self.transition_level()
             elif player_moved:
+                self.main.audio.play_sound(name='player_move')
                 self.level.clear_cache_redo()
                 self.reset_animations(force_reset=True)
                 self.no_movement = False
@@ -416,6 +424,8 @@ class Game:
                                                 new_new_object_data['last_slid'] = movement
                                         new_cell = new_new_cell
                                         new_new_cell = self.level.get_new_cell(position=new_new_cell.position, movement=movement)
+        if objects_slid:
+            self.main.audio.play_sound(name='ice')
         if self.players_exited:
             self.transition_level()
         elif not objects_slid:
@@ -436,6 +446,8 @@ class Game:
                     cell = self.level.level[conveyor]
                     if cell.check_element(name='conveyor'):
                         self.trigger_animation(cell=cell, object_type='tile')
+        if objects_conveyed:
+            self.main.audio.play_sound(name='conveyor')
         if self.players_exited:
             self.transition_level()
         else:
@@ -500,6 +512,7 @@ class Game:
                                                         (cell.elements['player'] and not cell.object_data['player']['split'])):
                 splitters = cell.split_cell(level=self.level)
                 if splitters:
+                    self.main.audio.play_sound(name='splitter')
                     self.check_standing = True
                     for splitter in splitters:
                         self.trigger_animation(cell=self.level.level[splitter], object_type='tile')
@@ -518,6 +531,7 @@ class Game:
                     if next_cell.check_element(name=['wall', 'player', 'rock']) or cell.check_element(name='barrier', state='vertical') or next_cell.check_element(name='barrier', state='vertical'):
                         break
                     elif next_cell.check_element(name='statue'):
+                        self.main.audio.play_sound(name='statue')
                         cell.elements['object'] = {'name': 'rock', 'state': 'rock'}
                         cell.object_data['object'] = cell.object_data['player'] | {'name': 'rock'}
                         self.trigger_animation(cell=cell, object_type='object')
@@ -531,6 +545,7 @@ class Game:
         for cell in self.level.get_cells():
             if cell.check_element(name='spike') and cell.check_element(name='player'):
                 if not cell.check_element(name=['permanent flag', 'temporary flag']) or cell.check_element(name=['permanent flag', 'temporary flag'], state='0'):
+                    self.main.audio.play_sound(name='spike')
                     cell.elements['player']['state'] = 'dead'
                     self.check_standing = True
         self.resolve_state = 'end'
@@ -744,7 +759,7 @@ class Game:
         self.interpolating = False
         self.players_exited = None
         self.player_cells = None
-        self.no_players = False
+        self.game_over = False
         self.teleporter_data = {'standing': None, 'setting': None}
         self.lock_data = None
         self.map.reset_map()
@@ -758,7 +773,7 @@ class Game:
                     if difference == 1 else lock_data['collectable_type']}', position='top')
 
     def start_up(self, previous_game_state=None):
-        self.main.change_menu_state(menu_state=None)
+        self.main.change_menu_state()
         self.main.audio.play_music(music_theme='game', fade=self.main.transition.length)
         self.reset_level()
         self.level.name = self.main.assets.data['game']['level'] if previous_game_state == 'main_menu' else 'custom'
@@ -821,7 +836,7 @@ class Game:
                                 self.level.cache_level()
                         else:
                             if not self.map.show_map:
-                                if self.main.debug or (not self.main.debug and not self.no_players):
+                                if self.main.debug or (not self.main.debug and not self.game_over):
                                     if self.stored_movement:
                                         self.move_players(movement=self.stored_movement)
                                         self.stored_movement = None
@@ -836,7 +851,7 @@ class Game:
                                                         self.move_players(movement=self.movement_directions[key])
                                 else:
                                     if keys_pressed:
-                                        self.no_players = False
+                                        self.game_over = False
                                         self.stored_movement = None
                                         self.level.load_level(name=self.level.name, load_respawn='current')
 
@@ -854,7 +869,7 @@ class Game:
             else:
                 self.main.text_handler.activate_text(text_group='steps', text_id=self.level.steps)
                 if not self.map.show_map:
-                    if self.no_players:
+                    if self.game_over:
                         # apply slight distort to level when no players are alive, need to apply effect in update function, not draw function...
                         self.main.text_handler.activate_text(text_group='game', text_id='reset')
                     if cell.check_element(name='sign'):
@@ -866,4 +881,3 @@ class Game:
                             self.main.text_handler.activate_text(text_group='game', text_id='warp')
                     if self.lock_data:
                         self.main.text_handler.activate_text(text_group='locks', text_id=self.lock_data)
-

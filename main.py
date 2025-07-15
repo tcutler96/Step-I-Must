@@ -39,6 +39,7 @@ import os
 # separate level into distinct display layers that can be controlled individually (level, player, text?)
 # restarting level or quitting game while map is switching breaks it...
 # in the game, always draw things to the screen whether the map or menu is open, so that can see them when the level is blurred...
+# have game blur when the map opens take ~30 frames/ 0.5 seconds
 
 
 class Main:

@@ -20,34 +20,37 @@ class MapCell:
     def update_rect(self, offset):
         self.rect = pg.Rect((self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]), (self.cell_size, self.cell_size))
 
-    def update(self, mouse_position, offset, interpolating):
+    def update(self, mouse_position, offset, interpolating, alpha):
         self.was_hovered = self.hovered
         self.hovered = False
         if interpolating:
             self.update_rect(offset=offset)
-        if mouse_position and (self.discovered or self.main.debug) and self.rect.collidepoint(mouse_position):
+        elif alpha==255 and mouse_position and (self.discovered or self.main.debug) and self.rect.collidepoint(mouse_position):
             self.hovered = True
             if self.teleporter or self.main.debug:
                 if not self.was_hovered:  # play sound when interactable map cell is highlighted
                     self.main.audio.play_sound(name='map_highlight_teleporter')
                 self.main.display.set_cursor(cursor='hand')
                 if self.main.events.check_key(key='mouse_1'):
+                    self.main.audio.play_sound(name='teleport')
                     return self.rect.center
             elif not self.was_hovered:  # play sound when non-interactable map cell is highlighted
                 self.main.audio.play_sound(name='map_highlight')
 
-    def draw_cell(self, displays, sprite, offset):
+    def draw_cell(self, displays, sprite, offset, alpha=0):
+        if alpha:
+            sprite.set_alpha(alpha)
         displays['map'].blit(source=sprite, dest=(self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]))
 
-    def draw(self, displays, icons, offset):
+    def draw(self, displays, icons, offset, alpha):
         if self.rect.colliderect(self.main.display.rect):
             if self.discovered or self.main.debug:
                 if self.main.assets.settings['video']['map_colour'] != 'disabled':
-                    pg.draw.rect(surface=displays['map'], color=self.main.assets.colours[self.main.assets.settings['video']['map_colour']], rect=self.rect)
+                    pg.draw.rect(surface=displays['map'], color=self.main.utilities.get_colour(colour=self.main.assets.settings['video']['map_colour'], alpha=alpha), rect=self.rect)
                 if self.hovered:
                     self.main.text_handler.activate_text(text_group='map', text_id=self.level_name)
-                    pg.draw.rect(surface=displays['map'], color=self.main.assets.colours['cream'], rect=self.rect)
-                self.draw_cell(displays=displays, sprite=self.sprite, offset=offset)
+                    pg.draw.rect(surface=displays['map'], color=self.main.utilities.get_colour(colour='cream', alpha=alpha), rect=self.rect)
+                self.draw_cell(displays=displays, sprite=self.sprite, offset=offset, alpha=alpha)
                 if self.teleporter:
                     self.draw_cell(displays=displays, sprite=icons['teleporter']['sprite'], offset=offset)
                 if self.player:

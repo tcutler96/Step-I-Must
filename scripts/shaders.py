@@ -65,8 +65,8 @@ class Shaders:
 
     def apply_effect(self, display_layer, effect):
         if self.apply_shaders:  # add shader options (fancy, simple, disabled), scale effects by some value?
-            if display_layer != 'background':
-                print(display_layer, effect)
+            # if display_layer != 'background':
+            #     print(display_layer, effect)
             display_layers = self.main.display.display_layers if display_layer == 'all' else [display_layer] if not isinstance(display_layer, list) else display_layer
             # maybe dont include transition display layer in 'all', transition display layer is always last so just use display_layers[:-1], need to test applying effect to all display layers...
             for display_layer in display_layers:
@@ -134,7 +134,7 @@ class Shaders:
                 else:
                     effect_data[3] -= 30
                     if effect_data[3] <= 0:
-                        effect_data[2] = max(0, effect_data[2] - 0.05)
+                        effect_data[2] = max(0, effect_data[2] - 1.25)
                         effect_data[3] = self.main.fps
                         if effect_data[2] <= 0:
                             effect_data[1] = 0

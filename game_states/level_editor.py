@@ -100,6 +100,9 @@ class LevelEditor:
             elif cell.is_empty() and self.level.current_respawn and cell.position in self.level.current_respawn[0]:
                 self.level.current_respawn = None
 
+    def load_level(self, name='empty', load_respawn=None, bump_player=None):
+        self.level.load_level(name=name, load_respawn=load_respawn, bump_player=bump_player)
+
     def start_up(self, previous_game_state=None):
         if previous_game_state == 'main_menu':
             self.main.change_menu_state(menu_state='choose_level')

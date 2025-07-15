@@ -906,12 +906,9 @@
       "horizontal_barrier": null
     },
     "12:6": {
-      "tile": {
-        "name": "teleporter",
-        "state": "sender"
-      },
       "object": null,
       "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -925,10 +922,7 @@
     "14:6": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "teleporter",
-        "state": "portal"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1032,12 +1026,9 @@
       "horizontal_barrier": null
     },
     "11:7": {
-      "tile": {
-        "name": "teleporter",
-        "state": "reciever"
-      },
       "object": null,
       "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1159,22 +1150,16 @@
       "horizontal_barrier": null
     },
     "11:8": {
-      "tile": {
-        "name": "player spawner",
-        "state": "player spawner"
-      },
       "object": null,
       "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "12:8": {
-      "tile": {
-        "name": "teleporter",
-        "state": "portal"
-      },
       "object": null,
       "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1186,12 +1171,9 @@
       "horizontal_barrier": null
     },
     "14:8": {
-      "tile": {
-        "name": "teleporter",
-        "state": "portal"
-      },
       "object": null,
       "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },

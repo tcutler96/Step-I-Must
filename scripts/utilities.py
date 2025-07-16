@@ -1,5 +1,6 @@
 import pygame.freetype
 import pygame as pg
+import json
 import os
 
 
@@ -158,3 +159,17 @@ class Utilities:
                 return surface, font_object.render(text=text, fgcolor=shadow_colour, size=size)[0]
             else:
                 return surface
+
+    def add_menu_data(self):
+        print(self.main.assets.settings)
+
+    def update_levels(self):
+        wall_state_updates = {'up down': 'top bottom', 'up end': 'top end', 'down end': 'bottom end'}
+        for level_name, level_data in self.main.assets.levels.items():
+            for cell in level_data['tilemap'].values():
+                if cell['tile'] and cell['tile']['name'] == 'wall' and cell['tile']['state'] in wall_state_updates:
+                    cell['tile']['state'] = wall_state_updates[cell['tile']['state']]
+            collectables = level_data['collectables'] | {'cheeses': []}
+            level_data['collectables'] = collectables
+            with open(os.path.join('assets/levels', f'{level_name}.json'), 'w') as file_data:
+                json.dump(obj=level_data, fp=file_data, indent=2)

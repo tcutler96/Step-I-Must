@@ -751,6 +751,7 @@ class Game:
 
     def load_level(self, name='empty', load_respawn=None, bump_player=None):
         self.map.show_map = False
+        self.map.map_alpha = 0
         self.level.load_level(name=name, load_respawn=load_respawn, bump_player=bump_player)
 
     def reset_level(self):

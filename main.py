@@ -13,8 +13,6 @@ from game_states.game import Game
 from game_states.level_editor import LevelEditor
 import pygame as pg
 import sys
-import json
-import os
 
 
 # add glow effect to hud layer
@@ -40,6 +38,7 @@ import os
 # restarting level or quitting game while map is switching breaks it...
 # in the game, always draw things to the screen whether the map or menu is open, so that can see them when the level is blurred...
 # have game blur when the map opens take ~30 frames/ 0.5 seconds
+# add main menu title sprite, can we draw a menu without a title?
 
 
 class Main:
@@ -71,19 +70,7 @@ class Main:
         self.draw_gol = False
         self.clear_gol = False
         self.conway = 0
-        # self.update_levels()
-
-
-    def update_levels(self):
-        wall_state_updates = {'up down': 'top bottom', 'up end': 'top end', 'down end': 'bottom end'}
-        for level_name, level_data in self.assets.levels.items():
-            for cell in level_data['tilemap'].values():
-                if cell['tile'] and cell['tile']['name'] == 'wall' and cell['tile']['state'] in wall_state_updates:
-                    cell['tile']['state'] = wall_state_updates[cell['tile']['state']]
-            collectables = level_data['collectables'] | {'cheeses': []}
-            level_data['collectables'] = collectables
-            with open(os.path.join('assets/levels', f'{level_name}.json'), 'w') as file_data:
-                json.dump(obj=level_data, fp=file_data, indent=2)
+        self.utilities.add_menu_data()
 
     def change_game_state(self, game_state):
         if game_state != self.game_state:

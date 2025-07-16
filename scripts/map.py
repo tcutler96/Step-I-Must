@@ -23,6 +23,10 @@ class Map:
                                 'cheeses': {'name': 'collectable', 'state': 'cheese', 'sprite': None}}}
         self.levels = self.load_levels()
         self.map = self.load_map()
+        # only show cheeses/ cryptids on the map after the first one has been collected, add another varible in game data similar to part one/ two...
+        # add progression tracker to collectable section, separate into first world, second world (or per collectable type), and overall pecentage (give weights to each collectable type)...
+        # can show how many collectables are left by drawing black silhouettes for missing collectables, only draw silhouette once a collectable is first got (make animated black sprite for each collectable)...
+        # hovering over a collectable shows how many you have collected/ how many there are in total...
 
     def load_levels(self):
         levels = {}
@@ -153,10 +157,9 @@ class Map:
             if selected_level[0]:
                 return selected_level
         else:
-            print(4)  # after level transition is finished, we need to set map alpha to 0...
             self.map_alpha = max(self.map_alpha - self.map_alpha_step, 0)
 
-    def draw_collectables(self, displays):  # text refers to show_map, sprites refer to map_alpha...
+    def draw_collectables(self, displays):
         if self.show_collectables:
             if self.show_map:
                 self.main.text_handler.activate_text(text_group='map', text_id='collectables')

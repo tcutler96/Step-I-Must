@@ -76,7 +76,7 @@ class TextElement:
                 elif (self.interactable and self.offset == (0, 0) and self.main.display.cursor.cursor and (self.menu_state == self.main.menu_state) and
                       self.rect.collidepoint((mouse_position[0], mouse_position[1] + self.scroll))):
                     self.hovered = True
-                    if not self.last_hovered:  # check if this text is a part of a menu, and whether that menu is currently active or not...
+                    if not self.last_hovered:
                         self.main.audio.play_sound(name='menu_highlight')
                     self.main.display.set_cursor(cursor='hand')
                     if self.main.events.check_key(key='mouse_1'):

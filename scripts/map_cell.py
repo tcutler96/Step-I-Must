@@ -28,17 +28,17 @@ class MapCell:
         elif alpha==255 and mouse_position and (self.discovered or self.main.debug) and self.rect.collidepoint(mouse_position):
             self.hovered = True
             if self.teleporter or self.main.debug:
-                if not self.was_hovered:  # play sound when interactable map cell is highlighted
+                if not self.was_hovered:
                     self.main.audio.play_sound(name='map_highlight_teleporter')
                 self.main.display.set_cursor(cursor='hand')
                 if self.main.events.check_key(key='mouse_1'):
                     self.main.audio.play_sound(name='teleport')
                     return self.rect.center
-            elif not self.was_hovered:  # play sound when non-interactable map cell is highlighted
+            elif not self.was_hovered:
                 self.main.audio.play_sound(name='map_highlight')
 
     def draw_cell(self, displays, sprite, offset, alpha=0):
-        if alpha:
+        if 0 < alpha < 255:
             sprite.set_alpha(alpha)
         displays['map'].blit(source=sprite, dest=(self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]))
 

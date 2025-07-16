@@ -38,7 +38,10 @@ import sys
 # restarting level or quitting game while map is switching breaks it...
 # in the game, always draw things to the screen whether the map or menu is open, so that can see them when the level is blurred...
 # have game blur when the map opens take ~30 frames/ 0.5 seconds
-# add main menu title sprite, can we draw a menu without a title?
+# add main menu title sprite, remove title from menu data and then just draw sprite from main menu or integrate into menu class...
+# add sprite entry instead of title to draw a sprite to the screen instead of drawing text...
+# shorten splash fade in and only allow slip when fade in finished...
+# make text element shadows move left to right on a 1 second cycle...
 
 
 class Main:
@@ -70,7 +73,6 @@ class Main:
         self.draw_gol = False
         self.clear_gol = False
         self.conway = 0
-        self.utilities.add_menu_data()
 
     def change_game_state(self, game_state):
         if game_state != self.game_state:

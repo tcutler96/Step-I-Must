@@ -27,7 +27,7 @@ class Menu:
         columns, rows = 1, len(menu_data) - 1 - (1 if 'Back' in menu_data else 0)
         column, row = 0, 0
         max_scroll = 0
-        for count, (element_name, element_data) in enumerate(menu_data.items()):
+        for element_name, element_data in menu_data.items():
             if element_data == 'title':
                 if element_name == 'Choose Level':
                     columns, rows = 3, ceil(rows / 3)
@@ -118,7 +118,6 @@ class Menu:
                         self.main.transition.start(response=['level', selected_element[1], 'level', None, None], queue=(True, 'fade', (0, 0), 1))
 
     def draw(self, displays):
-        pass
         if self.scrollbar:
             self.scrollbar.draw(displays=displays, scroll=self.scroll, offset=self.offset)
         for _, element in self.menu.items():

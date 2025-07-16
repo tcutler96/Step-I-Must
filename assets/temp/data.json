@@ -1,36 +1,107 @@
 {
   "game": {
-    "level": "(0, 0)",
+    "level": "(-2, 2)",
     "respawn": [
       [
         [
-          12,
-          2
+          8,
+          8
         ]
       ],
       [
         [
-          12,
-          2
+          8,
+          8
         ]
       ],
       [
-        false
+        true
       ]
     ],
-    "part_one": false,
-    "part_two": false,
+    "part_one": true,
+    "part_two": true,
     "collectables": {
-      "silver keys": [],
-      "silver gems": [],
-      "gold keys": [],
+      "silver keys": [
+        "(-2, 4) - (12, 9)",
+        "(-5, 3) - (9, 14)",
+        "(-5, 4) - (9, 8)",
+        "(-7, 1) - (12, 5)",
+        "(-6, -3) - (5, 2)",
+        "(-10, 2) - (2, 5)"
+      ],
+      "silver gems": [
+        "(-5, 3) - (2, 11)",
+        "(-10, 2) - (2, 13)"
+      ],
+      "gold keys": [
+        "(0, -8) - (10, 13)"
+      ],
       "gold gems": [],
-      "cheeses": []
+      "cheeses": [
+        "(-7, -6) - (13, 11)",
+        "(-7, -7) - (7, 6)"
+      ]
     },
     "discovered_levels": [
-      "(0, 0)"
+      "(0, 0)",
+      "(-2, -2)",
+      "(-1, -2)",
+      "(-1, -5)",
+      "(-2, 2)",
+      "(0, -8)",
+      "(-1, -7)",
+      "(-1, -8)",
+      "(-2, 3)",
+      "(-2, 4)",
+      "(-2, 1)",
+      "(-1, 2)",
+      "(-4, 2)",
+      "(-2, 0)",
+      "(-2, -1)",
+      "(-5, 2)",
+      "(-5, 3)",
+      "(-3, 2)",
+      "(-5, 4)",
+      "(-6, 2)",
+      "(-7, 2)",
+      "(-5, 1)",
+      "(-5, 0)",
+      "(-6, 0)",
+      "(-6, 1)",
+      "(-7, 1)",
+      "(-4, 0)",
+      "(-5, -1)",
+      "(-5, -2)",
+      "(-5, -3)",
+      "(-6, -3)",
+      "(-6, 3)",
+      "(-10, 2)",
+      "(-7, -6)",
+      "(-7, -7)",
+      "(2, -8)",
+      "(-1, -9)",
+      "(-3, -11)",
+      "(2, -11)",
+      "(-1, -10)",
+      "(0, -10)",
+      "(-3, -12)",
+      "(-3, -13)",
+      "(2, -12)",
+      "(-2, -7)",
+      "(-2, -6)",
+      "(0, -15)",
+      "(-1, -15)",
+      "(-2, 5)",
+      "(-3, 1)",
+      "(-8, 2)",
+      "(-9, 2)"
     ],
-    "active_portals": []
+    "active_portals": [
+      "(-1, -2) - (5, 7)",
+      "(-1, -5) - (3, 11)",
+      "(0, -8) - (7, 7)",
+      "(-1, -8) - (14, 3)"
+    ]
   },
   "locks": {
     "(-2, 2) - (0, 11)": {
@@ -95,11 +166,11 @@
     "(-1, 2)": "left right",
     "(-10, 2)": "left end",
     "(-2, -1)": "top left",
-    "(-2, 0)": "up down",
-    "(-2, 1)": "up down",
+    "(-2, 0)": "top bottom",
+    "(-2, 1)": "top bottom",
     "(-2, 2)": "centre",
-    "(-2, 3)": "up down",
-    "(-2, 4)": "up down",
+    "(-2, 3)": "top bottom",
+    "(-2, 4)": "top bottom",
     "(-3, 2)": "left right",
     "(-4, 0)": "left right",
     "(-4, 2)": "left right",
@@ -107,7 +178,7 @@
     "(-5, 1)": "left",
     "(-5, 2)": "centre",
     "(-5, 3)": "right",
-    "(-5, 4)": "down end",
+    "(-5, 4)": "bottom end",
     "(-6, 0)": "top left",
     "(-6, 1)": "bottom right",
     "(-6, 2)": "top",
@@ -116,12 +187,12 @@
     "(-7, 2)": "left right",
     "(-8, 2)": "left right",
     "(-9, 2)": "left right",
-    "(0, 0)": "up end",
-    "(0, 1)": "up down",
+    "(0, 0)": "top end",
+    "(0, 1)": "top bottom",
     "(0, 2)": "bottom right",
     "(-3, 0)": "right",
     "(-5, -1)": "left",
-    "(-5, -2)": "up down",
+    "(-5, -2)": "top bottom",
     "(-5, -3)": "top right",
     "(-6, -3)": "left end",
     "(-1, -2)": "right end",
@@ -129,19 +200,19 @@
     "(-3, -2)": "centre",
     "(-4, -1)": "bottom right",
     "(-4, -2)": "top left",
-    "(-2, 5)": "down end",
+    "(-2, 5)": "bottom end",
     "(-7, 3)": "top left",
     "(-3, 1)": "bottom right",
     "(-4, 1)": "left right",
-    "(-3, -1)": "up down",
-    "(-3, -3)": "up end",
-    "(-7, 4)": "up down",
-    "(-7, 5)": "up down",
-    "(-7, 6)": "up down",
-    "(-7, 7)": "down end",
+    "(-3, -1)": "top bottom",
+    "(-3, -3)": "top end",
+    "(-7, 4)": "top bottom",
+    "(-7, 5)": "top bottom",
+    "(-7, 6)": "top bottom",
+    "(-7, 7)": "bottom end",
     "(4, 4)": "single",
-    "(-1, -5)": "down end",
-    "(-1, -6)": "up down",
+    "(-1, -5)": "bottom end",
+    "(-1, -6)": "top bottom",
     "(-1, -7)": "centre",
     "(-2, -7)": "bottom",
     "(-3, -7)": "top",
@@ -172,48 +243,48 @@
     "(0, -9)": "right",
     "(-1, -8)": "left",
     "(0, -8)": "bottom right",
-    "(-2, -8)": "up end",
+    "(-2, -8)": "top end",
     "(-3, -9)": "top",
     "(-5, -10)": "left right",
     "(-5, -8)": "top left",
-    "(-3, -12)": "up down",
-    "(-4, -12)": "up down",
-    "(-3, -13)": "up down",
-    "(-3, -14)": "up end",
-    "(-2, -12)": "up end",
-    "(0, -6)": "down end",
-    "(-5, -7)": "down end",
-    "(-3, -8)": "down end",
+    "(-3, -12)": "top bottom",
+    "(-4, -12)": "top bottom",
+    "(-3, -13)": "top bottom",
+    "(-3, -14)": "top end",
+    "(-2, -12)": "top end",
+    "(0, -6)": "bottom end",
+    "(-5, -7)": "bottom end",
+    "(-3, -8)": "bottom end",
     "(-6, -10)": "bottom left",
-    "(-6, -11)": "up down",
-    "(-6, -12)": "up end",
-    "(-5, -11)": "down end",
-    "(-5, -12)": "up down",
-    "(-5, -13)": "up end",
-    "(-4, -13)": "up down",
+    "(-6, -11)": "left",
+    "(-6, -12)": "top end",
+    "(-5, -11)": "bottom right",
+    "(-5, -12)": "top bottom",
+    "(-5, -13)": "top end",
+    "(-4, -13)": "top bottom",
     "(0, -12)": "left",
     "(1, -12)": "right",
-    "(1, -13)": "up end",
+    "(1, -13)": "top end",
     "(2, -12)": "top left",
     "(3, -12)": "left right",
     "(4, -12)": "right end",
     "(1, -10)": "top",
-    "(1, -9)": "up down",
-    "(-3, -6)": "up down",
+    "(1, -9)": "top bottom",
+    "(-3, -6)": "top bottom",
     "(-3, -5)": "bottom right",
     "(-4, -5)": "left right",
     "(-5, -5)": "left end",
     "(3, -7)": "bottom left",
     "(3, -8)": "top right",
     "(4, -7)": "right end",
-    "(3, -10)": "up down",
-    "(3, -11)": "up end",
+    "(3, -10)": "top bottom",
+    "(3, -11)": "top end",
     "(3, -9)": "bottom right",
     "(0, -10)": "top left",
-    "(-1, -12)": "up down",
-    "(-1, -13)": "up down",
-    "(-2, -13)": "down end",
-    "(-4, -14)": "up end",
+    "(-1, -12)": "top bottom",
+    "(-1, -13)": "top bottom",
+    "(-2, -13)": "bottom end",
+    "(-4, -14)": "top end",
     "(0, -5)": "left end",
     "(1, -5)": "left right",
     "(-5, -6)": "left right",
@@ -228,13 +299,13 @@
     "(-1, -14)": "top",
     "(-2, -6)": "single",
     "(-5, -9)": "single",
-    "(-7, -10)": "down end",
-    "(-7, -11)": "up end",
-    "(0, -13)": "up end",
+    "(-7, -10)": "bottom end",
+    "(-7, -11)": "top end",
+    "(0, -13)": "top end",
     "(0, -14)": "right end",
     "(1, -14)": "single",
     "(1, -6)": "single",
-    "(1, -8)": "down end",
+    "(1, -8)": "bottom end",
     "(2, -13)": "single",
     "(2, -14)": "single",
     "(3, -6)": "left right",
@@ -256,11 +327,11 @@
     "(-4, -17)": "right",
     "(-5, -17)": "bottom",
     "(2, -17)": "right end",
-    "(-4, -15)": "down end",
+    "(-4, -15)": "bottom end",
     "(-5, -16)": "left end",
     "(-6, -17)": "left end",
-    "(7, -17)": "down end",
-    "(7, -18)": "up end"
+    "(7, -17)": "bottom end",
+    "(7, -18)": "top end"
   },
   "teleporters": {
     "recievers": {
@@ -376,7 +447,7 @@
           12,
           8
         ],
-        "destination": null
+        "destination": "(-5, 2) - (8, 7)"
       },
       "(-7, 3) - (8, 7)": {
         "position": [
@@ -397,7 +468,7 @@
           2,
           3
         ],
-        "destination": null
+        "destination": "(-5, 2) - (8, 7)"
       },
       "(-2, 4) - (13, 7)": {
         "position": [
@@ -411,7 +482,7 @@
           13,
           8
         ],
-        "destination": null
+        "destination": "(-5, 0) - (13, 2)"
       },
       "(-3, 0) - (2, 9)": {
         "position": [
@@ -432,7 +503,7 @@
           11,
           2
         ],
-        "destination": null
+        "destination": "(-5, 0) - (13, 2)"
       },
       "(-6, 3) - (5, 8)": {
         "position": [
@@ -1411,18 +1482,6 @@
       }
     },
     "activations": {
-      "(-1, -2) - (5, 7)": {
-        "position": [
-          5,
-          7
-        ],
-        "portals": [
-          "(-1, -2) - (5, 7)",
-          "(-1, -5) - (3, 11)"
-        ],
-        "two_players": false,
-        "activated": false
-      },
       "(-1, -6) - (9, 6)": {
         "position": [
           9,
@@ -1660,7 +1719,7 @@
           "(-1, -8) - (14, 3)"
         ],
         "two_players": false,
-        "activated": false
+        "activated": true
       },
       "(3, -11) - (10, 7)": {
         "position": [
@@ -2100,6 +2159,18 @@
         "portals": [
           "(2, -13) - (7, 3)",
           "(2, -16) - (7, 3)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(-1, -2) - (4, 7)": {
+        "position": [
+          4,
+          7
+        ],
+        "portals": [
+          "(-1, -2) - (5, 7)",
+          "(-1, -5) - (3, 11)"
         ],
         "two_players": false,
         "activated": false

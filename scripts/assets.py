@@ -15,7 +15,7 @@ class Assets:
         self.shaders = self.load_shaders()
         self.data = self.load_data()
         self.settings = self.load_settings()
-        # self.settings = {'video': {'background': None, 'button_prompt': True, 'cursor_type': 'sprite', 'hrt_shader': True, 'particles': True, 'resolution': 1, 'screen_shake': True},
+        # self.settings = {'video': {'background': None, 'button_prompt': True, 'cursor_type': 'sprite', 'hrt_shader': True, 'particles': True, 'resolution': 1, 'screen_shake': True, 'shader': True},
         #                  'audio': {'master_volume': 1.0, 'music_volume': 1.0, 'sound_volume': 1.0},
         #                  'gameplay': {'hold_to_move': 5, 'hold_to_undo': 5}}
         self.update_choose_level_menu()

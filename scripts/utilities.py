@@ -160,8 +160,29 @@ class Utilities:
             else:
                 return surface
 
-    def add_menu_data(self):
-        print(self.main.assets.settings)
+    def add_menu(self, name, title=None, buttons=None):
+        # name: menu name reference by other menus, title: string/ sprite, buttons: [{'name': 'Example', 'type': ['menu_state', 'game_state', 'level', 'option'], 'response': 'example'}]
+        # make sure to manually update option_to_setting dict in assets class and game_state_text_groups in text_handler class
+        menu_data = {}
+        if title:
+            menu_data[title] = 'title'
+        if buttons:
+            for button in buttons:
+                if button['type'] in ['menu_state', 'game_state', 'level', 'option']:
+                    menu_data[button['name']] = ['button', button['type'], button['response']]
+        self.main.assets.settings['menus'][name] = menu_data
+        self.main.assets.settings_changed = True
+        self.main.assets.save_settings()
+
+    def update_menu(self):  # add alphabetical option...
+        # if we want to add a new button/ option to an existing menu,
+        pass
+
+    def backup_data_and_settings(self, data=True, settings=True):  # make copy of data and settings files and store in temp folder...
+        pass
+
+    def restore_data_and_settings(self, data=True, settings=True):  # overwrite main copies of data and settings files with those in temp folder...
+        pass
 
     def update_levels(self):
         wall_state_updates = {'up down': 'top bottom', 'up end': 'top end', 'down end': 'bottom end'}

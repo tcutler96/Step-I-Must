@@ -37,8 +37,8 @@ class MapCell:
             elif not self.was_hovered:
                 self.main.audio.play_sound(name='map_highlight')
 
-    def draw_cell(self, displays, sprite, offset, alpha=0):
-        if 0 < alpha < 255:
+    def draw_cell(self, displays, sprite, offset, alpha=None):
+        if alpha:
             sprite.set_alpha(alpha)
         displays['map'].blit(source=sprite, dest=(self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]))
 
@@ -47,7 +47,7 @@ class MapCell:
             if self.discovered or self.main.debug:
                 if self.main.assets.settings['video']['map_colour'] != 'disabled':
                     pg.draw.rect(surface=displays['map'], color=self.main.utilities.get_colour(colour=self.main.assets.settings['video']['map_colour'], alpha=alpha), rect=self.rect)
-                if self.hovered:
+                if self.hovered and alpha == 255:
                     self.main.text_handler.activate_text(text_group='map', text_id=self.level_name)
                     pg.draw.rect(surface=displays['map'], color=self.main.utilities.get_colour(colour='cream', alpha=alpha), rect=self.rect)
                 self.draw_cell(displays=displays, sprite=self.sprite, offset=offset, alpha=alpha)
@@ -63,5 +63,5 @@ class MapCell:
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
                     elif collectable_type in ['gold keys', 'gold gems'] and self.main.assets.data['game']['part_two']:
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
-                    elif collectable_type == 'cheeses' and self.main.assets.data['game']['collectables']['cheeses']:
+                    elif collectable_type == 'cheeses' and self.main.utilities.check_collectable(collectable_type='cheese'):
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)

@@ -35,7 +35,7 @@ class Assets:
                         'light_green': (142, 184, 158),
                         'bright_green': (127, 255, 127)}
         self.settings_changed = False
-        self.option_to_setting = {'video': {'background': {'game_of_life': 'gol', 'disabled': None}, 'button_prompt': {'enabled': True, 'disabled': False}, 'hrt_shader': {'enabled': True, 'disabled': False},
+        self.option_to_setting = {'video': {'background': {'game_of_life': 'gol', 'disabled': False}, 'button_prompt': {'enabled': True, 'disabled': False}, 'hrt_shader': {'enabled': True, 'disabled': False},
                                             'particles': {'enabled': True, 'disabled': False}, 'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4},
                                             'screen_shake': {'enabled': True, 'disabled': False}, 'shaders': {'enabled': True, 'disabled': False}},
                                  'audio': {'master_volume': {'100%': 1.0, '75%': 0.75, '50%': 0.5, '25%': 0.25, 'disabled': 0.0}, 'music_volume': {'100%': 1.0, '75%': 0.75, '50%': 0.5, '25%': 0.25, 'disabled': 0.0},
@@ -185,15 +185,16 @@ class Assets:
             with open(os.path.join(self.assets_path, 'settings.json'), 'w') as file:
                 json.dump(obj=self.settings, fp=file, indent=2)
 
-    def save_date(self):
+    def save_data(self):
         with open(os.path.join(self.assets_path, 'data.json'), 'w') as file:
             json.dump(obj=self.data, fp=file, indent=2)
 
     def reset_game_data(self):
-        self.data['game'] = {'level': '(0, 0)', 'respawn': [[[12, 2]], [[12, 2]], [False]], 'part_one': False, 'part_two': False,
+        self.data['game'] = {'level': '(0, 0)', 'respawn': [[[12, 2]], [[12, 2]], [False]], 'part_one': False, 'part_two': False, 'part_one_percent': 0, 'part_two_percent': 0, 'overall_percent': 0,
                              'collectables': {'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []}, 'discovered_levels': ['(0, 0)'], 'active_portals': []}
-        # self.data['game'] = {'level': '(-2, 2)', 'respawn': [[[15, 12]], [[15, 12]], [False]], 'part_one': False, 'part_two': False,
+        # self.data['game'] = {'level': '(-2, 2)', 'respawn': [[[15, 12]], [[15, 12]], [False]], 'part_one': False, 'part_two': False, 'part_one_percentage': 0, 'part_two_percentage': 0, 'overall_percentage': 0,
         #                      'collectables': {'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []}, 'discovered_levels': ['(0, 0)'], 'active_portals': []}
+        self.save_data()
 
     def update_choose_level_menu(self):
         self.settings['menus']['choose_level'] = {'Choose Level': 'title', 'empty': None, 'filled': None, 'saved': None}

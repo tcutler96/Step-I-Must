@@ -23,9 +23,12 @@ class TextHandler:
         self.add_text(text_group='map', text_id='switch', text="switch map: 'space'", position='bottom_right', alpha_step=8.5, shadow_offset=(2, 2),
                       alignment=('r', 'c'), outline_size=0, size=14, interactable=True, hovered_outline_size=1, display_layer='map')
         self.add_text(text_group='map', text_id='collectables', text='collectables', position=(424, 40), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
-        self.add_text(text_group='map', text_id='tracker_1', text='World 1: 100%', position=(424, 252), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
-        self.add_text(text_group='map', text_id='tracker_2', text='World 2: 32%', position=(424, 266), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
-        self.add_text(text_group='map', text_id='tracker_3', text='Overall: 46%', position=(424, 280), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
+        self.add_text(text_group='map', text_id='part_one_percent', text=f'World 1: {self.main.assets.data['game']['part_one_percent']}%',
+                      position=(424, 252), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
+        self.add_text(text_group='map', text_id='part_two_percent', text=f'World 2: {self.main.assets.data['game']['part_two_percent']}%',
+                      position=(424, 266), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
+        self.add_text(text_group='map', text_id='overall_percent', text=f'Overall: {self.main.assets.data['game']['overall_percent']}%',
+                      position=(424, 280), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
         for steps in range(-9, 10):
             self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='steps')
         for collectable in self.main.assets.data['game']['collectables']:

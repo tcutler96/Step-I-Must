@@ -6,7 +6,7 @@
     "hrt_shader": false,
     "map_colour": "green",
     "particles": false,
-    "resolution": 1,
+    "resolution": 2,
     "screen_shake": false,
     "shaders": true
   },
@@ -127,10 +127,10 @@
         "button",
         "option",
         [
-          "(448, 320)",
           "(896, 640)",
           "(1344, 960)",
-          "(1792, 1280)"
+          "(1792, 1280)",
+          "(448, 320)"
         ]
       ],
       "Screen Shake": [

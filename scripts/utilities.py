@@ -28,6 +28,16 @@ class Utilities:
     def get_opposite_movement(self, movement):
         return movement[0] * -1, movement[1] * -1
 
+    def check_collectable(self, collectable_type):
+        if collectable_type == 'all':
+            collectable_type = list(self.main.assets.data['game']['collectables'])
+        elif not isinstance(collectable_type, list):
+            collectable_type = [collectable_type]
+        count = 0
+        for collectable in collectable_type:
+            count += len(self.main.assets.data['game']['collectables'][collectable if collectable.endswith('s') else collectable + 's'])
+        return count
+
     def load_image(self, path):
         if path.endswith('.png') or path.endswith('jpg'):
             image = pg.image.load(path).convert()

@@ -6,10 +6,9 @@ class Map:
         self.main = main
         self.show_map = False
         self.show_text = True
-        self.show_collectables = True
         self.cell_size = 16
-        part_one_offset = (304.0, 128.0)
-        part_two_offset = (240.0, 400.0)
+        part_one_offset = (304, 128)
+        part_two_offset = (240, 400)
         target = self.get_target(level=self.main.assets.data['game']['level'])
         self.offset_dict = {'1': part_one_offset, '2': part_two_offset, 'current': part_one_offset if target == '1' else part_two_offset, 'target': target,
                             'step': (abs(part_one_offset[0] - part_two_offset[0]) / (2 * self.cell_size), abs(part_one_offset[1] - part_two_offset[1]) / (2 * self.cell_size))}
@@ -19,8 +18,9 @@ class Map:
                                         {collectable_type[:-1]: None for collectable_type in list(self.main.assets.data['game']['collectables'])} |
                                         {f'{collectable_type[:-1]} empty': None for collectable_type in list(self.main.assets.data['game']['collectables'])}}
         self.alpha = 0
-        self.alpha_step = 12.75
-        self.alpha_updated = False
+        # self.alpha_step = 1
+        self.alpha_step = 8.5
+        self.alpha_updated = True
         self.icons = {'alpha': {'alpha': 255, 'alpha_alt': 0, 'step': -4.25, 'timer': 120, 'delay': 120}, 'alpha_default': {'alpha': 255, 'alpha_alt': 0, 'step': -4.25, 'timer': 120, 'delay': 120},
                       'icons': {'player': {'name': 'player', 'state': 'idle', 'sprite': None}, 'teleporter': {'name': 'teleporter', 'state': 'reciever', 'sprite': None},
                                 'silver keys': {'name': 'collectable', 'state': 'silver key', 'sprite': None}, 'silver gems': {'name': 'collectable', 'state': 'silver gem', 'sprite': None},
@@ -28,14 +28,10 @@ class Map:
                                 'cheeses': {'name': 'collectable', 'state': 'cheese', 'sprite': None}}}
         self.levels = self.load_levels()
         self.map = self.load_map()
-        self.c = 0
-        self.v = True
-        # map elements dont fade out if we open the pause menu...
-        # only show cheeses/ cryptids on the map after the first one has been collected, add another varible in game data similar to part one/ two...
         # get better sprite for medal/ trophy...
-        # disable current hovered map cell if we close the map...
-        # map alpha isnt being set to 0 after we teleport using the map, it fades out after transition...
-        # if we teleport via the map while in debug mode, then turn off debug mode after transition, opening the map and then turning debug mode back on doesnt load the undiscovered map cells...
+        # map elements dont fade out if we open the pause menu... keep updating map regardless of whether menu is open or not
+        # can we manually move level 404 closer to the main map...
+        # store world percentages in game data...
 
     def get_collectable_position(self, x, y):
         return self.collectables['base_position'][0] + x * self.main.sprite_size, self.collectables['base_position'][1] + y * self.main.sprite_size * self.collectables['y_overlap']
@@ -157,19 +153,16 @@ class Map:
                 icon['sprite'] = sprite
 
     def update_sprites(self):
-        for name, sprite in self.collectables['sprites'].items():
-            if name in ['fraction', 'medal']:
-                if self.alpha_updated:
+        if self.show_map or self.alpha:
+            for name, sprite in self.collectables['sprites'].items():
+                if name in ['fraction', 'medal']:
                     sprite.set_alpha(self.alpha)
-            else:
-                sprite = self.main.utilities.get_sprite(name='collectable', state=name)
-                if self.alpha_updated:
+                else:
+                    sprite = self.main.utilities.get_sprite(name='collectable', state=name)
                     sprite.set_alpha(self.alpha)
-                self.collectables['sprites'][name] = sprite
+                    self.collectables['sprites'][name] = sprite
 
     def update(self, mouse_position, active_cutscene):
-        if self.main.events.check_key('c'):
-            self.c += 1
         if not active_cutscene and (self.main.text_handler.text_elements['map']['toggle'].selected or self.main.events.check_key(key='tab')):
             self.show_map = not self.show_map
             if not self.show_map:
@@ -183,15 +176,13 @@ class Map:
             self.main.audio.play_sound(name='map_switch')
             self.offset_dict['target'] = '1' if self.offset_dict['target'] == '2' else '2'
             mouse_position = None
-        self.alpha_updated = False
         self.update_icons()
+        self.update_sprites()
         if self.show_map:
             interpolating = self.update_interpolation()
             self.main.shaders.apply_effect(display_layer=['level', 'steps'], effect='blur')
             if self.alpha < 255:
-                self.alpha_updated = True
                 self.alpha = min(self.alpha + self.alpha_step, 255)
-            self.update_sprites()
             selected_level = [None, None]
             for level_name, map_cell in self.map.items():
                 selected = map_cell.update(mouse_position=mouse_position, offset=self.offset_dict['current'], interpolating=interpolating, alpha=self.alpha)
@@ -201,26 +192,23 @@ class Map:
                 return selected_level
         else:
             if self.alpha:
-                self.alpha_updated = True
                 self.alpha = max(self.alpha - self.alpha_step, 0)
-            self.update_sprites()
 
     def draw_collectables(self, displays):
-        if self.show_collectables:
-            if self.show_map:
-                self.main.text_handler.activate_text(text_group='map', text_id='collectables')
-            for x, (collectable_type, collectable_count) in enumerate(self.main.assets.data['game']['collectables'].items()):
-                collectable_count = len(collectable_count) + self.c
-                if collectable_count:
-                    max_count = self.collectables['max_counts'][collectable_type]
-                    for y in list(range(collectable_count, max_count)) + list(range(collectable_count)):
-                        collectable_sprite = self.collectables['sprites'][collectable_type[:-1]] if y <= collectable_count - 1 else self.collectables['sprites'][collectable_type[:-1] + ' empty']
-                        displays['map'].blit(source=collectable_sprite, dest=self.get_collectable_position(x=x, y=y))
-                    displays['map'].blit(source=self.collectables['sprites']['fraction'], dest=self.get_collectable_position(x=x, y=max_count + 4.1))
-                    if self.show_map:
-                        self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_current')
-                        self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_max')
-                    # if collectable_count >= max_count:
+        if self.show_map and (self.main.utilities.check_collectable(collectable_type='all') or self.main.debug):
+            self.main.text_handler.activate_text(text_group='map', text_id='collectables')
+        for x, (collectable_type, collectable_count) in enumerate(self.main.assets.data['game']['collectables'].items()):
+            collectable_count = len(collectable_count)
+            if collectable_count or self.main.debug:
+                max_count = self.collectables['max_counts'][collectable_type]
+                for y in list(range(collectable_count, max_count)) + list(range(collectable_count)):
+                    collectable_sprite = self.collectables['sprites'][collectable_type[:-1]] if y <= collectable_count - 1 else self.collectables['sprites'][collectable_type[:-1] + ' empty']
+                    displays['map'].blit(source=collectable_sprite, dest=self.get_collectable_position(x=x, y=y))
+                displays['map'].blit(source=self.collectables['sprites']['fraction'], dest=self.get_collectable_position(x=x, y=max_count + 4.1))
+                if self.show_map:
+                    self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_current')
+                    self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_max')
+                if collectable_count >= max_count:
                     displays['map'].blit(source=self.collectables['sprites']['medal'], dest=self.get_collectable_position(x=x, y=max_count + 8))
 
     def draw(self, displays):
@@ -229,11 +217,12 @@ class Map:
             for map_cell in self.map.values():
                 map_cell.draw(displays=displays, icons=self.icons['icons'], offset=self.offset_dict['current'], alpha=self.alpha)
         if self.show_map:
-            if self.show_text:
+            if self.show_text or self.main.debug:
                 self.main.text_handler.activate_text(text_group='map', text_id='toggle')
-                # only show percentage trackers and collectable counts when needed...
-                self.main.text_handler.activate_text(text_group='map', text_id='tracker_1')
-                if self.main.assets.data['game']['part_two']:
+                if self.main.utilities.check_collectable(collectable_type=['silver key', 'silver gem']) or self.main.debug:
+                    self.main.text_handler.activate_text(text_group='map', text_id='part_one_percent')
+                if self.main.assets.data['game']['part_two'] or self.main.debug:
                     self.main.text_handler.activate_text(text_group='map', text_id='switch')
-                    self.main.text_handler.activate_text(text_group='map', text_id='tracker_2')
-                    self.main.text_handler.activate_text(text_group='map', text_id='tracker_3')
+                    if self.main.utilities.check_collectable(collectable_type=['gold key', 'gold gem', 'cheese']) or self.main.debug:
+                        self.main.text_handler.activate_text(text_group='map', text_id='part_two_percent')
+                        self.main.text_handler.activate_text(text_group='map', text_id='overall_percent')

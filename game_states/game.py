@@ -64,6 +64,39 @@ class Game:
                         object_data['last_split'] = None
                     object_data['split'] = False
 
+    def update_collectable_percent(self):
+        max_counts = self.map.collectables['max_counts']
+        # can we condense this down to a loop instead of doing the same thing 3 times...
+        # make a function that handles this and just pass in which collectables are required for each part...
+        # ie part_one: ['silver keys', 'silver gems'], part_two: ['gold keys', 'gold gems', 'cheeses'], overall: 'all'
+        # then use string name (ie part_one, part_two, overall) to update game data and text elements...
+
+        part_one_max_count = max_counts['silver keys'] + max_counts['silver gems']
+        part_two_max_count = max_counts['gold keys'] + max_counts['gold gems'] + max_counts['cheeses']
+        overall_max_count = part_one_max_count + part_two_max_count
+
+        part_one_count = self.main.utilities.check_collectable(collectable_type=['silver keys', 'silver gems'])
+        part_two_count = self.main.utilities.check_collectable(collectable_type=['gold keys', 'gold gems', 'cheeses'])
+        overall_count = self.main.utilities.check_collectable(collectable_type='all')
+
+        part_one_percent = round(100 * part_one_count / part_one_max_count)
+        part_two_percent = round(100 * part_two_count / part_two_max_count)
+        overall_percent = round(100 * overall_count / overall_max_count)
+
+        self.main.assets.data['game']['part_one_percent'] = part_one_percent
+        self.main.assets.data['game']['part_two_percent'] = part_two_percent
+        self.main.assets.data['game']['overall_percent'] = overall_percent
+        # do we save the game data now to make sure that we dont lose any progression when collecting a collectable?
+        # otherwise the player has to leave the room/ transition to a new one to save the game...
+        # would there be an issue with this?
+        # collectable data would be saved but respawn wouldnt be updated as collectables dont do that, should be fine...
+        self.main.text_handler.add_text(text_group='map', text_id='part_one_percent', text=f'World 1: {self.main.assets.data['game']['part_one_percent']}%',
+                                        position=(424, 252), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
+        self.main.text_handler.add_text(text_group='map', text_id='part_two_percent', text=f'World 2: {self.main.assets.data['game']['part_two_percent']}%',
+                                        position=(424, 266), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
+        self.main.text_handler.add_text(text_group='map', text_id='overall_percent', text=f'Overall: {self.main.assets.data['game']['overall_percent']}%',
+                                        position=(424, 280), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
+
     def collect_collectable(self, cell):
         # self.main.audio.play_sound(name='collectable')
         self.main.audio.play_sound(name=f'collectable_{cell.elements['object']['state'].replace(' ', '_')}')
@@ -71,6 +104,7 @@ class Game:
         if self.level.name != 'custom':
             self.main.assets.data['game']['collectables'][collectable_type].append(self.main.utilities.level_and_position(level=self.level.name, position=cell.object_data['object']['original_position']))
             self.map.update_collectables(collectable_type=collectable_type, level_name=self.level.name, position=cell.object_data['object']['original_position'])
+            self.update_collectable_percent()
         levels = self.level.cached_levels
         levels.append({'name': self.level.name, 'level': self.level.level})
         for count, level in enumerate(levels):
@@ -93,7 +127,8 @@ class Game:
                     if difference == 1 else collectable_type}', position='top')
         cell.elements['object'] = None
         cell.object_data['object'] = None
-        # we sometimes get stuck in moving animation when we collect something... need to resolve level loop still while cutscene is happening or pause all that until after cutscene?
+        # we sometimes get stuck in moving animation when we collect something...
+        # need to resolve level loop still while cutscene is happening or pause all that until after cutscene?
         self.cutscene.start(collectable_type=collectable_type, position=cell.position)
 
     def resolve_object_conflict(self, revert_cell, revert_object_type, revert_movement, bump_cell, bump_object_type, bump_movement):
@@ -214,7 +249,7 @@ class Game:
                 self.map.transition_level(old_level=self.level.name, new_level=new_level)
                 self.main.assets.data['game']['level'] = new_level
                 self.main.assets.data['game']['respawn'] = respawn
-                self.main.assets.save_date()
+                self.main.assets.save_data()
             self.level.name = new_level
             self.level.orignal_respawn = respawn
             self.main.transition.start(style='circle', centre=centre, response=['level', self.level.name, 'original', bump],
@@ -311,11 +346,11 @@ class Game:
             if self.teleporter_data['standing']:
                 if len(self.teleporter_data['standing']) == 1:
                     self.teleporter_data['standing'] = self.teleporter_data['standing'][0]
+            if steps_updated:
+                self.set_steps(steps=steps)
+            elif new_level:
+                self.set_steps(steps=5)
             if not self.main.debug:
-                if steps_updated:
-                    self.set_steps(steps=steps)
-                elif new_level:
-                    self.set_steps(steps=5)
                 if not new_level and self.level.steps == 0:
                     self.main.audio.play_sound(name='game_over')
                     self.game_over = True
@@ -701,6 +736,7 @@ class Game:
     def update_cutscene(self):
         response = self.cutscene.update(level=self.level)
         if response == 'show_map':
+            self.main.audio.play_sound(name='map_open')
             self.map.show_map = True
             self.map.show_text = False
             self.map.show_collectables = False
@@ -751,7 +787,7 @@ class Game:
 
     def load_level(self, name='empty', load_respawn=None, bump_player=None):
         self.map.show_map = False
-        self.map.map_alpha = 0
+        self.map.alpha = 0
         self.level.load_level(name=name, load_respawn=load_respawn, bump_player=bump_player)
 
     def reset_level(self):

@@ -37,8 +37,13 @@ class Display:
         self.cursor.set_cursors.append(cursor)
 
     def change_resolution(self, scale_factor):
+        new_window_size = (self.size[0] * scale_factor, self.size[1] * scale_factor)
+        if new_window_size[0] > self.screen_size[0] or new_window_size[1] > self.screen_size[1]:
+            # if propsed window size if wider or taller than screen size, then trigger menu button again, change option to first/ smallest setting...
+            pass
         self.scale_factor = scale_factor
         self.window_size = self.window_width, self.window_height = (self.size[0] * self.scale_factor, self.size[1] * self.scale_factor)
+        print(self.screen_size, self.window_size)
         self.window_centre = self.window_half_width, self.window_half_height = self.window_width // 2, self.window_height // 2
         self.window = pg.display.set_mode(size=self.window_size, flags=pg.OPENGL | pg.DOUBLEBUF)
         pg.display.set_window_position((self.screen_half_width - self.window_half_width, self.screen_half_height - self.window_half_height))

@@ -14,7 +14,7 @@ class Map:
                             'step': (abs(part_one_offset[0] - part_two_offset[0]) / (2 * self.cell_size), abs(part_one_offset[1] - part_two_offset[1]) / (2 * self.cell_size))}
         self.collectables = {'base_position': (384, 50), 'y_overlap': 0.35, 'types': list(self.main.assets.data['game']['collectables']),
                              'max_counts': {collectable_type: 0 for collectable_type in list(self.main.assets.data['game']['collectables'])},
-                             'sprites': {'fraction': self.main.assets.images['map']['fraction'].copy(), 'medal': self.main.assets.images['map']['medal'].copy()} |
+                             'sprites': {'fraction': self.main.assets.images['map']['fraction_2'].copy(), 'medal': self.main.assets.images['map']['medal'].copy()} |
                                         {collectable_type[:-1]: None for collectable_type in list(self.main.assets.data['game']['collectables'])} |
                                         {f'{collectable_type[:-1]} empty': None for collectable_type in list(self.main.assets.data['game']['collectables'])}}
         self.alpha = 0
@@ -28,6 +28,7 @@ class Map:
         self.levels = self.load_levels()
         self.map = self.load_map()
         # add back board to collectable section...
+        # add better silhouette version of fraction sprite and swap to normal sprite when all collectables of a type is collected...
 
     def get_collectable_position(self, x, y):
         return self.collectables['base_position'][0] + x * self.main.sprite_size, self.collectables['base_position'][1] + y * self.main.sprite_size * self.collectables['y_overlap']
@@ -41,14 +42,7 @@ class Map:
                         self.collectables['max_counts'][collectable] += len(amount)
                 levels[level_name] = level_data
         for x, collectable_type in enumerate(self.collectables['types']):
-            count = len(self.main.assets.data['game']['collectables'][collectable_type])
-            max_count = self.collectables['max_counts'][collectable_type]
-            self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_current', text=str(count), alignment=('c', 'c'),
-                                            shadow_offset=(2, 2), outline_size=1 if count < max_count else 0, size=14, max_width=self.main.sprite_size * 0.75, display_layer='map',
-                                            alpha_step=8.5, colour='purple' if count < max_count else 'light_green', position=self.get_collectable_position(x=x + 0.5, y=max_count + 3))
-            self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_max', text=str(max_count), alignment=('c', 'c'),
-                                            shadow_offset=(2, 2), outline_size=0, size=14, max_width=self.main.sprite_size * 0.75, display_layer='map', alpha_step=8.5,
-                                            position=self.get_collectable_position(x=x + 0.5, y=max_count + 6.1))
+            self.update_collectable_count_text(collectable_type=collectable_type)
         return levels
 
     def load_map(self):
@@ -121,12 +115,22 @@ class Map:
             if map_cell.level_name == level_name:
                 map_cell.player = True
 
+    def update_collectable_count_text(self, collectable_type):
+        count = len(self.main.assets.data['game']['collectables'][collectable_type])
+        max_count = self.collectables['max_counts'][collectable_type]
+        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_current', text=str(count), alignment=('c', 'c'), shadow_offset=(2, 2),
+                                        outline_size=1 if count < max_count else 0, size=14, max_width=self.main.sprite_size * 0.75, display_layer='map',
+                                        alpha_step=8.5, colour='purple' if count < max_count else 'light_green',
+                                        position=self.get_collectable_position(x=self.collectables['types'].index(collectable_type) + 0.5, y=max_count + 3))
+        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_max', text=str(max_count), alignment=('c', 'c'), shadow_offset=(2, 2),
+                                        outline_size=1 if count < max_count else 0, size=14, max_width=self.main.sprite_size * 0.75, display_layer='map',
+                                        alpha_step=8.5, colour='purple' if count < max_count else 'light_green',
+                                        position=self.get_collectable_position(x=self.collectables['types'].index(collectable_type) + 0.5, y=max_count + (6.3 if count < max_count else 6.1)))
+
     def update_collectables(self, collectable_type, level_name, position):
         if collectable_type in self.collectables['types'] and level_name != 'custom' and position in self.map[level_name].collectables[collectable_type]:
             self.map[level_name].collectables[collectable_type].remove(position)
-            self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_current', text=str(count), alignment=('c', 'c'),
-                                            shadow_offset=(2, 2), outline_size=1 if count < max_count else 0, size=14, max_width=self.main.sprite_size * 0.75, display_layer='map',
-                                            alpha_step=8.5, colour='purple' if count < max_count else 'light_green', position=self.get_collectable_position(x=x + 0.5, y=max_count + 3))
+            self.update_collectable_count_text(collectable_type=collectable_type)
 
     def update_interpolation(self):
         interpolating = False
@@ -196,7 +200,7 @@ class Map:
                 self.alpha = max(self.alpha - self.alpha_step, 0)
 
     def draw_collectables(self, displays):  # store all collectable positions in dict as they never change...
-        if self.show_map and (self.main.utilities.check_collectable(collectable_type='all') or self.main.debug):
+        if self.show_map and (self.main.assets.data['game']['part_one'] or self.main.debug):
             self.main.text_handler.activate_text(text_group='map', text_id='collectables')
         for x, (collectable_type, collectable_count) in enumerate(self.main.assets.data['game']['collectables'].items()):
             collectable_count = len(collectable_count)
@@ -218,12 +222,12 @@ class Map:
             for map_cell in self.map.values():
                 map_cell.draw(displays=displays, icons=self.icons['icons'], offset=self.offset_dict['current'], alpha=self.alpha)
         if self.show_map:
-            if self.show_text or self.main.debug:
-                self.main.text_handler.activate_text(text_group='map', text_id='toggle')
-                if self.main.utilities.check_collectable(collectable_type=['silver key', 'silver gem']) or self.main.debug:
-                    self.main.text_handler.activate_text(text_group='map', text_id='part_one_percent')
-                if self.main.assets.data['game']['part_two'] or self.main.debug:
+            if self.main.assets.data['game']['part_one'] or self.main.debug:
+                if self.show_text or self.main.debug:
+                    self.main.text_handler.activate_text(text_group='map', text_id='toggle')
+                self.main.text_handler.activate_text(text_group='map', text_id='part_one_percent')
+            if self.main.assets.data['game']['part_two'] or self.main.debug:
+                if self.show_text or self.main.debug:
                     self.main.text_handler.activate_text(text_group='map', text_id='switch')
-                    if self.main.utilities.check_collectable(collectable_type=['gold key', 'gold gem', 'cheese']) or self.main.debug:
-                        self.main.text_handler.activate_text(text_group='map', text_id='part_two_percent')
-                        self.main.text_handler.activate_text(text_group='map', text_id='overall_percent')
+                self.main.text_handler.activate_text(text_group='map', text_id='part_two_percent')
+                self.main.text_handler.activate_text(text_group='map', text_id='overall_percent')

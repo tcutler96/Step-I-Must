@@ -61,19 +61,31 @@ class Toolbar:
         toolbar['elements'] = elements
         return toolbar
 
+    def get_element(self, element_type, elements, element):
+        return [elements[element]['name'], self.element_choices[element_type][elements[element]['name']].index(elements[element]['state'])
+                if elements[element]['state'] in self.element_choices[element_type][elements[element]['name']] else 0]
+
     def set_toolbar(self, elements):
         self.selected_object = ['no object', 0]
         self.selected_tile = ['no tile', 0]
-        if elements['object']:
-            self.selected_object = [elements['object']['name'], self.element_choices['objects'][elements['object']['name']].index(elements['object']['state'])]
-        elif elements['player']:
-            self.selected_object = [elements['player']['name'], self.element_choices['objects'][elements['player']['name']].index(elements['player']['state'])]
-        if elements['tile']:
-            self.selected_tile = [elements['tile']['name'], self.element_choices['tiles'][elements['tile']['name']].index(elements['tile']['state'])]
-        elif elements['vertical_barrier']:
-            self.selected_tile = [elements['vertical_barrier']['name'], self.element_choices['tiles'][elements['vertical_barrier']['name']].index(elements['vertical_barrier']['state'])]
-        elif elements['horizontal_barrier']:
-            self.selected_tile = [elements['horizontal_barrier']['name'], self.element_choices['tiles'][elements['horizontal_barrier']['name']].index(elements['horizontal_barrier']['state'])]
+        for element in ['object', 'player']:
+            if elements[element]:
+                self.selected_object = self.get_element(element_type='objects', elements=elements, element=element)
+                break
+        for element in ['tile', 'vertical_barrier', 'horizontal_barrier']:
+            if elements[element]:
+                self.selected_tile = self.get_element(element_type='tiles', elements=elements, element=element)
+                break
+        # if elements['object']:
+        #     self.selected_object = [elements['object']['name'], self.element_choices['objects'][elements['object']['name']].index(elements['object']['state'])]
+        # elif elements['player']:
+        #     self.selected_object = [elements['player']['name'], self.element_choices['objects'][elements['player']['name']].index(elements['player']['state'])]
+        # if elements['tile']:
+        #     self.selected_tile = [elements['tile']['name'], self.element_choices['tiles'][elements['tile']['name']].index(elements['tile']['state'])]
+        # elif elements['vertical_barrier']:
+        #     self.selected_tile = [elements['vertical_barrier']['name'], self.element_choices['tiles'][elements['vertical_barrier']['name']].index(elements['vertical_barrier']['state'])]
+        # elif elements['horizontal_barrier']:
+        #     self.selected_tile = [elements['horizontal_barrier']['name'], self.element_choices['tiles'][elements['horizontal_barrier']['name']].index(elements['horizontal_barrier']['state'])]
 
 
     def update(self, mouse_position):

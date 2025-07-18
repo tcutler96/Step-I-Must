@@ -29,8 +29,9 @@ class Game:
         self.interpolating = False
         self.players_exited = None
         self.player_cells = None
-        self.game_over = False
+        self.no_steps = False
         self.teleporter_data = None
+        self.sign_data = None
         self.lock_data = None
 
     def reset_animations(self, force_reset=False):
@@ -277,15 +278,16 @@ class Game:
             steps_updated = False
             respawn_updated = False
             self.player_cells = {}
-            self.game_over = True
+            self.no_steps = True
             self.teleporter_data['standing'] = []
+            self.sign_data = []
             self.lock_data = None
             for cell in self.level.get_cells():
                 if cell.check_element(name='player'):
                     self.player_cells[cell.position] = cell
                     level_and_position = self.main.utilities.level_and_position(level=self.level.name, position=cell.position)
                     if self.main.debug:
-                        self.game_over = False
+                        self.no_steps = False
                         if cell.check_element(name='teleporter'):
                             self.teleporter_data['standing'] = [{'state': cell.elements['tile']['state'].split(' ')[0], 'level_and_position': level_and_position}]
                     else:
@@ -307,7 +309,10 @@ class Game:
                             self.collect_collectable(cell=cell)
 
                         if not cell.check_element(name='player', state='dead'):  # players
-                            self.game_over = False
+                            self.no_steps = False
+
+                        if cell.check_element(name='sign'):  # collectables
+                            self.sign_data.append(cell.position)
 
                         for direction in cell.adjacent_directions:  # locks
                             new_cell = self.level.get_new_cell(position=cell.position, movement=direction)
@@ -352,8 +357,8 @@ class Game:
                 self.set_steps(steps=5)
             if not self.main.debug:
                 if not new_level and self.level.steps == 0:
-                    self.main.audio.play_sound(name='game_over')
-                    self.game_over = True
+                    self.main.audio.play_sound(name='no_steps')
+                    self.no_steps = True
                     for cell in self.player_cells.values():
                         cell.elements['player']['state'] = 'dead'
                 if respawn_updated:
@@ -717,7 +722,7 @@ class Game:
                             else:
                                 print(f'warp not set')
 
-    def update_map(self, mouse_position):  # game blur shader is turned off when we teleport using the map, want it to stay while transition happens...
+    def update_map(self, mouse_position):
         if self.level.name != 'custom':
             selected_level = self.map.update(mouse_position=mouse_position if (self.map.show_map and not self.cutscene.timer) else None, active_cutscene=self.cutscene.active_cutscene)
             if selected_level:
@@ -799,8 +804,9 @@ class Game:
         self.interpolating = False
         self.players_exited = None
         self.player_cells = None
-        self.game_over = False
+        self.no_steps = False
         self.teleporter_data = {'standing': None, 'setting': None}
+        self.sign_data = None
         self.lock_data = None
         self.map.reset_map()
         self.level.reset_cache()
@@ -810,7 +816,7 @@ class Game:
                 difference = lock_data['collectable_amount'] - len(self.main.assets.data['game']['collectables'][lock_data['collectable_type']])
                 if difference > 0:
                     self.main.text_handler.add_text(text_group='locks', text_id=lock, text=f'collect {difference} more {lock_data['collectable_type'][:-1] 
-                    if difference == 1 else lock_data['collectable_type']}', position='top')
+                    if difference == 1 else lock_data['collectable_type']}', position='top', display_layer='level')
 
     def start_up(self, previous_game_state=None):
         self.main.change_menu_state()
@@ -822,6 +828,7 @@ class Game:
     def update(self, mouse_position):
         if self.main.menu_state:
             self.main.display.set_cursor(cursor='arrow')
+            self.update_map(mouse_position=None)
             self.main.shaders.apply_effect(display_layer=['level', 'steps', 'map'], effect='blur')
         else:
             if self.main.debug or self.map.show_map:
@@ -876,7 +883,7 @@ class Game:
                                 self.level.cache_level()
                         else:
                             if not self.map.show_map:
-                                if self.main.debug or (not self.main.debug and not self.game_over):
+                                if self.main.debug or (not self.main.debug and not self.no_steps):
                                     if self.stored_movement:
                                         self.move_players(movement=self.stored_movement)
                                         self.stored_movement = None
@@ -891,40 +898,37 @@ class Game:
                                                         self.move_players(movement=self.movement_directions[key])
                                 else:
                                     self.main.shaders.apply_effect(display_layer=['level', 'steps'], effect='grey')
-                                    # self.main.shaders.apply_effect(display_layer=['level'], effect='pixelate')
+                                    # self.main.shaders.apply_effect(display_layer=['level'], effect='pixelate')  # cool effect but would be also to still be able to see the level to asses what went wrong
+                                    # maybe only pixelate the player when we separate the level into proper display layers...
+                                    # we we reach 1 step left, apply shader but only with half effect...
                                     if keys_pressed:
-                                        self.game_over = False
+                                        self.no_steps = False
                                         self.stored_movement = None
                                         self.load_level(name=self.level.name, load_respawn='current')
             else:
                 if not self.main.transition.fade_in:  # activating another shader effect doesnt allow the old effect to fade out...
                     # teleporting via a sender applies pixelate effect but it just looks like a blur?
                     # blur must be getting triggered somewhere first, and then them value are being modified in shader update...
-                    print(0)
                     self.main.shaders.apply_effect(display_layer=['level', 'steps', 'map'], effect='pixelate')
+                    # might be cool to only pixelate player when we teleport in and out...
 
     def draw(self, displays):
         self.level.draw(displays=displays)
         self.cutscene.draw(displays=displays)
         self.map.draw(displays=displays)
-        if not self.player_cells:
+        self.main.text_handler.activate_text(text_group='steps', text_id=self.level.steps)
+        if not self.player_cells or self.no_steps:
             self.main.text_handler.activate_text(text_group='game', text_id='reset')
+        for sign in self.sign_data:
+            self.main.text_handler.activate_text(text_group='signs', text_id=self.level.name + ' - ' + str(sign))
+        if self.main.debug:
+            if self.teleporter_data['standing'] or self.teleporter_data['setting']:
+                self.main.text_handler.activate_text(text_group='game', text_id='set_warp')
         else:
-            for position, cell in self.player_cells.items():
-                if self.main.debug:
-                    if (self.teleporter_data['standing'] or self.teleporter_data['setting']) and not self.map.show_map:
-                        self.main.text_handler.activate_text(text_group='game', text_id='set_warp')
+            if self.teleporter_data['standing']:
+                if isinstance(self.teleporter_data['standing'], list):
+                    self.main.text_handler.activate_text(text_group='game', text_id='warp?')
                 else:
-                    self.main.text_handler.activate_text(text_group='steps', text_id=self.level.steps)
-                    if not self.map.show_map:
-                        if self.game_over:
-                            self.main.text_handler.activate_text(text_group='game', text_id='reset')
-                        if cell.check_element(name='sign'):
-                            self.main.text_handler.activate_text(text_group='signs', text_id=self.level.name + ' - ' + str(cell.position))
-                        if self.teleporter_data['standing']:
-                            if isinstance(self.teleporter_data['standing'], list):
-                                self.main.text_handler.activate_text(text_group='game', text_id='warp?')
-                            else:
-                                self.main.text_handler.activate_text(text_group='game', text_id='warp')
-                        if self.lock_data:
-                            self.main.text_handler.activate_text(text_group='locks', text_id=self.lock_data)
+                    self.main.text_handler.activate_text(text_group='game', text_id='warp')
+            if self.lock_data:
+                self.main.text_handler.activate_text(text_group='locks', text_id=self.lock_data)

@@ -25,7 +25,7 @@ class MapCell:
         self.hovered = False
         if interpolating:
             self.update_rect(offset=offset)
-        elif alpha==255 and mouse_position and (self.discovered or self.main.debug) and self.rect.collidepoint(mouse_position):
+        elif alpha==255 and (self.discovered or self.main.debug) and mouse_position  and self.rect.collidepoint(mouse_position):
             self.hovered = True
             if self.teleporter or self.main.debug:
                 if not self.was_hovered:

@@ -7,7 +7,7 @@ class Menu:
     def __init__(self, main, menu_name, menu_data):
         self.main = main
         self.menu_name = menu_name
-        self.data = {'title_font': 'Alagard', 'title_size': 50, 'button_font': 'Alagard', 'button_size': 24}
+        self.data = {'title_font': 'Mleitod', 'title_size': 48, 'button_font': 'Alagard', 'button_size': 24}
         self.menu_centre = (self.main.display.half_width, self.main.display.half_height - self.data['button_size'] // 2)
         self.max_rows = (self.main.display.height - self.menu_centre[1]) // self.data['button_size'] - 1
         self.choose_level_columns = 3

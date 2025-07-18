@@ -116,7 +116,7 @@ class Utilities:
 
     def draw_text(self, text, surface=None, position=(0, 0), alignment=('c', 'c'), colour='light_green', bg_colour=None, shadow_colour='dark_purple', shadow_offset=(4, 2),
                   outline_colour='dark_purple', outline_size=1, size=16, max_width=0, max_height=0, font='Alagard', style=None):
-        if outline_size:
+        if outline_size > 0:
             outline_offsets = [[x - outline_size, y - outline_size] for x in range(outline_size * 2 + 1) for y in range(outline_size * 2 + 1)]
         else:
             outline_offsets = None

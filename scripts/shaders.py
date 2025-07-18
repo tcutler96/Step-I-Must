@@ -125,16 +125,15 @@ class Shaders:
                         if effect_data[2] <= 0:  # min value
                             effect_data[1] = 0  # reset reset of effect data here or in reset_effects function?
             elif effect_data[1] == self.shaders['effects']['pixelate']['index']:
-                print(1)
                 if effect_data[0]:
                     effect_data[3] -= 30
                     if effect_data[3] <= 0:
-                        effect_data[2] = min(16.4, effect_data[2] + 1.25)
+                        effect_data[2] = min(16, effect_data[2] + 1)
                         effect_data[3] = self.main.fps
                 else:
                     effect_data[3] -= 30
                     if effect_data[3] <= 0:
-                        effect_data[2] = max(0, effect_data[2] - 1.25)
+                        effect_data[2] = max(0, effect_data[2] - 1)
                         effect_data[3] = self.main.fps
                         if effect_data[2] <= 0:
                             effect_data[1] = 0

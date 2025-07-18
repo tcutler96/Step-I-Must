@@ -20,10 +20,10 @@ class Assets:
         #                  'gameplay': {'hold_to_move': 5, 'hold_to_undo': 5}}
         self.update_choose_level_menu()
         self.music_themes = {'splash': None, 'game': 'game', 'level_editor': 'main_menu', 'main_menu': 'main_menu', 'quit': None}
-        self.colours = {'white': (230, 230, 230),
-                        'black': (25, 25, 25),
-                        'true_white': (255, 255, 255),
-                        'true_black': (0, 0, 0),
+        self.colours = {'whiteish': (230, 230, 230),
+                        'blackish': (25, 25, 25),
+                        'white': (255, 255, 255),
+                        'black': (0, 0, 0),
                         'r': (255, 0, 0),
                         'g': (0, 255, 0),
                         'b': (0, 0, 255),

@@ -51,8 +51,7 @@ class Display:
             else:
                 display_surface.fill(color=(0, 0, 0, 0))
         pg.display.set_caption('Slime Stepper' + (f' - running at {round(self.main.true_fps)} fps for {round(self.main.runtime_seconds, 2)}s' if self.main.debug else ''))
-        if self.main.game_state in ['game', 'level_editor']:
-            pg.display.set_icon(self.main.utilities.get_sprite(name='player', state='idle', animated=True))
+        pg.display.set_icon(self.main.utilities.get_sprite(name='player', state='idle', animated=True))
         self.cursor.update()
 
     def draw(self):

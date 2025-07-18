@@ -63,5 +63,5 @@ class MapCell:
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
                     elif collectable_type in ['gold keys', 'gold gems'] and self.main.assets.data['game']['part_two']:
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
-                    elif collectable_type == 'cheeses' and self.main.utilities.check_collectable(collectable_type='cheese'):
+                    elif collectable_type == 'cheeses' and self.main.utilities.check_collectable(collectable_type='cheese', count=False):
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)

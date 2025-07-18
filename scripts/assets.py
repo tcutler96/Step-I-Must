@@ -165,6 +165,7 @@ class Assets:
             elif name == 'particles':  # reference main/ particle handler...
                 pass
             elif name == 'resolution':
+                # if new setting rejected then need to tell higher function to change option to default value...
                 self.main.display.change_resolution(scale_factor=option)
             elif name == 'screen_shake':  # reference game class
                 pass

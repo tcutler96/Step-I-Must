@@ -17,22 +17,16 @@ class TextHandler:
         self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', display_layer='ui')  # draw game over text on seperate layer to main level so that it doesnt get effected by the shaders...
         self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', display_layer='level')
         self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', display_layer='level')
-        self.add_text(text_group='game', text_id='warp?', text=f"¡ ¿ ? !  press 'e' to warp  ! ? ¿ ¡", position='top', display_layer='level')
+        self.add_text(text_group='game', text_id='warp?', text=f"{{*<¡>*}} press 'e' to warp {{*<¡>*}}", position='top', display_layer='level', style='itallic')
         self.add_text(text_group='map', text_id='toggle', text="Toggle map: 'tab'", position='bottom_left', alpha_step=8.5, shadow_offset=(4, 4),
                       alignment=('l', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='map')
         self.add_text(text_group='map', text_id='switch', text="Switch map: 'space'", position='bottom_right', alpha_step=8.5, shadow_offset=(4, 4),
                       alignment=('r', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='map')
         self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
-        self.add_text(text_group='map', text_id='part_one_percent', text=f'World 1: {self.main.assets.data['game']['part_one_percent']}%',
-                      position=(424, 252), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
-        self.add_text(text_group='map', text_id='part_two_percent', text=f'World 2: {self.main.assets.data['game']['part_two_percent']}%',
-                      position=(424, 266), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
-        self.add_text(text_group='map', text_id='overall_percent', text=f'Overall: {self.main.assets.data['game']['overall_percent']}%',
-                      position=(424, 280), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
         for steps in range(-9, 10):
             self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='steps')
         for collectable in self.main.assets.data['game']['collectables']:
-            self.add_text(text_group='collectables', text_id=collectable, text=f'{collectable[:-1]} collected!', position='bottom', outline_size=1, display_layer='level')
+            self.add_text(text_group='collectables', text_id=collectable, text=f'{collectable[:-1]} collected!', position='top', outline_size=1, display_layer='level')
         # pull sign data from game data, and have text positioned just above the sign...
         # sign text position: level offset (112, 32) + cell position (x + 0.5, y - 0.25) * cell size (16)
         # add functionality for multiline sign text when it is too long for one line...

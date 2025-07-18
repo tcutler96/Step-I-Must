@@ -11,6 +11,9 @@ class Game:
         self.main.assets.data['game']['part_two'] = True
         # self.main.assets.data['game']['part_one'] = False
         # self.main.assets.data['game']['part_two'] = False
+        self.part_data = {'part_one': {'collectable_types': ['silver keys', 'silver gems'], 'text': 'World 1: ', 'position': (424, 252)},
+                          'part_two': {'collectable_types': ['gold keys', 'gold gems', 'cheeses'], 'text': 'World 2: ', 'position': (424, 266)},
+                          'overall': {'collectable_types': ['silver keys', 'silver gems', 'gold keys', 'gold gems', 'cheeses'], 'text': 'Overall: ', 'position': (424, 280)}}
         self.cutscene = Cutscene(main=self.main)
         self.level = Level(main=self.main)
         self.map = Map(main=self.main)
@@ -65,38 +68,18 @@ class Game:
                         object_data['last_split'] = None
                     object_data['split'] = False
 
-    def update_collectable_percent(self):
+    def update_part_percents(self):
         max_counts = self.map.collectables['max_counts']
-        # can we condense this down to a loop instead of doing the same thing 3 times...
-        # make a function that handles this and just pass in which collectables are required for each part...
-        # ie part_one: ['silver keys', 'silver gems'], part_two: ['gold keys', 'gold gems', 'cheeses'], overall: 'all'
-        # then use string name (ie part_one, part_two, overall) to update game data and text elements...
-
-        part_one_max_count = max_counts['silver keys'] + max_counts['silver gems']
-        part_two_max_count = max_counts['gold keys'] + max_counts['gold gems'] + max_counts['cheeses']
-        overall_max_count = part_one_max_count + part_two_max_count
-
-        part_one_count = self.main.utilities.check_collectable(collectable_type=['silver keys', 'silver gems'])
-        part_two_count = self.main.utilities.check_collectable(collectable_type=['gold keys', 'gold gems', 'cheeses'])
-        overall_count = self.main.utilities.check_collectable(collectable_type='all')
-
-        part_one_percent = round(100 * part_one_count / part_one_max_count)
-        part_two_percent = round(100 * part_two_count / part_two_max_count)
-        overall_percent = round(100 * overall_count / overall_max_count)
-
-        self.main.assets.data['game']['part_one_percent'] = part_one_percent
-        self.main.assets.data['game']['part_two_percent'] = part_two_percent
-        self.main.assets.data['game']['overall_percent'] = overall_percent
-        # do we save the game data now to make sure that we dont lose any progression when collecting a collectable?
-        # otherwise the player has to leave the room/ transition to a new one to save the game...
-        # would there be an issue with this?
-        # collectable data would be saved but respawn wouldnt be updated as collectables dont do that, should be fine...
-        self.main.text_handler.add_text(text_group='map', text_id='part_one_percent', text=f'World 1: {self.main.assets.data['game']['part_one_percent']}%',
-                                        position=(424, 252), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
-        self.main.text_handler.add_text(text_group='map', text_id='part_two_percent', text=f'World 2: {self.main.assets.data['game']['part_two_percent']}%',
-                                        position=(424, 266), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
-        self.main.text_handler.add_text(text_group='map', text_id='overall_percent', text=f'Overall: {self.main.assets.data['game']['overall_percent']}%',
-                                        position=(424, 280), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
+        for part in self.part_data:
+            max_count = 0
+            for collectable_type in self.part_data[part]['collectable_types']:
+                max_count += max_counts[collectable_type]
+            count = self.main.utilities.check_collectable(collectable_type=self.part_data[part]['collectable_types'])
+            # count = max_count
+            percent = round(100 * count / max_count, 2)
+            self.main.assets.data['game'][f'{part}_percent'] = percent
+            self.main.text_handler.add_text(text_group='map', text_id=f'{part}_percent', text=f'{self.part_data[part]['text']}{percent:g}%', position=self.part_data[part]['position'],
+                                            alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
 
     def collect_collectable(self, cell):
         # self.main.audio.play_sound(name='collectable')
@@ -105,7 +88,7 @@ class Game:
         if self.level.name != 'custom':
             self.main.assets.data['game']['collectables'][collectable_type].append(self.main.utilities.level_and_position(level=self.level.name, position=cell.object_data['object']['original_position']))
             self.map.update_collectables(collectable_type=collectable_type, level_name=self.level.name, position=cell.object_data['object']['original_position'])
-            self.update_collectable_percent()
+            self.update_part_percents()
         levels = self.level.cached_levels
         levels.append({'name': self.level.name, 'level': self.level.level})
         for count, level in enumerate(levels):
@@ -131,6 +114,7 @@ class Game:
         # we sometimes get stuck in moving animation when we collect something...
         # need to resolve level loop still while cutscene is happening or pause all that until after cutscene?
         self.cutscene.start(collectable_type=collectable_type, position=cell.position)
+        self.main.assets.save_data()
 
     def resolve_object_conflict(self, revert_cell, revert_object_type, revert_movement, bump_cell, bump_object_type, bump_movement):
         count = self.revert_object(cell=revert_cell, object_type=revert_object_type, movement=revert_movement)
@@ -808,6 +792,7 @@ class Game:
         self.teleporter_data = {'standing': None, 'setting': None}
         self.sign_data = None
         self.lock_data = None
+        self.update_part_percents()
         self.map.reset_map()
         self.level.reset_cache()
         self.cutscene.reset()

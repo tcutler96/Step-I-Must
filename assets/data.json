@@ -1,17 +1,17 @@
 {
   "game": {
-    "level": "(-1, -7)",
+    "level": "(0, -6)",
     "respawn": [
       [
         [
-          10,
-          3
+          7,
+          7
         ]
       ],
       [
         [
-          10,
-          3
+          7,
+          7
         ]
       ],
       [
@@ -20,9 +20,9 @@
     ],
     "part_one": true,
     "part_two": true,
-    "part_one_percent": 32,
-    "part_two_percent": 2,
-    "overall_percent": 12,
+    "part_one_percent": 32.0,
+    "part_two_percent": 5.66,
+    "overall_percent": 14.1,
     "collectables": {
       "silver keys": [
         "(-2, 4) - (12, 9)",
@@ -37,10 +37,13 @@
         "(-1, 2) - (8, 5)"
       ],
       "gold keys": [
-        "(-1, -6) - (8, 4)"
+        "(-1, -6) - (8, 4)",
+        "(0, -6) - (6, 14)"
       ],
       "gold gems": [],
-      "cheeses": []
+      "cheeses": [
+        "(-7, -7) - (7, 6)"
+      ]
     },
     "discovered_levels": [
       "(0, 0)",
@@ -52,7 +55,11 @@
       "(-1, -1)",
       "(-2, 2)",
       "(0, 2)",
-      "(-1, 2)"
+      "(-1, 2)",
+      "(-2, -7)",
+      "(-2, -8)",
+      "(-7, -7)",
+      "(0, -6)"
     ],
     "active_portals": [
       "(-1, -6) - (10, 2)",
@@ -287,7 +294,9 @@
     "(-5, -16)": "left end",
     "(-6, -17)": "left end",
     "(7, -17)": "bottom end",
-    "(7, -18)": "top end"
+    "(7, -18)": "top end",
+    "(-1, 0)": "centre",
+    "(-1, 1)": "centre"
   },
   "teleporters": {
     "recievers": {

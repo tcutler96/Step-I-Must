@@ -7,6 +7,7 @@ class Splash:
         self.timers = {'timer': 0, 'text_id': None, 30: 'tcgame', 150: 'hoolioes', 270: '...', 390: 'end'}
 
     def start_up(self, previous_game_state=None):
+        self.main.audio.play_music(music_theme='edgy demo')
         self.main.change_menu_state()
 
 

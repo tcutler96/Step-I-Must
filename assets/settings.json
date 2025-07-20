@@ -1,18 +1,18 @@
 {
   "video": {
     "background": "gol",
-    "button_prompt": false,
+    "button_prompt": true,
     "cursor_type": "sprite",
-    "hrt_shader": false,
+    "hrt_shader": true,
     "map_colour": "green",
     "particles": false,
     "resolution": 2,
-    "screen_shake": false,
+    "screen_shake": true,
     "shaders": true
   },
   "audio": {
-    "master_volume": 0.5,
-    "music_volume": 0.0,
+    "master_volume": 0.8,
+    "music_volume": 0.2,
     "sound_volume": 1.0
   },
   "gameplay": {
@@ -85,8 +85,8 @@
         "button",
         "option",
         [
-          "Disabled",
-          "Enabled"
+          "Enabled",
+          "Disabled"
         ]
       ],
       "Cursor Type": [
@@ -101,8 +101,8 @@
         "button",
         "option",
         [
-          "Disabled",
-          "Enabled"
+          "Enabled",
+          "Disabled"
         ]
       ],
       "Map Colour": [
@@ -137,8 +137,8 @@
         "button",
         "option",
         [
-          "Disabled",
-          "Enabled"
+          "Enabled",
+          "Disabled"
         ]
       ],
       "Shaders": [
@@ -161,22 +161,34 @@
         "button",
         "option",
         [
-          "50%",
-          "25%",
-          "Disabled",
+          "80%",
+          "90%",
           "100%",
-          "75%"
+          "Disabled",
+          "10%",
+          "20%",
+          "30%",
+          "40%",
+          "50%",
+          "60%",
+          "70%"
         ]
       ],
       "Music Volume": [
         "button",
         "option",
         [
-          "Disabled",
-          "100%",
-          "75%",
+          "20%",
+          "30%",
+          "40%",
           "50%",
-          "25%"
+          "60%",
+          "70%",
+          "80%",
+          "90%",
+          "100%",
+          "Disabled",
+          "10%"
         ]
       ],
       "Sound Volume": [
@@ -184,10 +196,16 @@
         "option",
         [
           "100%",
-          "75%",
+          "Disabled",
+          "10%",
+          "20%",
+          "30%",
+          "40%",
           "50%",
-          "25%",
-          "Disabled"
+          "60%",
+          "70%",
+          "80%",
+          "90%"
         ]
       ],
       "Back": [
@@ -362,6 +380,16 @@
         "button",
         "level",
         "(-1, -9)"
+      ],
+      "(-1, 0)": [
+        "button",
+        "level",
+        "(-1, 0)"
+      ],
+      "(-1, 1)": [
+        "button",
+        "level",
+        "(-1, 1)"
       ],
       "(-1, 2)": [
         "button",

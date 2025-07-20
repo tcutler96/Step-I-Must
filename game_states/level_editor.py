@@ -104,13 +104,13 @@ class LevelEditor:
         self.level.load_level(name=name, load_respawn=load_respawn, bump_player=bump_player)
 
     def start_up(self, previous_game_state=None):
+        self.main.audio.play_music(music_theme='edgy demo')
         if previous_game_state == 'main_menu':
             self.main.change_menu_state(menu_state='choose_level')
             self.reset_toolbar(hovered=True, selected=True)
         elif previous_game_state == 'game':
             self.main.change_menu_state()
             del self.main.assets.levels['custom']
-        self.main.audio.play_music(music_theme='main_menu')
 
     def update(self, mouse_position):
         self.main.display.set_cursor(cursor='arrow')

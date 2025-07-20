@@ -75,15 +75,14 @@ class Game:
             for collectable_type in self.part_data[part]['collectable_types']:
                 max_count += max_counts[collectable_type]
             count = self.main.utilities.check_collectable(collectable_type=self.part_data[part]['collectable_types'])
-            # count = max_count
             percent = round(100 * count / max_count, 2)
             self.main.assets.data['game'][f'{part}_percent'] = percent
             self.main.text_handler.add_text(text_group='map', text_id=f'{part}_percent', text=f'{self.part_data[part]['text']}{percent:g}%', position=self.part_data[part]['position'],
                                             alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
 
     def collect_collectable(self, cell):
-        # self.main.audio.play_sound(name='collectable')
-        self.main.audio.play_sound(name=f'collectable_{cell.elements['object']['state'].replace(' ', '_')}')
+        self.main.audio.play_sound(name='collectable')
+        # self.main.audio.play_sound(name=f'collectable_{cell.elements['object']['state'].replace(' ', '_')}')
         collectable_type = cell.elements['object']['state'] + 's'
         if self.level.name != 'custom':
             self.main.assets.data['game']['collectables'][collectable_type].append(self.main.utilities.level_and_position(level=self.level.name, position=cell.object_data['object']['original_position']))
@@ -804,8 +803,8 @@ class Game:
                     if difference == 1 else lock_data['collectable_type']}', position='top', display_layer='level')
 
     def start_up(self, previous_game_state=None):
+        self.main.audio.play_music(music_theme='chill idea')
         self.main.change_menu_state()
-        self.main.audio.play_music(music_theme='game', fade=self.main.transition.length)
         self.reset_level()
         self.level.name = self.main.assets.data['game']['level'] if previous_game_state == 'main_menu' else 'custom'
         self.load_level(name=self.level.name, load_respawn='setting' if previous_game_state == 'main_menu' and self.main.assets.data['game']['respawn'] else 'level')

@@ -38,8 +38,9 @@ class Assets:
         self.option_to_setting = {'video': {'background': {'game_of_life': 'gol', 'disabled': False}, 'button_prompt': {'enabled': True, 'disabled': False}, 'hrt_shader': {'enabled': True, 'disabled': False},
                                             'particles': {'enabled': True, 'disabled': False}, 'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4},
                                             'screen_shake': {'enabled': True, 'disabled': False}, 'shaders': {'enabled': True, 'disabled': False}},
-                                 'audio': {'master_volume': {'100%': 1.0, '75%': 0.75, '50%': 0.5, '25%': 0.25, 'disabled': 0.0}, 'music_volume': {'100%': 1.0, '75%': 0.75, '50%': 0.5, '25%': 0.25, 'disabled': 0.0},
-                                           'sound_volume': {'100%': 1.0, '75%': 0.75, '50%': 0.5, '25%': 0.25, 'disabled': 0.0}},
+                                 'audio': {'master_volume': {'disabled': 0.0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1.0},
+                                           'music_volume': {'disabled': 0.0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1.0},
+                                           'sound_volume': {'disabled': 0.0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1.0}},
                                  'gameplay': {'hold_to_move': {'fast': 5, 'slow': 15, 'disabled': -1}, 'hold_to_undo': {'fast': 5, 'slow': 15, 'disabled': -1}}}
 
     def post_load(self):

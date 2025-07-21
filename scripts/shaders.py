@@ -156,7 +156,8 @@ class Shaders:
     def update(self, mouse_position):
         # if self.main.events.check_key('e', 'held'):
         #     self.apply_effect(display_layer=['menu', 'level'], effect='blur')
-        self.apply_effect(display_layer='background', effect=self.background_effect)
+        if self.background_effect == 'gol':
+            self.apply_effect(display_layer='background', effect='gol')
         self.update_effect_data()
         self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_position': mouse_position} | self.shaders['display_layers'])
 

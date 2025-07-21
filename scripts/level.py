@@ -132,10 +132,13 @@ class Level:
         return {'respawn': self.current_respawn, 'collectables': self.collectables, 'locks': self.locks, 'tilemap': self.tilemap}
 
     def load_level(self, name='empty', load_respawn=None, bump_player=None):
-        if name not in self.default_levels:
-            if name not in self.main.assets.levels:
-                name = '(4, 4)'
-            self.name = name
+        if name in self.default_levels and not self.name:
+                self.name = name
+        else:
+            if name in self.main.assets.levels:
+                self.name = name
+            else:
+                self.name = '(4, 4)'
         tilemap_data = deepcopy(self.main.assets.levels[name])
         self.tilemap = tilemap_data['tilemap']
         if load_respawn == 'level':
@@ -162,7 +165,7 @@ class Level:
             self.main.update_choose_level_menu()
             with open(os.path.join('assets/levels', f'{name}.json'), 'w') as file_data:
                 json.dump(obj=tilemap_data, fp=file_data, indent=2)
-            self.main.text_handler.deactivate_text(text_group='level_editor', text_id='reset')
+            self.main.text_handler.deactivate_text_group(text_group='level_editor')
             self.main.text_handler.activate_text(text_group='level_editor', text_id='saved', duration=2)
 
     def copy_level(self, level_data=None):

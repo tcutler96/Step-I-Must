@@ -53,12 +53,12 @@ class MenuElement:
                     if self.button_type == 'option':
                         self.offset = self.offset_start.copy()
                         self.cycle_option(selected=selected)
-                        return self.button_type, self.button_response, self.name, selected
+                        return self.button_type, self.button_response, selected
                     elif selected == 'left':
                         return self.button_type, self.button_response, self.name
                 elif self.main.events.check_key(key=['mouse_3', 'escape']) and self.name in ['Back', 'Resume', 'No']:
                     self.main.events.remove_key(key=['mouse_3', 'escape'])
-                    return self.button_type, self.button_response, self.name
+                    return self.button_type, self.button_response
 
     def draw(self, offset):
         self.main.text_handler.activate_text(text_group=self.menu_name, text_id=self.name, offset=offset)

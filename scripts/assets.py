@@ -1,3 +1,4 @@
+from copy import deepcopy
 import pygame.freetype
 import pygame as pg
 import json
@@ -7,7 +8,7 @@ import os
 class Assets:
     def __init__(self, main):
         self.main = main
-        self.assets_path = os.path.join(os.path.abspath(os.curdir), 'assets')
+        self.assets_path = self.main.assets_path
         self.audio = self.load_audio()
         self.fonts = self.load_fonts()
         self.images = None
@@ -35,7 +36,7 @@ class Assets:
                         'light_green': (142, 184, 158),
                         'bright_green': (127, 255, 127)}
         self.settings_changed = False
-        self.option_to_setting = {'video': {'background': {'game_of_life': 'gol', 'disabled': False}, 'button_prompt': {'enabled': True, 'disabled': False}, 'hrt_shader': {'enabled': True, 'disabled': False},
+        self.option_to_setting = {'video': {'background': {'game_of_life': 'gol', 'space': 'space'}, 'button_prompt': {'enabled': True, 'disabled': False}, 'hrt_shader': {'enabled': True, 'disabled': False},
                                             'particles': {'enabled': True, 'disabled': False}, 'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4},
                                             'screen_shake': {'enabled': True, 'disabled': False}, 'shaders': {'enabled': True, 'disabled': False}},
                                  'audio': {'master_volume': {'disabled': 0.0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1.0},
@@ -135,17 +136,17 @@ class Assets:
                     shaders[file.split('.')[0]] = file_data.read()
         return shaders
 
-    def load_settings(self):
-        path = os.path.join(self.assets_path, 'settings.json')
-        with open(path, 'r') as file_data:
-            settings = json.load(file_data)
-        return settings
-
     def load_data(self):
         path = os.path.join(self.assets_path, 'data.json')
         with open(path, 'r') as file_data:
             data = json.load(file_data)
         return data
+
+    def load_settings(self):
+        path = os.path.join(self.assets_path, 'settings.json')
+        with open(path, 'r') as file_data:
+            settings = json.load(file_data)
+        return settings
 
     def change_setting(self, group, name, option):
         name = name.lower().replace(' ', '_')
@@ -182,15 +183,17 @@ class Assets:
                 self.main.game_states['game'].level.undo_redo_delay = option
                 self.main.game_states['level_editor'].level.undo_redo_delay = option
 
-    def save_settings(self):
-        if self.settings_changed:
-            self.settings_changed = False
-            with open(os.path.join(self.assets_path, 'settings.json'), 'w') as file:
-                json.dump(obj=self.settings, fp=file, indent=2)
-
     def save_data(self):
         with open(os.path.join(self.assets_path, 'data.json'), 'w') as file:
             json.dump(obj=self.data, fp=file, indent=2)
+
+    def save_settings(self):
+        if self.settings_changed:
+            self.settings_changed = False
+            settings = deepcopy(self.settings)
+            del settings['menus']['choose_level']
+            with open(os.path.join(self.assets_path, 'settings.json'), 'w') as file:
+                json.dump(obj=settings, fp=file, indent=2)
 
     def reset_game_data(self):
         self.data['game'] = {'level': '(0, 0)', 'respawn': [[[12, 2]], [[12, 2]], [False]], 'part_one': False, 'part_two': False, 'part_one_percent': 0, 'part_two_percent': 0, 'overall_percent': 0,

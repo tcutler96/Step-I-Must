@@ -1,3 +1,4 @@
+from copy import deepcopy
 import pygame.freetype
 import pygame as pg
 import json
@@ -7,6 +8,7 @@ import os
 class Utilities:
     def __init__(self, main):
         self.main = main
+        self.assets_path = self.main.assets_path
         self.neighbour_offsets = [(-1, 0), (0, -1), (1, 0), (0, 1)]
         self.neighbour_auto_tile_map = {tuple(sorted([])): 'single', tuple(sorted([(0, -1)])): 'bottom end', tuple(sorted([(1, 0)])): 'left end', tuple(sorted([(0, 1)])): 'top end',
                                         tuple(sorted([(-1, 0)])): 'right end', tuple(sorted([(-1, 0), (1, 0)])): 'left right', tuple(sorted([(0, -1), (0, 1)])): 'top bottom',
@@ -176,6 +178,7 @@ class Utilities:
                 return surface
 
     def add_menu(self, name, title=None, buttons=None):
+        # do we really need this?
         # name: menu name reference by other menus, title: string/ sprite, buttons: [{'name': 'Example', 'type': ['menu_state', 'game_state', 'level', 'option'], 'response': 'example'}]
         # make sure to manually update option_to_setting dict in assets class and game_state_text_groups in text_handler class
         menu_data = {}
@@ -189,15 +192,22 @@ class Utilities:
         self.main.assets.settings_changed = True
         self.main.assets.save_settings()
 
-    def update_menu(self):  # add alphabetical option...
-        # if we want to add a new button/ option to an existing menu,
-        pass
+    def backup_file(self, file_name=None):  # call from develop options menu
+        if file_name in ['data', 'settings']:
+            if file_name == 'data':
+                file_data = self.main.assets.data
+            elif file_name == 'settings':
+                file_data = deepcopy(self.main.assets.settings)
+                del file_data['menus']['choose_level']
+            with open(os.path.join(self.assets_path, f'{file_name}_backup.json'), 'w') as file:
+                json.dump(obj=file_data, fp=file, indent=2)
 
-    def backup_data_and_settings(self, data=True, settings=True):  # make copy of data and settings files and store in temp folder...
-        pass
-
-    def restore_data_and_settings(self, data=True, settings=True):  # overwrite main copies of data and settings files with those in temp folder...
-        pass
+    def restore_file(self, file_name=None):  # call from developer options menu, add additional check before doing (ie are you sure?)
+        if file_name in ['data', 'settings']:
+            path = os.path.join(self.assets_path, f'{file_name}_backup.json')
+            with open(path, 'r') as file_data:
+                with open(os.path.join(self.assets_path, f'{file_name}.json'), 'w') as file:
+                    json.dump(obj=json.load(file_data), fp=file, indent=2)
 
     def update_levels(self):
         wall_state_updates = {'up down': 'top bottom', 'up end': 'top end', 'down end': 'bottom end'}

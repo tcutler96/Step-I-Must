@@ -168,7 +168,7 @@ class Map:
 
     def update(self, mouse_position, active_cutscene):
         if not active_cutscene and not self.main.menu_state:
-            if self.main.text_handler.text_elements['map']['toggle'].selected or self.main.events.check_key(key='tab'):
+            if self.main.text_handler.text_elements['map']['toggle'].selected == 'left' or self.main.events.check_key(key='tab'):
                 self.show_map = not self.show_map
                 if not self.show_map:
                     self.main.audio.play_sound(name='map_close')
@@ -177,7 +177,7 @@ class Map:
                     self.alpha = 0
                     self.icons['alpha'] = self.icons['alpha_default'].copy()
                     self.set_target(target=self.get_target(level=self.main.assets.data['game']['level']))
-            if self.show_map and (self.main.text_handler.text_elements['map']['switch'].selected or self.main.events.check_key(key='space')):
+            if self.show_map and (self.main.text_handler.text_elements['map']['switch'].selected == 'left' or self.main.events.check_key(key='space')):
                 self.main.audio.play_sound(name='map_switch')
                 self.offset_dict['target'] = '1' if self.offset_dict['target'] == '2' else '2'
                 mouse_position = None

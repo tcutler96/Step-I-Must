@@ -43,6 +43,7 @@ class Game:
                 if element and element['state'].endswith(' animated') and not element['state'].startswith('portal'):
                     if self.main.assets.images['sprites_data'][element['name']]['frame_data'][element['state']]['loops'] or force_reset:
                         element['state'] = element['state'].replace(' animated', '')
+
     def reset_objects_while(self):
         for cell in self.level.get_cells():
             for object_data in cell.object_data.values():
@@ -78,7 +79,7 @@ class Game:
             percent = round(100 * count / max_count, 2)
             self.main.assets.data['game'][f'{part}_percent'] = percent
             self.main.text_handler.add_text(text_group='map', text_id=f'{part}_percent', text=f'{self.part_data[part]['text']}{percent:g}%', position=self.part_data[part]['position'],
-                                            alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
+                                            alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, max_width=112, display_layer='map')
 
     def collect_collectable(self, cell):
         self.main.audio.play_sound(name='collectable')
@@ -395,7 +396,7 @@ class Game:
                 self.no_movement = False
                 self.transition_level()
             elif player_moved:
-                self.main.audio.play_sound(name='player_move')
+                self.main.audio.play_sound(name='player_move', overlap=True)
                 self.level.clear_cache_redo()
                 self.reset_animations(force_reset=True)
                 self.no_movement = False
@@ -827,6 +828,11 @@ class Game:
                     self.main.change_menu_state(menu_state='game_paused')
                 self.update_map(mouse_position=mouse_position)
                 if not self.update_cutscene():
+                    if self.no_steps or not self.player_cells:  # no more steps or players, game over, you can not do anything except open menu, map, move to reset, and press 'e' to teleport...
+                        self.main.text_handler.activate_text(text_group='game', text_id='reset')
+                        self.main.shaders.apply_effect(display_layer=['level', 'steps'], effect='grey')
+                    else:
+                        pass
                     self.update_teleporters()
                     if not self.map.show_map:
                         if self.level.update():
@@ -881,7 +887,6 @@ class Game:
                                                     if self.movement_held[key] > self.hold_move_delay:
                                                         self.move_players(movement=self.movement_directions[key])
                                 else:
-                                    self.main.shaders.apply_effect(display_layer=['level', 'steps'], effect='grey')
                                     # self.main.shaders.apply_effect(display_layer=['level'], effect='pixelate')  # cool effect but would be also to still be able to see the level to asses what went wrong
                                     # maybe only pixelate the player when we separate the level into proper display layers...
                                     # we we reach 1 step left, apply shader but only with half effect...
@@ -891,8 +896,6 @@ class Game:
                                         self.load_level(name=self.level.name, load_respawn='current')
             else:
                 if not self.main.transition.fade_in:  # activating another shader effect doesnt allow the old effect to fade out...
-                    # teleporting via a sender applies pixelate effect but it just looks like a blur?
-                    # blur must be getting triggered somewhere first, and then them value are being modified in shader update...
                     self.main.shaders.apply_effect(display_layer=['level', 'steps', 'map'], effect='pixelate')
                     # might be cool to only pixelate player when we teleport in and out...
 
@@ -901,8 +904,8 @@ class Game:
         self.cutscene.draw(displays=displays)
         self.map.draw(displays=displays)
         self.main.text_handler.activate_text(text_group='steps', text_id=self.level.steps)
-        if not self.player_cells or self.no_steps:
-            self.main.text_handler.activate_text(text_group='game', text_id='reset')
+        # if not self.player_cells or self.no_steps:
+        #     self.main.text_handler.activate_text(text_group='game', text_id='reset')
         for sign in self.sign_data:
             self.main.text_handler.activate_text(text_group='signs', text_id=self.level.name + ' - ' + str(sign))
         if self.main.debug:

@@ -57,6 +57,8 @@ class Display:
         for display_layer, display_surface in self.displays.items():
             if display_layer == 'background':
                 display_surface.fill(color=self.main.assets.colours['purple'])
+                if self.main.assets.settings['video']['background'] == 'space':
+                    display_surface.blit(source=self.main.assets.images['other']['space'], dest=(0, 0))
             else:
                 display_surface.fill(color=(0, 0, 0, 0))
         pg.display.set_caption('Slime Stepper' + (f' - running at {round(self.main.true_fps)} fps for {round(self.main.runtime_seconds, 2)}s' if self.main.debug else ''))

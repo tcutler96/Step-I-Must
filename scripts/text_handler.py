@@ -8,12 +8,16 @@ class TextHandler:
         # and way to move text elements so that they bounce up and down with the game cycle...
         self.text_elements = {}
         self.add_text(text_group='main', text_id='debug', text='debug mode', position='bottom', colour='purple', size=16)
+        self.add_text(text_group='main', text_id='backup_data', text='data backed up', position='top')
+        self.add_text(text_group='main', text_id='backup_settings', text='settings backed up', position='top')
+        self.add_text(text_group='main', text_id='restore_data', text='data restored', position='top')
+        self.add_text(text_group='main', text_id='restore_settings', text='settings restored', position='top')
         self.add_text(text_group='main', text_id='conway', text="conway's game of life", position='top', colour='cream', shadow_colour=None, outline_colour=None, display_layer='background')
         self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_step=8.5, colour='purple', size=24)
         self.add_text(text_group='splash', text_id='hoolioes', text='with hoolioes audio', position='centre', alpha_step=8.5, colour='purple', size=24)
         self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_step=8.5, colour='purple', size=24)
-        self.add_text(text_group='level_editor', text_id='reset', text='level reset', position='bottom')
-        self.add_text(text_group='level_editor', text_id='saved', text='level saved', position='bottom')
+        self.add_text(text_group='level_editor', text_id='reset', text='level reset', position='bottom_right', alignment=('r', 'c'))
+        self.add_text(text_group='level_editor', text_id='saved', text='level saved', position='bottom_right', alignment=('r', 'c'))
         self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', display_layer='ui')  # draw game over text on seperate layer to main level so that it doesnt get effected by the shaders...
         self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', display_layer='level')
         self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', display_layer='level')
@@ -32,9 +36,10 @@ class TextHandler:
         # add functionality for multiline sign text when it is too long for one line...
         # just have separate text elements for each line, shifting position up by ~12 for each line...
         self.add_text(text_group='signs', text_id='(-2, 2) - (6, 8)', text='this is a sign text test', position=(216, 156), size=12, outline_size=1, display_layer='level')
-        self.game_state_text_groups = {'game': ['game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay'],
+        self.game_state_text_groups = {'game': ['game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay', 'developer'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],
-                                       'main_menu': ['title_screen', 'options', 'video', 'audio', 'gameplay', 'new_game', 'are_you_sure', 'choose_level'], 'splash': ['splash']}
+                                       'main_menu': ['title_screen', 'options', 'video', 'audio', 'gameplay', 'developer', 'new_game', 'are_you_sure', 'choose_level'],
+                                       'splash': ['splash']}
 
     def check_text_element(self, text_group, text_id):
         return text_group in self.text_elements and text_id in self.text_elements[text_group]
@@ -65,6 +70,11 @@ class TextHandler:
     def deactivate_text(self, text_group, text_id):
         if self.check_text_element(text_group=text_group, text_id=text_id):
             self.text_elements[text_group][text_id].deactivate()
+
+    def deactivate_text_group(self, text_group):
+        if text_group in self.text_elements:
+            for text_id in self.text_elements[text_group]:
+                self.text_elements[text_group][text_id].deactivate()
 
     def update(self, mouse_position):
         for text_group, text_ids in self.text_elements.items():

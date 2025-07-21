@@ -130,7 +130,7 @@ class LevelEditor:
                     if selected_element[1] == 'Toggle Grid':
                         self.level.show_grid = not self.level.show_grid
                     elif selected_element[1] == 'Reset Level':
-                        self.main.text_handler.deactivate_text(text_group='level_editor', text_id='saved')
+                        self.main.text_handler.deactivate_text_group(text_group='level_editor')
                         self.main.text_handler.activate_text(text_group='level_editor', text_id='reset', duration=2)
                         self.level.load_level(name='filled' if self.level.name == 'empty' else 'empty', load_respawn='level')
                     elif selected_element[1] == 'Save Level':
@@ -139,8 +139,7 @@ class LevelEditor:
                         self.reset_toolbar(hovered=True, selected=True)
                         self.main.menu_states['choose_level'].menu['Back'].button_type = 'menu_state'
                         self.main.menu_states['choose_level'].menu['Back'].button_response = None
-                        self.main.text_handler.deactivate_text(text_group='level_editor', text_id='reset')
-                        self.main.text_handler.deactivate_text(text_group='level_editor', text_id='saved')
+                        self.main.text_handler.deactivate_text_group(text_group='level_editor')
                         self.main.change_menu_state(menu_state='choose_level')
                     elif selected_element[1] == 'Quit to Main Menu':
                         self.reset_toolbar(hovered=True)

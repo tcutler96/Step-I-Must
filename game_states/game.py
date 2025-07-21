@@ -804,7 +804,7 @@ class Game:
                     if difference == 1 else lock_data['collectable_type']}', position='top', display_layer='level')
 
     def start_up(self, previous_game_state=None):
-        self.main.audio.play_music(music_theme='chill idea')
+        self.main.audio.play_music(music_theme='metronome')
         self.main.change_menu_state()
         self.reset_level()
         self.level.name = self.main.assets.data['game']['level'] if previous_game_state == 'main_menu' else 'custom'

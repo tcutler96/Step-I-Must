@@ -12,7 +12,7 @@
   },
   "audio": {
     "master_volume": 0.1,
-    "music_volume": 0.0,
+    "music_volume": 1.0,
     "sound_volume": 1.0
   },
   "gameplay": {
@@ -184,6 +184,7 @@
         "button",
         "option",
         [
+          "100%",
           "Disabled",
           "10%",
           "20%",
@@ -193,8 +194,7 @@
           "60%",
           "70%",
           "80%",
-          "90%",
-          "100%"
+          "90%"
         ]
       ],
       "Sound Volume": [

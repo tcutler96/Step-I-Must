@@ -4,162 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd724a6d-6dff-439b-b170-fc28b5f114f8" name="Changes" comment="added compatability check when changing settings">
+    <list default="true" id="bd724a6d-6dff-439b-b170-fc28b5f114f8" name="Changes" comment="moved temp image folder to temp asset folder">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/data.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/other/intro.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/100.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/All icons.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/Cavern.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/Full.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/Heroes-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/Heroes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/Items.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/Mini-Map.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/Monsters-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/Monsters.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/No-Background/Cavern.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/No-Background/Full.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/No-Background/Heroes-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/No-Background/Heroes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/No-Background/Items.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/No-Background/Mini-Map.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/No-Background/Monsters-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/No-Background/Monsters.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-16x16/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Documented-16x16/Cavern.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Documented-16x16/Heroes-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Documented-16x16/Heroes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Documented-16x16/Items.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Documented-16x16/Mini-Map.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Documented-16x16/Monsters-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Documented-16x16/Monsters.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Documented-16x16/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Examples/Mockup-1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Examples/Mockup-2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Examples/Mockup-3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Frozen Cavern/Demonic-Dungeon-Frozen-Cavern-Examples/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/Full.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/Heroes-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/Heroes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/Items.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/Mini-Map.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/Monsters-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/Monsters.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/No-Background/Full.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/No-Background/Heroes-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/No-Background/Heroes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/No-Background/Items.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/No-Background/Mini-Map.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/No-Background/Monsters-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/No-Background/Monsters.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/No-Background/Temple.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-16x16/Temple.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Documented-16x16/Heroes-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Documented-16x16/Heroes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Documented-16x16/Items.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Documented-16x16/Mini-Map.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Documented-16x16/Monsters-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Documented-16x16/Monsters.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Documented-16x16/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Documented-16x16/Temple.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Examples/Mockup-1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Examples/Mockup-2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Examples/Mockup-3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Haunted Temple/Demonic-Dungeon-Haunted-Temple-Examples/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/Cave.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/Dungeon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/Full.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/Heroes-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/Heroes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/Items.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/Mini-Map.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/Monsters-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/Monsters.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/No-Background/Cave.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/No-Background/Dungeon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/No-Background/Full.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/No-Background/Heroes-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/No-Background/Heroes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/No-Background/Items.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/No-Background/Mini-Map.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/No-Background/Monsters-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/No-Background/Monsters.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-16x16/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Documented-16x16/Cave.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Documented-16x16/Dungeon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Documented-16x16/Heroes-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Documented-16x16/Heroes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Documented-16x16/Items.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Documented-16x16/Mini-Map.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Documented-16x16/Monsters-Animated.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Documented-16x16/Monsters.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Documented-16x16/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Examples/Mockup-1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Examples/Mockup-2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Examples/Mockup-3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Examples/Mockup-4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Examples/Mockup-5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Demonic Dungeon/Original/Demonic-Dungeon-Examples/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_alias.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_cell.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_col_r.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_copy.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_croshair.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_dead.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_default.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_grab.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_grabbing.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_help.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_move.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_pen.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_pick.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_progress1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_progress2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_progress3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_progress4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_progress5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_progress6.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_progress7.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_progress8.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_r_diag1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_r_diag2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_re_horizontal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_re_vertical.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_row_r.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_select.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_select_tap.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_unavailable.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_work1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_work2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_work3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_work4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_work5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_work6.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_work7.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_work8.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_zomming.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/Roret_Cursor/cursor_zoomout.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/klOrTF.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/temp/space.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/temp/data.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/temp/settings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_states/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_states/game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_states/level_editor.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_states/level_editor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_states/splash.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_states/splash.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/assets.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/assets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/display.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/display.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/map.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/map.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/menu_element.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/menu_element.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/shaders.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/shaders.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/text_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/text_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/transition.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/transition.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/utilities.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/utilities.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -268,7 +115,7 @@
       <workItem from="1752742595506" duration="12768000" />
       <workItem from="1752994924930" duration="186000" />
       <workItem from="1752995136974" duration="6205000" />
-      <workItem from="1753081770797" duration="16197000" />
+      <workItem from="1753081770797" duration="17020000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <option name="closed" value="true" />
@@ -350,7 +197,23 @@
       <option name="project" value="LOCAL" />
       <updated>1753085354374</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="added developer menu to backup and restore game data and user settings">
+      <option name="closed" value="true" />
+      <created>1753103142867</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1753103142867</updated>
+    </task>
+    <task id="LOCAL-00012" summary="moved temp image folder to temp asset folder">
+      <option name="closed" value="true" />
+      <created>1753103193089</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1753103193089</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -376,10 +239,12 @@
     <MESSAGE value="can now cycle both ways through options" />
     <MESSAGE value="started on resolution check" />
     <MESSAGE value="added compatability check when changing settings" />
-    <option name="LAST_COMMIT_MESSAGE" value="added compatability check when changing settings" />
+    <MESSAGE value="added developer menu to backup and restore game data and user settings" />
+    <MESSAGE value="moved temp image folder to temp asset folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="moved temp image folder to temp asset folder" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PuzzleGame$main.coverage" NAME="main Coverage Results" MODIFIED="1753103011807" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PuzzleGame$main.coverage" NAME="main Coverage Results" MODIFIED="1753103276082" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/main_py$main.coverage" NAME="main Coverage Results" MODIFIED="1752755074694" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

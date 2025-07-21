@@ -110,7 +110,10 @@ class Menu:
                         self.main.assets.save_settings()
                     self.main.change_menu_state(menu_state=selected_element[1])
                 elif selected_element[0] == 'option':
-                    self.main.assets.change_setting(group=self.menu_name, name=selected_element[2].lower().replace(' ', '_'), option=selected_element[1][0].lower().replace(' ', '_'))
+                    response = self.main.assets.change_setting(group=self.menu_name, name=selected_element[2], option=selected_element[1][0])
+                    while response:
+                        element.cycle_option(selected=selected_element[3])
+                        response = self.main.assets.change_setting(group=self.menu_name, name=selected_element[2], option=selected_element[1][0])
                 elif selected_element[0] == 'level':
                     if self.main.game_state == 'game' and selected_element[2] == 'Restart Level':
                         self.main.transition.start(style='circle', centre=element.centre, response=['level', self.main.game_states['game'].level.name, 'original', None, None], queue=(True, 'circle', 'player', 1))

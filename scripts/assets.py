@@ -148,6 +148,8 @@ class Assets:
         return data
 
     def change_setting(self, group, name, option):
+        name = name.lower().replace(' ', '_')
+        option = option.lower().replace(' ', '_')
         self.settings_changed = True
         if name in self.option_to_setting[group] and option in self.option_to_setting[group][name]:
             option = self.option_to_setting[group][name][option]
@@ -166,8 +168,7 @@ class Assets:
             elif name == 'particles':  # reference main/ particle handler...
                 pass
             elif name == 'resolution':
-                # if new setting rejected then need to tell higher function to change option to default value...
-                self.main.display.change_resolution(scale_factor=option)
+                return self.main.display.change_resolution(scale_factor=option)
             elif name == 'screen_shake':  # reference game class
                 pass
             elif name == 'shaders':

@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd724a6d-6dff-439b-b170-fc28b5f114f8" name="Changes" comment="can now cycle both ways through options">
+    <list default="true" id="bd724a6d-6dff-439b-b170-fc28b5f114f8" name="Changes" comment="started on resolution check">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/assets.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/assets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/display.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/display.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/menu_element.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/menu_element.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +119,8 @@
       <workItem from="1752659323178" duration="1912000" />
       <workItem from="1752742595506" duration="12768000" />
       <workItem from="1752994924930" duration="186000" />
-      <workItem from="1752995136974" duration="5534000" />
+      <workItem from="1752995136974" duration="6205000" />
+      <workItem from="1753081770797" duration="3262000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <option name="closed" value="true" />
@@ -180,7 +186,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752999608429</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="started on resolution check">
+      <option name="closed" value="true" />
+      <created>1753005938417</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1753005938417</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -204,10 +218,11 @@
     <MESSAGE value="map fixes and added collectable percent tracker" />
     <MESSAGE value="idea folder" />
     <MESSAGE value="can now cycle both ways through options" />
-    <option name="LAST_COMMIT_MESSAGE" value="can now cycle both ways through options" />
+    <MESSAGE value="started on resolution check" />
+    <option name="LAST_COMMIT_MESSAGE" value="started on resolution check" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PuzzleGame$main.coverage" NAME="main Coverage Results" MODIFIED="1753001056303" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PuzzleGame$main.coverage" NAME="main Coverage Results" MODIFIED="1753085003938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/main_py$main.coverage" NAME="main Coverage Results" MODIFIED="1752755074694" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

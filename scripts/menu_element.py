@@ -31,6 +31,15 @@ class MenuElement:
         self.offset_step = 5
         self.offset_start = [-50, 0]
 
+    def cycle_option(self, selected):
+        if selected == 'left':
+            self.button_response.append(self.button_response.pop(0))
+            self.option_centres.append(self.option_centres.pop(0))
+        elif selected == 'right':
+            self.button_response.insert(0, self.button_response.pop())
+            self.option_centres.insert(0, self.option_centres.pop())
+            self.main.events.remove_key(key='mouse_3')
+
     def update(self, offset, scroll):
         if self.offset[0] < 0:
             self.offset[0] += self.offset_step
@@ -43,14 +52,8 @@ class MenuElement:
                 if selected:
                     if self.button_type == 'option':
                         self.offset = self.offset_start.copy()
-                        if selected == 'left':
-                            self.button_response.append(self.button_response.pop(0))
-                            self.option_centres.append(self.option_centres.pop(0))
-                        elif selected == 'right':
-                            self.button_response.insert(0, self.button_response.pop())
-                            self.option_centres.insert(0, self.option_centres.pop())
-                            self.main.events.remove_key(key='mouse_3')
-                        return self.button_type, self.button_response, self.name
+                        self.cycle_option(selected=selected)
+                        return self.button_type, self.button_response, self.name, selected
                     elif selected == 'left':
                         return self.button_type, self.button_response, self.name
                 elif self.main.events.check_key(key=['mouse_3', 'escape']) and self.name in ['Back', 'Resume', 'No']:

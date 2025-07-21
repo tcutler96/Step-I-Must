@@ -1,0 +1,345 @@
+{
+  "video": {
+    "background": "gol",
+    "button_prompt": false,
+    "cursor_type": "sprite",
+    "hrt_shader": true,
+    "map_colour": "green",
+    "particles": false,
+    "resolution": 1,
+    "screen_shake": true,
+    "shaders": true
+  },
+  "audio": {
+    "master_volume": 0.5,
+    "music_volume": 0.5,
+    "sound_volume": 1.0
+  },
+  "gameplay": {
+    "hold_to_move": 5,
+    "hold_to_undo": 15,
+    "controls": "'wasd'"
+  },
+  "menus": {
+    "title_screen": {
+      "Slime Stepper": "title",
+      "Play": [
+        "button",
+        "game_state",
+        "game"
+      ],
+      "New Game": [
+        "button",
+        "menu_state",
+        "new_game"
+      ],
+      "Level Editor": [
+        "button",
+        "game_state",
+        "level_editor"
+      ],
+      "Options": [
+        "button",
+        "menu_state",
+        "options"
+      ],
+      "Quit": [
+        "button",
+        "game_state",
+        "quit"
+      ]
+    },
+    "options": {
+      "Options": "title",
+      "Video": [
+        "button",
+        "menu_state",
+        "video"
+      ],
+      "Audio": [
+        "button",
+        "menu_state",
+        "audio"
+      ],
+      "Gameplay": [
+        "button",
+        "menu_state",
+        "gameplay"
+      ],
+      "Developer": [
+        "button",
+        "menu_state",
+        "developer"
+      ],
+      "Back": [
+        "button",
+        "menu_state",
+        "title_screen"
+      ]
+    },
+    "video": {
+      "Video": "title",
+      "Background": [
+        "button",
+        "option",
+        [
+          "Game of Life",
+          "Space"
+        ]
+      ],
+      "Button Prompt": [
+        "button",
+        "option",
+        [
+          "Disabled",
+          "Enabled"
+        ]
+      ],
+      "Cursor Type": [
+        "button",
+        "option",
+        [
+          "Sprite",
+          "System"
+        ]
+      ],
+      "HRT Shader": [
+        "button",
+        "option",
+        [
+          "Enabled",
+          "Disabled"
+        ]
+      ],
+      "Map Colour": [
+        "button",
+        "option",
+        [
+          "Green",
+          "Light Purple",
+          "Dark Purple",
+          "Disabled"
+        ]
+      ],
+      "Particles": [
+        "button",
+        "option",
+        [
+          "Disabled",
+          "Enabled"
+        ]
+      ],
+      "Resolution": [
+        "button",
+        "option",
+        [
+          "(448, 320)",
+          "(896, 640)",
+          "(1344, 960)",
+          "(1792, 1280)"
+        ]
+      ],
+      "Screen Shake": [
+        "button",
+        "option",
+        [
+          "Enabled",
+          "Disabled"
+        ]
+      ],
+      "Shaders": [
+        "button",
+        "option",
+        [
+          "Enabled",
+          "Disabled"
+        ]
+      ],
+      "Back": [
+        "button",
+        "menu_state",
+        "options"
+      ]
+    },
+    "audio": {
+      "Audio": "title",
+      "Master Volume": [
+        "button",
+        "option",
+        [
+          "50%",
+          "60%",
+          "70%",
+          "80%",
+          "90%",
+          "100%",
+          "Disabled",
+          "10%",
+          "20%",
+          "30%",
+          "40%"
+        ]
+      ],
+      "Music Volume": [
+        "button",
+        "option",
+        [
+          "50%",
+          "60%",
+          "70%",
+          "80%",
+          "90%",
+          "100%",
+          "Disabled",
+          "10%",
+          "20%",
+          "30%",
+          "40%"
+        ]
+      ],
+      "Sound Volume": [
+        "button",
+        "option",
+        [
+          "100%",
+          "Disabled",
+          "10%",
+          "20%",
+          "30%",
+          "40%",
+          "50%",
+          "60%",
+          "70%",
+          "80%",
+          "90%"
+        ]
+      ],
+      "Back": [
+        "button",
+        "menu_state",
+        "options"
+      ]
+    },
+    "gameplay": {
+      "Gameplay": "title",
+      "Controls": [
+        "button",
+        "option",
+        [
+          "'wasd'",
+          "arrows keys"
+        ]
+      ],
+      "Hold to Move": [
+        "button",
+        "option",
+        [
+          "Fast",
+          "Disabled",
+          "Slow"
+        ]
+      ],
+      "Hold to Undo": [
+        "button",
+        "option",
+        [
+          "Slow",
+          "Fast",
+          "Disabled"
+        ]
+      ],
+      "Back": [
+        "button",
+        "menu_state",
+        "options"
+      ]
+    },
+    "developer": {
+      "Developer": "title",
+      "Backup Data": [
+        "button",
+        "button",
+        "backup_data"
+      ],
+      "Retore Data": [
+        "button",
+        "button",
+        "restore_data"
+      ],
+      "Backup Settings": [
+        "button",
+        "button",
+        "backup_settings"
+      ],
+      "Retore Settings": [
+        "button",
+        "button",
+        "restore_settings"
+      ],
+      "Back": [
+        "button",
+        "menu_state",
+        "options"
+      ]
+    },
+    "game_paused": {
+      "Paused": "title",
+      "Resume": [
+        "button",
+        "menu_state",
+        null
+      ],
+      "Options": [
+        "button",
+        "menu_state",
+        "options"
+      ],
+      "Restart Level": [
+        "button",
+        "level",
+        null
+      ],
+      "Quit": [
+        "button",
+        "game_state",
+        "menu_menu"
+      ]
+    },
+    "new_game": {
+      "New Game?": "title",
+      "Yes": [
+        "button",
+        "menu_state",
+        "are_you_sure"
+      ],
+      "No": [
+        "button",
+        "menu_state",
+        "title_screen"
+      ]
+    },
+    "are_you_sure": {
+      "Are You Sure?": "title",
+      "No": [
+        "button",
+        "menu_state",
+        "title_screen"
+      ],
+      "Nay": [
+        "button",
+        "menu_state",
+        "title_screen"
+      ],
+      "Yes": [
+        "button",
+        "game_state",
+        "game"
+      ],
+      "Nope": [
+        "button",
+        "menu_state",
+        "title_screen"
+      ]
+    }
+  }
+}

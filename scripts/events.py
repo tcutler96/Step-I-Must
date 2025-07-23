@@ -12,7 +12,7 @@ class Events:
         self.mouse_movement = [0, 0]
         self.mouse_window_position = [0, 0]
         self.mouse_display_position = [0, 0]
-        self.custom_events = self.load_custom_events(events=['music_end'])
+        self.custom_events = self.load_custom_events(events=['custom_event'])
 
     def load_custom_events(self, events):
         custom_events = {}

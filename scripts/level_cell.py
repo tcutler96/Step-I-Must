@@ -2,9 +2,10 @@ import pygame as pg
 from copy import deepcopy
 
 class LevelCell:
-    def __init__(self, main, position, elements=None, object_data=None):
+    def __init__(self, main, position, level_offset, elements=None, object_data=None):
         self.main = main
         self.position = position
+        self.level_offset = level_offset
         self.empty_elements = {'object': None, 'player': None, 'tile': None, 'vertical_barrier': None, 'horizontal_barrier': None}
         if not elements:
             self.elements = deepcopy(self.empty_elements)
@@ -205,7 +206,7 @@ class LevelCell:
                 self.object_data[object_type] = None
         return queue
 
-    def draw(self, surface, animated, alpha=255, element_types=None):
+    def draw(self, displays, animated, alpha=255, element_types=None):
         for element_type, element in self.elements.items():
             if element_type in element_types and element:
                 sprite = self.main.utilities.get_sprite(name=element['name'], state=element['state'], animated=animated)
@@ -218,5 +219,5 @@ class LevelCell:
                         position = self.object_data[element_type]['blit_position'][0]
                     else:
                         position = self.position
-                    surface.blit(source=sprite, dest=(position[0] * self.main.sprite_size + (self.barrier_offset if element_type == 'vertical_barrier' else 0),
-                                                      position[1] * self.main.sprite_size + (self.barrier_offset if element_type == 'horizontal_barrier' else 0)))
+                    displays['player' if element_type == 'player' else 'level'].blit(source=sprite, dest=(self.level_offset[0] + position[0] * self.main.sprite_size + (self.barrier_offset if element_type == 'vertical_barrier' else 0),
+                                                                self.level_offset[1] + position[1] * self.main.sprite_size + (self.barrier_offset if element_type == 'horizontal_barrier' else 0)))

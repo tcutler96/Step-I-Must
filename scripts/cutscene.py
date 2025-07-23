@@ -20,11 +20,14 @@ class Cutscene:
             self.timer = cutscene_data['length'] * self.main.fps
             cutscene_data['position'] = position
             self.main.text_handler.activate_text(text_group='collectables', text_id=collectable_type, duration=3)
+            self.main.shaders.shaders['effects']['distort']['data']['x'], self.main.shaders.shaders['effects']['distort']['data']['y'] = position
 
     def update(self, level):
         if self.active_cutscene:
             self.timer -= 1
             if self.timer == 0:
+                if self.active_cutscene == 'collectable':
+                    self.main.shaders.apply_effect(display_layer=['level', 'player'], effect=None)
                 self.active_cutscene = None
             if self.active_cutscene == 'part_one':
                 if self.timer == 240:
@@ -41,9 +44,9 @@ class Cutscene:
                 elif self.timer == 1:
                     return 'show_map_text'
             elif self.active_cutscene == 'collectable':
-                pass
+                self.main.shaders.apply_effect(display_layer=['level', 'player'], effect='distort')
         else:
-            for name, data in self.cutscene_data.items():  # how/ where do we trigger collectable cutscene?
+            for name, data in self.cutscene_data.items():
                 if data['type'] == 'level' and not data['triggered']:
                     if level.name == data['trigger']:
                         self.active_cutscene = name

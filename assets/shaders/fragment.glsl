@@ -2,18 +2,21 @@
 
 uniform int fps;
 uniform vec2 resolution;
+uniform vec2 aspect;
 uniform vec2 pixel;
 uniform float time;
 uniform bool mouse_active;
 uniform vec2 mouse_position;
 
-const int effect_data_length = 6;
+const int effect_data_length = 10;
 uniform sampler2D background_display;
 uniform float background_effect[effect_data_length];
 uniform sampler2D level_display;
 uniform float level_effect[effect_data_length];
-uniform sampler2D steps_display;
-uniform float steps_effect[effect_data_length];
+uniform sampler2D player_display;
+uniform float player_effect[effect_data_length];
+uniform sampler2D level_text_display;
+uniform float level_text_effect[effect_data_length];
 uniform sampler2D map_display;
 uniform float map_effect[effect_data_length];
 uniform sampler2D level_editor_display;
@@ -30,6 +33,7 @@ uniform float grey_index;
 uniform float invert_index;
 uniform float blur_index;
 uniform float pixelate_index;
+uniform float distort_index;
 uniform float test_index;
 uniform float gol_index;
 
@@ -100,6 +104,36 @@ vec4 pixelate(sampler2D display_layer, float effect_data[effect_data_length]) {
     return colour;
 }
 
+float get_map(float d, float t, float effect_data[effect_data_length]) {
+    float outer_map = 1.0 - smoothstep(effect_data[2] - effect_data[7], effect_data[2], d);
+    float inner_map = smoothstep(effect_data[2] - effect_data[7] * 2.0, effect_data[2] - effect_data[7], d);
+    float map = outer_map * inner_map;
+    map *= smoothstep(0.0, 0.25, t);
+    map *= 1.0 - smoothstep(0.25, 1.0, t);
+    return map;
+}
+
+vec4 distort(sampler2D display_layer, float effect_data[effect_data_length]) {
+    vec2 direction = uv - vec2(effect_data[4], effect_data[5]) / resolution;
+    float d = length(direction / aspect);
+
+    float map_r = get_map(d, effect_data[2] + 0.02, effect_data);
+    float map_g = get_map(d, effect_data[2], effect_data);
+    float map_b = get_map(d, effect_data[2] - 0.02, effect_data);
+
+    vec2 displacement_r = normalize(direction) * effect_data[6] * map_r;
+    vec2 displacement_g = normalize(direction) * effect_data[6] * map_g;
+    vec2 displacement_b = normalize(direction) * effect_data[6] * map_b;
+
+    float r = texture(display_layer, uv - displacement_r).r;
+    float g = texture(display_layer, uv - displacement_g).g;
+    float b = texture(display_layer, uv - displacement_b).b;
+
+    vec4 colour = vec4(r, g, b, texture(display_layer, uv - displacement_g).a);
+    colour.rgb += map_g * 0.2;
+    return colour;
+}
+
 vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
 //    vec4 colour = texture(display_layer, uv);
 //    colour.rgb = vec3(colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722);
@@ -139,6 +173,8 @@ vec4 get_colour(sampler2D display_layer, float effect_data[effect_data_length], 
         colour = blur(display_layer, effect_data);
     } else if (effect_data[1]==pixelate_index) {
         colour = pixelate(display_layer, effect_data);
+    } else if (effect_data[1]==distort_index) {
+        colour = distort(display_layer, effect_data);
     } else if (effect_data[1]==test_index) {
         colour = test(display_layer, effect_data);
     } else if (effect_data[1]==gol_index) {
@@ -161,11 +197,15 @@ void main() {
             out_colour = get_colour(background_display, background_effect, out_colour);
         }
         out_colour = get_colour(level_display, level_effect, out_colour);
-        out_colour = get_colour(steps_display, steps_effect, out_colour);
+        out_colour = get_colour(player_display, player_effect, out_colour);
+        out_colour = get_colour(level_text_display, level_text_effect, out_colour);
         out_colour = get_colour(map_display, map_effect, out_colour);
         out_colour = get_colour(level_editor_display, level_editor_effect, out_colour);
         out_colour = get_colour(menu_display, menu_effect, out_colour);
         out_colour = get_colour(ui_display, ui_effect, out_colour);
         out_colour = get_colour(transition_display, transition_effect, out_colour);
+
+//        out_colour = get_colour(final_display, final_effect, out_colour);
+//        out_colour.rgb = vec3(out_colour.r * 0.2126 + out_colour.g * 0.7152 + out_colour.b * 0.0722);
     }
 }

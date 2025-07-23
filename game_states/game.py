@@ -11,18 +11,16 @@ class Game:
         self.main.assets.data['game']['part_two'] = True
         # self.main.assets.data['game']['part_one'] = False
         # self.main.assets.data['game']['part_two'] = False
-        self.part_data = {'part_one': {'collectable_types': ['silver keys', 'silver gems'], 'text': 'World 1: ', 'position': (424, 252)},
-                          'part_two': {'collectable_types': ['gold keys', 'gold gems', 'cheeses'], 'text': 'World 2: ', 'position': (424, 266)},
-                          'overall': {'collectable_types': ['silver keys', 'silver gems', 'gold keys', 'gold gems', 'cheeses'], 'text': 'Overall: ', 'position': (424, 280)}}
         self.cutscene = Cutscene(main=self.main)
         self.level = Level(main=self.main)
         self.map = Map(main=self.main)
-        self.movement_held = {'w': False, 'a': False, 's': False, 'd': False}
-        self.movement_directions = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0)}
+        self.movement_dict = {'w': 'up', 'a': 'left', 's': 'down', 'd': 'right'}
+        self.movement_held = {'up': 0, 'left': 0, 'down': 0, 'right': 0}
+        self.movement_directions = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0), 'up': (0, -1), 'left': (-1, 0), 'down': (0, 1), 'right': (1, 0)}
         self.move_delay = self.main.assets.settings['gameplay']['hold_to_move']
         self.move_timer = 0
         self.hold_move_delay = 15
-        self.interpolation_speed = 0.125
+        self.movement_speed = self.main.assets.settings['gameplay']['movement']
         self.bump_amount = 0.4
         self.last_movement = None
         self.no_movement = False
@@ -69,26 +67,13 @@ class Game:
                         object_data['last_split'] = None
                     object_data['split'] = False
 
-    def update_part_percents(self):
-        max_counts = self.map.collectables['max_counts']
-        for part in self.part_data:
-            max_count = 0
-            for collectable_type in self.part_data[part]['collectable_types']:
-                max_count += max_counts[collectable_type]
-            count = self.main.utilities.check_collectable(collectable_type=self.part_data[part]['collectable_types'])
-            percent = round(100 * count / max_count, 2)
-            self.main.assets.data['game'][f'{part}_percent'] = percent
-            self.main.text_handler.add_text(text_group='map', text_id=f'{part}_percent', text=f'{self.part_data[part]['text']}{percent:g}%', position=self.part_data[part]['position'],
-                                            alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, max_width=112, display_layer='map')
-
     def collect_collectable(self, cell):
-        self.main.audio.play_sound(name='collectable')
+        self.main.audio.play_sound(name='collectable', overlap=True)
         # self.main.audio.play_sound(name=f'collectable_{cell.elements['object']['state'].replace(' ', '_')}')
         collectable_type = cell.elements['object']['state'] + 's'
         if self.level.name != 'custom':
             self.main.assets.data['game']['collectables'][collectable_type].append(self.main.utilities.level_and_position(level=self.level.name, position=cell.object_data['object']['original_position']))
             self.map.update_collectables(collectable_type=collectable_type, level_name=self.level.name, position=cell.object_data['object']['original_position'])
-            self.update_part_percents()
         levels = self.level.cached_levels
         levels.append({'name': self.level.name, 'level': self.level.level})
         for count, level in enumerate(levels):
@@ -113,7 +98,8 @@ class Game:
         cell.object_data['object'] = None
         # we sometimes get stuck in moving animation when we collect something...
         # need to resolve level loop still while cutscene is happening or pause all that until after cutscene?
-        self.cutscene.start(collectable_type=collectable_type, position=cell.position)
+        self.cutscene.start(collectable_type=collectable_type, position=(self.level.level_offset[0] + self.level.sprite_size * (cell.position[0] + 0.5),
+                                                                         self.level.level_offset[1] + self.level.sprite_size * (cell.position[1] + 0.5)))
         self.main.assets.save_data()
 
     def resolve_object_conflict(self, revert_cell, revert_object_type, revert_movement, bump_cell, bump_object_type, bump_movement):
@@ -183,7 +169,7 @@ class Game:
         # add smoke/ magic animation to splitter...
         self.resolve_state = None
         self.no_movement = False
-        self.movement_held = {'w': False, 'a': False, 's': False, 'd': False}
+        self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
         if self.level.name == 'custom':
             new_level = self.level.name
             respawn = self.get_respawn()
@@ -392,7 +378,7 @@ class Game:
                     if self.move_object(cell=cell, object_type='player', movement=movement):
                         player_moved = True
             if self.players_exited:
-                self.movement_held = {'w': False, 'a': False, 's': False, 'd': False}
+                self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
                 self.no_movement = False
                 self.transition_level()
             elif player_moved:
@@ -745,16 +731,16 @@ class Game:
 
     def interpolate_blit_position(self, blit_position):
         if blit_position[0][0] < blit_position[1][0]:
-            blit_position[0] = (blit_position[0][0] + self.interpolation_speed, blit_position[0][1])
+            blit_position[0] = (blit_position[0][0] + self.movement_speed, blit_position[0][1])
         elif blit_position[0][0] > blit_position[1][0]:
-            blit_position[0] = (blit_position[0][0] - self.interpolation_speed, blit_position[0][1])
-        if abs(blit_position[0][0] - blit_position[1][0]) < self.interpolation_speed:
+            blit_position[0] = (blit_position[0][0] - self.movement_speed, blit_position[0][1])
+        if abs(blit_position[0][0] - blit_position[1][0]) < self.movement_speed:
             blit_position[0] = (blit_position[1][0], blit_position[0][1])
         if blit_position[0][1] < blit_position[1][1]:
-            blit_position[0] = (blit_position[0][0], blit_position[0][1] + self.interpolation_speed)
+            blit_position[0] = (blit_position[0][0], blit_position[0][1] + self.movement_speed)
         elif blit_position[0][1] > blit_position[1][1]:
-            blit_position[0] = (blit_position[0][0], blit_position[0][1] - self.interpolation_speed)
-        if abs(blit_position[0][1] - blit_position[1][1]) < self.interpolation_speed:
+            blit_position[0] = (blit_position[0][0], blit_position[0][1] - self.movement_speed)
+        if abs(blit_position[0][1] - blit_position[1][1]) < self.movement_speed:
             blit_position[0] = (blit_position[0][0], blit_position[1][1])
         if blit_position[0] == blit_position[1]:
             blit_position.pop(1)
@@ -792,7 +778,6 @@ class Game:
         self.teleporter_data = {'standing': None, 'setting': None}
         self.sign_data = None
         self.lock_data = None
-        self.update_part_percents()
         self.map.reset_map()
         self.level.reset_cache()
         self.cutscene.reset()
@@ -804,7 +789,7 @@ class Game:
                     if difference == 1 else lock_data['collectable_type']}', position='top', display_layer='level')
 
     def start_up(self, previous_game_state=None):
-        self.main.audio.play_music(music_theme='metronome')
+        self.main.audio.play_music(music_theme='chill idea')
         self.main.change_menu_state()
         self.reset_level()
         self.level.name = self.main.assets.data['game']['level'] if previous_game_state == 'main_menu' else 'custom'
@@ -814,7 +799,7 @@ class Game:
         if self.main.menu_state:
             self.main.display.set_cursor(cursor='arrow')
             self.update_map(mouse_position=None)
-            self.main.shaders.apply_effect(display_layer=['level', 'steps', 'map'], effect='blur')
+            self.main.shaders.apply_effect(display_layer=['level', 'player', 'level_text', 'map'], effect='blur')
         else:
             if self.main.debug or self.map.show_map:
                 self.main.display.set_cursor(cursor='arrow')
@@ -828,11 +813,11 @@ class Game:
                     self.main.change_menu_state(menu_state='game_paused')
                 self.update_map(mouse_position=mouse_position)
                 if not self.update_cutscene():
-                    if self.no_steps or not self.player_cells:  # no more steps or players, game over, you can not do anything except open menu, map, move to reset, and press 'e' to teleport...
-                        self.main.text_handler.activate_text(text_group='game', text_id='reset')
-                        self.main.shaders.apply_effect(display_layer=['level', 'steps'], effect='grey')
-                    else:
-                        pass
+                    if self.player_cells and self.level.steps == 1:
+                        self.main.shaders.apply_effect(display_layer=['player'], effect='grey')
+                    elif self.no_steps or not self.player_cells:  # no more steps or players, game over, you can not do anything except open menu, map, move to reset, and press 'e' to teleport...
+                        # self.main.audio.play_sound(name='game_over')
+                        self.main.shaders.apply_effect(display_layer=['level', 'player'], effect='grey')
                     self.update_teleporters()
                     if not self.map.show_map:
                         if self.level.update():
@@ -842,10 +827,14 @@ class Game:
                         self.move_timer -= 1
                     keys_pressed = self.main.events.check_key(key=list(self.movement_directions.keys()), action='pressed')
                     if keys_pressed:
+                        if keys_pressed[0] in self.movement_dict:
+                            keys_pressed[0] = self.movement_dict[keys_pressed[0]]
                         self.move_timer = 0
-                        self.movement_held = {'w': 0, 'a': 0, 's': 0, 'd': 0, keys_pressed[0]: 1}
+                        self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0, keys_pressed[0]: 1}
                     keys_unpressed = self.main.events.check_key(key=list(self.movement_directions.keys()), action='unpressed')
                     if keys_unpressed:
+                        if keys_unpressed[0] in self.movement_dict:
+                            keys_unpressed[0] = self.movement_dict[keys_unpressed[0]]
                         self.movement_held[keys_unpressed[0]] = 0
                         self.no_movement = False
                     if self.interpolating:
@@ -887,25 +876,22 @@ class Game:
                                                     if self.movement_held[key] > self.hold_move_delay:
                                                         self.move_players(movement=self.movement_directions[key])
                                 else:
-                                    # self.main.shaders.apply_effect(display_layer=['level'], effect='pixelate')  # cool effect but would be also to still be able to see the level to asses what went wrong
-                                    # maybe only pixelate the player when we separate the level into proper display layers...
-                                    # we we reach 1 step left, apply shader but only with half effect...
                                     if keys_pressed:
                                         self.no_steps = False
                                         self.stored_movement = None
                                         self.load_level(name=self.level.name, load_respawn='current')
             else:
-                if not self.main.transition.fade_in:  # activating another shader effect doesnt allow the old effect to fade out...
-                    self.main.shaders.apply_effect(display_layer=['level', 'steps', 'map'], effect='pixelate')
-                    # might be cool to only pixelate player when we teleport in and out...
+                if not self.main.transition.fade_in:
+                    # this triggers when we close the game, need to check that were transitioning levels, also it is a cool effect
+                    self.main.shaders.apply_effect(display_layer=['level', 'player', 'level_text', 'map'], effect='pixelate')
 
     def draw(self, displays):
         self.level.draw(displays=displays)
         self.cutscene.draw(displays=displays)
         self.map.draw(displays=displays)
         self.main.text_handler.activate_text(text_group='steps', text_id=self.level.steps)
-        # if not self.player_cells or self.no_steps:
-        #     self.main.text_handler.activate_text(text_group='game', text_id='reset')
+        if not self.player_cells or self.no_steps:
+            self.main.text_handler.activate_text(text_group='game', text_id='reset')
         for sign in self.sign_data:
             self.main.text_handler.activate_text(text_group='signs', text_id=self.level.name + ' - ' + str(sign))
         if self.main.debug:

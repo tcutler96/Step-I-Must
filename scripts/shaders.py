@@ -9,22 +9,25 @@ class Shaders:
         self.quad_buffer = self.context.buffer(data=array('f', [-1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, 1.0, -1.0, 1.0, 1.0]))
         self.vertex_shader, self.fragment_shader = self.main.assets.shaders['vertex'], self.main.assets.shaders['fragment']
         self.program = self.context.program(vertex_shader=self.vertex_shader, fragment_shader=self.fragment_shader)
-        self.set_uniforms(uniforms={'fps': self.main.fps, 'resolution': self.main.display.size, 'pixel': (1 / self.main.display.size[0], 1 / self.main.display.size[1])})
+        self.set_uniforms(uniforms={'fps': self.main.fps, 'resolution': self.main.display.size, 'aspect': self.main.display.aspect, 'pixel': (1 / self.main.display.size[0], 1 / self.main.display.size[1])})
         self.render_object = self.context.vertex_array(program=self.program, content=[(self.quad_buffer, '2f 2f', 'vert', 'texcoord')], mode=mgl.TRIANGLE_STRIP)
         self.extra_textures = ['buffer']
         self.textures = self.create_textures()
         self.render_buffer = self.context.renderbuffer(size=self.main.display.size)
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
-        self.effect_data_length = 6
+        self.effect_data_length = 10
         self.empty_effect_data = [0] * self.effect_data_length
         self.shaders = self.load_shaders(effects={'grey': {'scale': 0, 'step': 1}, 'invert': {'scale': 0, 'step': 1},
                                                   'blur': {'size': 1, 'length': 3, 'counter': self.main.fps},
                                                   'pixelate': {'size': 1, 'counter': self.main.fps},  # play around with this value to get cool low poly effects, can switch between 12 - 16, can have diffent values for x and y...
-                                                  'test': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False}})
+                                                  'distort': {'scale': 0, 'step': 0.5, 'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05}, 'test': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False}})
         self.apply_shaders = self.main.assets.settings['video']['shaders']
         self.background_effect = self.main.assets.settings['video']['background']
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
         # how inefficient is it to have one fragment shader, would we get better frames from individual shaders?
+        # activating another shader effect doesnt allow the old effect to fade out...
+        # pass in shader effect variables so we can control them (ie only greyscale the player layer slightly when we only have 1 step left but fully pixealte on teleport)...
+        # add distortion effect to grey effect that is used when low/ out of steps...
 
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)
@@ -56,7 +59,7 @@ class Shaders:
             self.set_uniforms(uniforms={f'{effect}_index': index + 1})
         return shaders
 
-    def clear_gol(self):  # gol background cycles through 4 versions of texture for some reason, could leave it as is as a cool quirk...
+    def clear_gol(self):
         self.textures['buffer'].release()
         buffer = self.context.texture(size=self.main.display.size, components=4)
         buffer.filter = (mgl.NEAREST, mgl.NEAREST)
@@ -73,7 +76,6 @@ class Shaders:
                 if display_layer in self.main.display.display_layers and (not effect or effect in self.shaders['effects']):
                     display_layer += '_effect'
                     if not effect:  # if None effect passed in, then force effect data to be empty (maybe just set the first two indexes to zero and let the update function naturally fade out current effect)...
-                        # self.shaders['display_layers'][display_layer] = self.empty_effect_data
                         self.shaders['display_layers'][display_layer][0:2] = [0] * 2
                     elif not self.shaders['display_layers'][display_layer][1]:
                         if effect == 'gol':
@@ -137,6 +139,13 @@ class Shaders:
                         effect_data[3] = self.main.fps
                         if effect_data[2] <= 0:
                             effect_data[1] = 0
+            elif effect_data[1] == self.shaders['effects']['distort']['index']:
+                if effect_data[0]:
+                    effect_data[2] = min(1, effect_data[2] + effect_data[3] / self.main.fps)
+                else:
+                    effect_data[2] = max(0, effect_data[2] - effect_data[3] / self.main.fps)
+                    if effect_data[2] == 0:
+                        effect_data[1] = 0
             elif effect_data[1] == self.shaders['effects']['test']['index']:
                 if effect_data[0]:
                     pass
@@ -154,8 +163,8 @@ class Shaders:
                     effect_data[1] = 0
 
     def update(self, mouse_position):
-        # if self.main.events.check_key('e', 'held'):
-        #     self.apply_effect(display_layer=['menu', 'level'], effect='blur')
+        if self.main.events.check_key('x', 'held'):
+            self.apply_effect(display_layer=['menu', 'level'], effect='distort')
         if self.background_effect == 'gol':
             self.apply_effect(display_layer='background', effect='gol')
         self.update_effect_data()

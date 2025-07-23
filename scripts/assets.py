@@ -42,7 +42,7 @@ class Assets:
                                  'audio': {'master_volume': {'disabled': 0.0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1.0},
                                            'music_volume': {'disabled': 0.0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1.0},
                                            'sound_volume': {'disabled': 0.0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1.0}},
-                                 'gameplay': {'hold_to_move': {'fast': 5, 'slow': 15, 'disabled': -1}, 'hold_to_undo': {'fast': 5, 'slow': 15, 'disabled': -1}}}
+                                 'gameplay': {'hold_to_move': {'disabled': -1, 'slow': 15, 'fast': 5}, 'hold_to_undo': {'disabled': -1, 'slow': 15, 'fast': 5}, 'movement': {'slow': 0.125, 'fast': 0.25}}}
 
     def post_load(self):
         self.images = self.load_images()
@@ -182,6 +182,8 @@ class Assets:
             elif name == 'hold_to_undo':
                 self.main.game_states['game'].level.undo_redo_delay = option
                 self.main.game_states['level_editor'].level.undo_redo_delay = option
+            elif name == 'movement':
+                self.main.game_states['game'].movement_speed = option
 
     def save_data(self):
         with open(os.path.join(self.assets_path, 'data.json'), 'w') as file:

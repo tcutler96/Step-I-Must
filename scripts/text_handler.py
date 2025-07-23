@@ -18,7 +18,7 @@ class TextHandler:
         self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_step=8.5, colour='purple', size=24)
         self.add_text(text_group='level_editor', text_id='reset', text='level reset', position='bottom_right', alignment=('r', 'c'))
         self.add_text(text_group='level_editor', text_id='saved', text='level saved', position='bottom_right', alignment=('r', 'c'))
-        self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', display_layer='ui')  # draw game over text on seperate layer to main level so that it doesnt get effected by the shaders...
+        self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', display_layer='level_text')
         self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', display_layer='level')
         self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', display_layer='level')
         self.add_text(text_group='game', text_id='warp?', text=f"{{*<¡>*}} press 'e' to warp {{*<¡>*}}", position='top', display_layer='level', style='itallic')
@@ -28,14 +28,14 @@ class TextHandler:
                       alignment=('r', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='map')
         self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
         for steps in range(-9, 10):
-            self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='steps')
+            self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='level_text')
         for collectable in self.main.assets.data['game']['collectables']:
-            self.add_text(text_group='collectables', text_id=collectable, text=f'{collectable[:-1]} collected!', position='top', outline_size=1, display_layer='level')
+            self.add_text(text_group='collectables', text_id=collectable, text=f'{collectable[:-1]} collected!', position='top', display_layer='level')
         # pull sign data from game data, and have text positioned just above the sign...
         # sign text position: level offset (112, 32) + cell position (x + 0.5, y - 0.25) * cell size (16)
         # add functionality for multiline sign text when it is too long for one line...
         # just have separate text elements for each line, shifting position up by ~12 for each line...
-        self.add_text(text_group='signs', text_id='(-2, 2) - (6, 8)', text='this is a sign text test', position=(216, 156), size=12, outline_size=1, display_layer='level')
+        self.add_text(text_group='signs', text_id='(-2, 2) - (6, 8)', text='this is a sign text test', position=(216, 156), size=12, display_layer='level')
         self.game_state_text_groups = {'game': ['game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay', 'developer'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],
                                        'main_menu': ['title_screen', 'options', 'video', 'audio', 'gameplay', 'developer', 'new_game', 'are_you_sure', 'choose_level'],

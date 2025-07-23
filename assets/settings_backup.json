@@ -6,23 +6,23 @@
     "hrt_shader": true,
     "map_colour": "green",
     "particles": false,
-    "resolution": 1,
+    "resolution": 2,
     "screen_shake": true,
     "shaders": true
   },
   "audio": {
-    "master_volume": 0.5,
-    "music_volume": 0.5,
+    "master_volume": 0.1,
+    "music_volume": 1.0,
     "sound_volume": 1.0
   },
   "gameplay": {
     "hold_to_move": 5,
     "hold_to_undo": 15,
-    "controls": "'wasd'"
+    "movement": 0.125
   },
   "menus": {
     "title_screen": {
-      "Slime Stepper": "title",
+      "Slime Steppa": "title",
       "Play": [
         "button",
         "game_state",
@@ -133,10 +133,10 @@
         "button",
         "option",
         [
-          "(448, 320)",
           "(896, 640)",
           "(1344, 960)",
-          "(1792, 1280)"
+          "(1792, 1280)",
+          "(448, 320)"
         ]
       ],
       "Screen Shake": [
@@ -167,34 +167,34 @@
         "button",
         "option",
         [
+          "10%",
+          "20%",
+          "30%",
+          "40%",
           "50%",
           "60%",
           "70%",
           "80%",
           "90%",
           "100%",
-          "Disabled",
-          "10%",
-          "20%",
-          "30%",
-          "40%"
+          "Disabled"
         ]
       ],
       "Music Volume": [
         "button",
         "option",
         [
-          "50%",
-          "60%",
-          "70%",
-          "80%",
-          "90%",
           "100%",
           "Disabled",
           "10%",
           "20%",
           "30%",
-          "40%"
+          "40%",
+          "50%",
+          "60%",
+          "70%",
+          "80%",
+          "90%"
         ]
       ],
       "Sound Volume": [
@@ -222,14 +222,6 @@
     },
     "gameplay": {
       "Gameplay": "title",
-      "Controls": [
-        "button",
-        "option",
-        [
-          "'wasd'",
-          "arrows keys"
-        ]
-      ],
       "Hold to Move": [
         "button",
         "option",
@@ -246,6 +238,14 @@
           "Slow",
           "Fast",
           "Disabled"
+        ]
+      ],
+      "Movement": [
+        "button",
+        "option",
+        [
+          "Slow",
+          "Fast"
         ]
       ],
       "Back": [

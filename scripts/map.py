@@ -17,6 +17,9 @@ class Map:
                              'sprites': {'fraction': self.main.assets.images['map']['fraction_2'].copy(), 'medal': self.main.assets.images['map']['medal'].copy()} |
                                         {collectable_type[:-1]: None for collectable_type in list(self.main.assets.data['game']['collectables'])} |
                                         {f'{collectable_type[:-1]} empty': None for collectable_type in list(self.main.assets.data['game']['collectables'])}}
+        self.part_data = {'part_one': {'collectable_types': ['silver keys', 'silver gems'], 'text': 'World 1: ', 'position': (424, 252)},
+                          'part_two': {'collectable_types': ['gold keys', 'gold gems', 'cheeses'], 'text': 'World 2: ', 'position': (424, 266)},
+                          'overall': {'collectable_types': ['silver keys', 'silver gems', 'gold keys', 'gold gems', 'cheeses'], 'text': 'Overall: ', 'position': (424, 280)}}
         self.alpha = 0
         self.alpha_step = 8.5
         self.alpha_updated = True
@@ -80,6 +83,7 @@ class Map:
         self.show_map = False
         self.icons['alpha'] = self.icons['alpha_default'].copy()
         self.update_icons()
+        self.update_part_percents()
         for level_name, map_cell in self.map.items():
             map_cell.discovered = level_name in self.main.assets.data['game']['discovered_levels']
             map_cell.player = level_name == self.main.assets.data['game']['level']
@@ -127,10 +131,23 @@ class Map:
                                         alpha_step=8.5, colour='purple' if count < max_count else 'light_green',
                                         position=self.get_collectable_position(x=self.collectables['types'].index(collectable_type) + 0.5, y=max_count + (6.3 if count < max_count else 6.1)))
 
+    def update_part_percents(self):
+        max_counts = self.collectables['max_counts']
+        for part in self.part_data:
+            max_count = 0
+            for collectable_type in self.part_data[part]['collectable_types']:
+                max_count += max_counts[collectable_type]
+            count = self.main.utilities.check_collectable(collectable_type=self.part_data[part]['collectable_types'])
+            percent = round(100 * count / max_count, 2)
+            self.main.assets.data['game'][f'{part}_percent'] = percent
+            self.main.text_handler.add_text(text_group='map', text_id=f'{part}_percent', text=f'{self.part_data[part]['text']}{percent:g}%', position=self.part_data[part]['position'],
+                                            alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, max_width=112, display_layer='map')
+
     def update_collectables(self, collectable_type, level_name, position):
-        if collectable_type in self.collectables['types'] and level_name != 'custom' and position in self.map[level_name].collectables[collectable_type]:
+        if collectable_type in self.collectables['types'] and position in self.map[level_name].collectables[collectable_type]:
             self.map[level_name].collectables[collectable_type].remove(position)
             self.update_collectable_count_text(collectable_type=collectable_type)
+            self.update_part_percents()
 
     def update_interpolation(self):
         interpolating = False
@@ -185,7 +202,7 @@ class Map:
         self.update_sprites()
         if self.show_map:
             interpolating = self.update_interpolation()
-            self.main.shaders.apply_effect(display_layer=['level', 'steps'], effect='blur')
+            self.main.shaders.apply_effect(display_layer=['level', 'player', 'level_text'], effect='blur')
             if self.alpha < 255:
                 self.alpha = min(self.alpha + self.alpha_step, 255)
             selected_level = [None, None]
@@ -218,9 +235,9 @@ class Map:
 
     def draw(self, displays):
         if self.alpha:
-            self.draw_collectables(displays=displays)
             for map_cell in self.map.values():
                 map_cell.draw(displays=displays, icons=self.icons['icons'], offset=self.offset_dict['current'], alpha=self.alpha)
+            self.draw_collectables(displays=displays)
         if self.show_map:
             if self.main.assets.data['game']['part_one'] or self.main.debug:
                 if self.show_text or self.main.debug:

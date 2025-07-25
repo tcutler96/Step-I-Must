@@ -17,18 +17,23 @@ class Shaders:
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
         self.effect_data_length = 10
         self.empty_effect_data = [0] * self.effect_data_length
-        self.shaders = self.load_shaders(effects={'grey': {'scale': 0, 'step': 1}, 'invert': {'scale': 0, 'step': 1},  # {'scale': 0.0-1.0, 'length': 1 (seconds), extra parameters...}
-                                                  'blur': {'scale': 0, 'length': 0.5, 'samples': 2, 'min': 2, 'max': 25},
+        # default values for shader effects, we can optionally pass in values when shader effect is applied...
+        # {'scale': 0.0-1.0, 'length': int (seconds), extra parameters...}
+        self.shaders = self.load_shaders(effects={'grey': {'scale': 0, 'length': 0.5},
+                                                  'invert': {'scale': 0, 'length': 0.5},
+                                                  'blur': {'scale': 0, 'length': 0.5, 'samples': 2, 'min_samples': 2, 'max_samples': 25},
                                                   'pixelate': {'size': 1, 'counter': self.main.fps},  # play around with this value to get cool low poly effects, can switch between 12 - 16, can have diffent values for x and y...
                                                   'distort': {'scale': 0, 'step': 0.5, 'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05}, 'test': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False}})
         self.apply_shaders = self.main.assets.settings['video']['shaders']
         self.background_effect = self.main.assets.settings['video']['background']
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
         # how inefficient is it to have one fragment shader, would we get better frames from individual shaders?
-        # activating another shader effect doesnt allow the old effect to fade out...
         # pass in shader effect variables so we can control them (ie only greyscale the player layer slightly when we only have 1 step left but fully pixealte on teleport)...
         # add distortion effect to grey effect that is used when low/ out of steps...
-        # maybe we leave shader effect values in a dict for easier manipulation and then convert to list each frame when we update uniforms...
+        # have dict with all default shader effect data
+        # have another dict for currently active shader effects, organised by display layers...
+        # shader effect data for each display layer is left in dict form for easier manipulation...
+        # convert to list at the end of the update function to be set as uniforms for fragment shader...
 
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)
@@ -71,12 +76,14 @@ class Shaders:
 
     def apply_effect(self, display_layer, effect):
         if self.apply_shaders:  # add shader options (fancy, simple, disabled), scale effects by some value?
+            # if display_layer != 'background':
+            #     print(display_layer, effect)
             display_layers = self.main.display.display_layers if display_layer == 'all' else [display_layer] if not isinstance(display_layer, list) else display_layer
             # maybe dont include transition display layer in 'all', transition display layer is always last so just use display_layers[:-1], need to test applying effect to all display layers...
             for display_layer in display_layers:
                 if display_layer in self.main.display.display_layers and (not effect or effect in self.shaders['effects']):
                     display_layer += '_effect'
-                    if not effect:  # if None effect passed in, then force effect data to be empty (maybe just set the first two indexes to zero and let the update function naturally fade out current effect)...
+                    if not effect:
                         self.shaders['display_layers'][display_layer][0:2] = [0] * 2
                     elif not self.shaders['display_layers'][display_layer][1]:
                         if effect == 'gol':
@@ -90,43 +97,32 @@ class Shaders:
                 else:
                     print(f"either '{display_layer}' display layer does not exist or '{effect}' effect does not exist...")
 
+    def update_effect_data2(self, effect_data):
+        if effect_data[0] == effect_data[1]:  # increase values
+            if effect_data[2] < 1:
+                effect_data[2] = min(1, effect_data[2] + (1 / self.main.fps) / effect_data[3])
+                effect_data[4] = int(effect_data[5] + effect_data[2] * (effect_data[6] - effect_data[5]))
+                if effect_data[2] >= 1:  # max value, stop endless loop
+                    pass
+        else:  # decrease values
+            if effect_data[2] > 0:
+                effect_data[2] = max(0, effect_data[2] - (1 / self.main.fps) / effect_data[3])
+                effect_data[4] = int(effect_data[5] + effect_data[2] * (effect_data[6] - effect_data[5]))
+                if effect_data[2] <= 0:  # min value
+                    effect_data[1] = 0
+
     def update_effect_data(self):
-        blur = 20 # add max blur variable in blur effect data...
-        blur_min = 2
-        blur_max = 25
         for display_layer, effect_data in self.shaders['display_layers'].items():  # dont need display_layer in the end, just use .values...
             if effect_data[1] == self.shaders['effects']['grey']['index']:
-                if effect_data[0]:
-                    effect_data[2] = min(1, effect_data[2] + effect_data[3] / self.main.fps)
-                else:
-                    effect_data[2] = max(0, effect_data[2] - effect_data[3] / self.main.fps)
-                    if effect_data[2] == 0:
-                        effect_data[1] = 0
+                self.update_effect_data2(effect_data=effect_data)  # we can just call this generic update function at the top of this loop and then do effect specific changes if needed...
             elif effect_data[1] == self.shaders['effects']['invert']['index']:
-                if effect_data[0]:
-                    effect_data[2] = min(1, effect_data[2] + effect_data[3] / self.main.fps)
-                else:
-                    effect_data[2] = max(0, effect_data[2] - effect_data[3] / self.main.fps)
-                    if effect_data[2] == 0:
-                        effect_data[1] = 0
+                self.update_effect_data2(effect_data=effect_data)
             elif effect_data[1] == self.shaders['effects']['blur']['index']:
-                # can we make a universal function to handle changing effect values, or is it not needed?
-                # might need to have all effect datas follow the same default layout...
-                # effect_data = [applied bool, active bool, counter, ]
-                # all shader effects should have a scale parameter that goes from 0 to 1 (ie min to max)...
-                # and a length parameter that says how long it takes to go from min to max...
-                if effect_data[0]:  # increase values
-                    effect_data[2] = min(1, effect_data[2] + (1 / self.main.fps) / effect_data[3])  # could add step variable that is worked out from length variable...
-                    effect_data[4] = int(effect_data[5] + effect_data[2] * (effect_data[6] - effect_data[5]))
-                    if effect_data[2] >= 1:  # max value, stop endless loop
-                            pass
-                else:  # decrease values
-                    effect_data[2] = max(0, effect_data[2] - (1 / self.main.fps) / effect_data[3])
-                    effect_data[4] = int(effect_data[5] + effect_data[2] * (effect_data[6] - effect_data[5]))
-                    if effect_data[5] <= 0:  # min value
-                        effect_data[1] = 0  # reset reset of effect data here or in reset_effects function?
+                self.update_effect_data2(effect_data=effect_data)  # generic update of effect data (ie scale)
+                # then we can make more effect specific changes here...
             elif effect_data[1] == self.shaders['effects']['pixelate']['index']:
-                if effect_data[0]:
+                # self.update_effect_data2(effect_data=effect_data)
+                if effect_data[0] == effect_data[1]:
                     effect_data[3] -= 30
                     if effect_data[3] <= 0:
                         effect_data[2] = min(16, effect_data[2] + 1)

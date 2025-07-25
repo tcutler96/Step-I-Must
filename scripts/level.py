@@ -269,8 +269,7 @@ class Level:
 
     def draw(self, displays, mouse_cell=None):
         if self.level:
-            # level display layers: background (dark purple rect, could add something moving in there), level (cells, tiles, objects, player), mouse cell
-            pg.draw.rect(surface=displays['level'], color=self.main.assets.colours['dark_purple'], rect=self.background_rect)
+            pg.draw.rect(surface=displays['level_background'], color=self.main.assets.colours['dark_purple'], rect=self.background_rect)
             if self.show_grid:
                 for grid_rect in self.grid_rects:
                     pg.draw.rect(surface=displays['level'], color=self.main.assets.colours['white'], rect=grid_rect, width=1)

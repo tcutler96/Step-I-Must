@@ -14,7 +14,7 @@ class Display:
         self.scale_factor = self.main.assets.settings['video']['resolution']
         self.window_size = self.window_width, self.window_height = (self.size[0] * self.scale_factor, self.size[1] * self.scale_factor)
         self.window_centre = self.window_half_width, self.window_half_height = self.window_width // 2, self.window_height // 2
-        self.display_layers = ['background', 'level', 'player', 'level_text', 'map', 'level_editor', 'menu', 'ui', 'transition']
+        self.display_layers = ['background', 'level_background', 'level', 'player', 'level_text', 'map', 'level_editor', 'menu', 'ui', 'transition']
         self.displays = self.load_displays()
         if platform.system() == 'Darwin':
             pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)

@@ -11,6 +11,8 @@ uniform vec2 mouse_position;
 const int effect_data_length = 10;
 uniform sampler2D background_display;
 uniform float background_effect[effect_data_length];
+uniform sampler2D level_background_display;
+uniform float level_background_effect[effect_data_length];
 uniform sampler2D level_display;
 uniform float level_effect[effect_data_length];
 uniform sampler2D player_display;
@@ -97,13 +99,13 @@ vec4 grey(sampler2D display_layer, float effect_data[effect_data_length]) {
 //    vec2 offset = v < cut_off ? vec2(0.0) : vec2(pow((v - cut_off) * 1 / (1.0 - cut_off), 2) * 0.005);
 //	vec4 colour = vec4(texture(display_layer, uv - offset).r, texture(display_layer, uv).g, texture(display_layer, uv + offset).b, texture(display_layer, uv).a);
 
-    vec2 xy = uv;
-//    xy.y += sin(5 + time) * 0.01 * effect_data[2];  // bounce up and down
-    xy.y += sin(xy.x * 5 + time) * 0.01 * effect_data[2];  // sin wave sway
-    vec4 colour = texture(display_layer, xy);
+//    vec2 xy = uv;
+////    xy.y += sin(5 + time) * 0.01 * effect_data[2];  // bounce up and down
+//    xy.y += sin(xy.x * 5 + time) * 0.01 * effect_data[2];  // sin wave sway
+//    vec4 colour = texture(display_layer, xy);
 
-//    vec4 colour = texture(display_layer, uv);
-//    colour.rgb = mix(colour.rgb, vec3(colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722), effect_data[2]);
+    vec4 colour = texture(display_layer, uv);
+    colour.rgb = mix(colour.rgb, vec3(colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722), effect_data[2]);
     return colour;
 }
 
@@ -121,9 +123,8 @@ vec4 blur(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec4 colour = vec4(0.0);
     float sigma = effect_data[4] * 0.25;
     float accum = 0.0;
-    float weight;
     vec2 offset;
-
+    float weight;
     for (int x = -int(effect_data[4]) / 2; x < int(effect_data[4]) / 2; ++x) {
         for (int y = -int(effect_data[4]) / 2; y < int(effect_data[4]) / 2; ++y) {
             offset = vec2(x, y);
@@ -133,14 +134,6 @@ vec4 blur(sampler2D display_layer, float effect_data[effect_data_length]) {
         }
     }
     colour /= accum;
-
-//    vec4 colour;
-//    for (float i = 0.0; i < int(effect_data[3]); i++) {
-//            for (float j = 0.0; j < int(effect_data[3]); j++) {
-//                colour += texture(display_layer, uv + pixel_size * (vec2(i, j) - int(effect_data[2])));
-//            }
-//        }
-//    colour /= pow(int(effect_data[3]), 2.0);
     return colour;
 }
 
@@ -243,6 +236,7 @@ void main() {
         } else {
             out_colour = get_colour(background_display, background_effect, out_colour);
         }
+        out_colour = get_colour(level_background_display, level_background_effect, out_colour);
         out_colour = get_colour(level_display, level_effect, out_colour);
         out_colour = get_colour(player_display, player_effect, out_colour);
         out_colour = get_colour(level_text_display, level_text_effect, out_colour);

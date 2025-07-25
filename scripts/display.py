@@ -9,7 +9,7 @@ class Display:
         self.screen_size = self.screen_width, self.screen_height = pg.display.get_desktop_sizes()[0]
         self.screen_centre = self.screen_half_width, self.screen_half_height = self.screen_width // 2, self.screen_height // 2
         self.size = self.width, self.height = (480, 320)
-        self.aspect = (1, self.size[0] / self.size[1])
+        self.aspect_ratio = (1, self.size[0] / self.size[1])
         self.centre = self.half_width, self.half_height = self.width // 2, self.height // 2
         self.scale_factor = self.main.assets.settings['video']['resolution']
         self.window_size = self.window_width, self.window_height = (self.size[0] * self.scale_factor, self.size[1] * self.scale_factor)

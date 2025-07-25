@@ -14,7 +14,7 @@ class TextHandler:
         self.add_text(text_group='main', text_id='restore_settings', text='settings restored', position='top')
         self.add_text(text_group='main', text_id='conway', text="conway's game of life", position='top', colour='cream', shadow_colour=None, outline_colour=None, display_layer='background')
         self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_step=8.5, colour='purple', size=24)
-        self.add_text(text_group='splash', text_id='hoolioes', text='with hoolioes audio', position='centre', alpha_step=8.5, colour='purple', size=24)
+        self.add_text(text_group='splash', text_id='hoolio', text='with hoolio audio', position='centre', alpha_step=8.5, colour='purple', size=24)
         self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_step=8.5, colour='purple', size=24)
         self.add_text(text_group='level_editor', text_id='reset', text='level reset', position='bottom_right', alignment=('r', 'c'))
         self.add_text(text_group='level_editor', text_id='saved', text='level saved', position='bottom_right', alignment=('r', 'c'))

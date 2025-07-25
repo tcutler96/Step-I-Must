@@ -4,7 +4,7 @@ class Splash:
     def __init__(self, main):
         self.main = main
         self.timer = 0
-        self.timers = {'timer': 0, 'text_id': None, 60: 'tcgame', 250: 'hoolioes', 440: 'end'}
+        self.timers = {'timer': 0, 'text_id': None, 120: 'tcgame', 280: 'hoolio', 440: 'end'}
 
     def start_up(self, previous_game_state=None):
         self.main.audio.play_music(music_theme='edgy demo')
@@ -12,9 +12,9 @@ class Splash:
 
 
     def update(self, mouse_position):
+        self.timers['timer'] += 1
         if not self.main.transition.transitioning:
             self.main.display.set_cursor(cursor='arrow')
-            self.timers['timer'] += 1
             if self.timers['timer'] in self.timers:
                 self.timers['text_id'] = self.timers[self.timers['timer']]
                 if self.timers['text_id'] and self.timers['text_id'] != 'end':

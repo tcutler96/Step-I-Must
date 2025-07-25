@@ -9,16 +9,16 @@ class Shaders:
         self.quad_buffer = self.context.buffer(data=array('f', [-1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, 1.0, -1.0, 1.0, 1.0]))
         self.vertex_shader, self.fragment_shader = self.main.assets.shaders['vertex'], self.main.assets.shaders['fragment']
         self.program = self.context.program(vertex_shader=self.vertex_shader, fragment_shader=self.fragment_shader)
-        self.set_uniforms(uniforms={'fps': self.main.fps, 'resolution': self.main.display.size, 'aspect': self.main.display.aspect, 'pixel': (1 / self.main.display.size[0], 1 / self.main.display.size[1])})
+        self.set_uniforms(uniforms={'fps': self.main.fps, 'resolution': self.main.display.size, 'aspect_ratio': self.main.display.aspect_ratio, 'pixel_size': (1 / self.main.display.size[0], 1 / self.main.display.size[1])})
         self.render_object = self.context.vertex_array(program=self.program, content=[(self.quad_buffer, '2f 2f', 'vert', 'texcoord')], mode=mgl.TRIANGLE_STRIP)
-        self.extra_textures = ['buffer']
+        self.extra_textures = ['noise', 'buffer']
         self.textures = self.create_textures()
         self.render_buffer = self.context.renderbuffer(size=self.main.display.size)
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
         self.effect_data_length = 10
         self.empty_effect_data = [0] * self.effect_data_length
-        self.shaders = self.load_shaders(effects={'grey': {'scale': 0, 'step': 1}, 'invert': {'scale': 0, 'step': 1},
-                                                  'blur': {'size': 1, 'length': 3, 'counter': self.main.fps},
+        self.shaders = self.load_shaders(effects={'grey': {'scale': 0, 'step': 1}, 'invert': {'scale': 0, 'step': 1},  # {'scale': 0.0-1.0, 'length': 1 (seconds), extra parameters...}
+                                                  'blur': {'scale': 0, 'length': 0.5, 'samples': 2, 'min': 2, 'max': 25},
                                                   'pixelate': {'size': 1, 'counter': self.main.fps},  # play around with this value to get cool low poly effects, can switch between 12 - 16, can have diffent values for x and y...
                                                   'distort': {'scale': 0, 'step': 0.5, 'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05}, 'test': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False}})
         self.apply_shaders = self.main.assets.settings['video']['shaders']
@@ -28,6 +28,7 @@ class Shaders:
         # activating another shader effect doesnt allow the old effect to fade out...
         # pass in shader effect variables so we can control them (ie only greyscale the player layer slightly when we only have 1 step left but fully pixealte on teleport)...
         # add distortion effect to grey effect that is used when low/ out of steps...
+        # maybe we leave shader effect values in a dict for easier manipulation and then convert to list each frame when we update uniforms...
 
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)
@@ -47,6 +48,8 @@ class Shaders:
             texture.filter = (mgl.NEAREST, mgl.NEAREST)
             if display_layer not in self.extra_textures:
                 texture.swizzle = 'BGRA'
+            if display_layer == 'noise':
+                texture.write(data=self.main.assets.images['other']['noise'].get_view('1'))
             texture.use(location=location)
             self.set_uniforms(uniforms={f'{display_layer}_display': location})
             textures[display_layer] = texture
@@ -68,8 +71,6 @@ class Shaders:
 
     def apply_effect(self, display_layer, effect):
         if self.apply_shaders:  # add shader options (fancy, simple, disabled), scale effects by some value?
-            # if display_layer != 'background':
-            #     print(display_layer, effect)
             display_layers = self.main.display.display_layers if display_layer == 'all' else [display_layer] if not isinstance(display_layer, list) else display_layer
             # maybe dont include transition display layer in 'all', transition display layer is always last so just use display_layers[:-1], need to test applying effect to all display layers...
             for display_layer in display_layers:
@@ -90,7 +91,9 @@ class Shaders:
                     print(f"either '{display_layer}' display layer does not exist or '{effect}' effect does not exist...")
 
     def update_effect_data(self):
-        blur = 3 # add max blur variable in blur effect data...
+        blur = 20 # add max blur variable in blur effect data...
+        blur_min = 2
+        blur_max = 25
         for display_layer, effect_data in self.shaders['display_layers'].items():  # dont need display_layer in the end, just use .values...
             if effect_data[1] == self.shaders['effects']['grey']['index']:
                 if effect_data[0]:
@@ -110,22 +113,18 @@ class Shaders:
                 # can we make a universal function to handle changing effect values, or is it not needed?
                 # might need to have all effect datas follow the same default layout...
                 # effect_data = [applied bool, active bool, counter, ]
+                # all shader effects should have a scale parameter that goes from 0 to 1 (ie min to max)...
+                # and a length parameter that says how long it takes to go from min to max...
                 if effect_data[0]:  # increase values
-                    effect_data[4] -= 15  # count down counter (-1 or -1/fps each time)
-                    if effect_data[4] <= 0:  # counter hits zero, value change triggered
-                        effect_data[2] = min(blur, effect_data[2] + 1)  # add step value, use min and max function with value min and max
-                        effect_data[3] = effect_data[2] * 2 + 1  # extra effect values
-                        effect_data[4] = self.main.fps  # set counter to default value
-                        if effect_data[2] >= blur:  # max value, stop endless loop
+                    effect_data[2] = min(1, effect_data[2] + (1 / self.main.fps) / effect_data[3])  # could add step variable that is worked out from length variable...
+                    effect_data[4] = int(effect_data[5] + effect_data[2] * (effect_data[6] - effect_data[5]))
+                    if effect_data[2] >= 1:  # max value, stop endless loop
                             pass
                 else:  # decrease values
-                    effect_data[4] -= 15
-                    if effect_data[4] <= 0:
-                        effect_data[2] = max(0, effect_data[2] - 1)
-                        effect_data[3] = effect_data[2] * 2 + 1
-                        effect_data[4] = self.main.fps
-                        if effect_data[2] <= 0:  # min value
-                            effect_data[1] = 0  # reset reset of effect data here or in reset_effects function?
+                    effect_data[2] = max(0, effect_data[2] - (1 / self.main.fps) / effect_data[3])
+                    effect_data[4] = int(effect_data[5] + effect_data[2] * (effect_data[6] - effect_data[5]))
+                    if effect_data[5] <= 0:  # min value
+                        effect_data[1] = 0  # reset reset of effect data here or in reset_effects function?
             elif effect_data[1] == self.shaders['effects']['pixelate']['index']:
                 if effect_data[0]:
                     effect_data[3] -= 30
@@ -164,7 +163,7 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('x', 'held'):
-            self.apply_effect(display_layer=['menu', 'level'], effect='distort')
+            self.apply_effect(display_layer=['menu', 'level', 'ui'], effect='blur')
         if self.background_effect == 'gol':
             self.apply_effect(display_layer='background', effect='gol')
         self.update_effect_data()

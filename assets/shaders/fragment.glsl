@@ -2,8 +2,8 @@
 
 uniform int fps;
 uniform vec2 resolution;
-uniform vec2 aspect;
-uniform vec2 pixel;
+uniform vec2 aspect_ratio;
+uniform vec2 pixel_size;
 uniform float time;
 uniform bool mouse_active;
 uniform vec2 mouse_position;
@@ -28,6 +28,7 @@ uniform float ui_effect[effect_data_length];
 uniform sampler2D transition_display;
 uniform float transition_effect[effect_data_length];
 uniform sampler2D buffer_display;
+uniform sampler2D noise;
 
 uniform float grey_index;
 uniform float invert_index;
@@ -37,6 +38,7 @@ uniform float distort_index;
 uniform float test_index;
 uniform float gol_index;
 
+const float pi = atan(1.0) * 4.0;
 const vec4 on_colour = vec4(0.96, 0.95, 0.76, 1.0);
 const vec4 off_colour = vec4(0.19, 0.16, 0.24, 1.0);
 
@@ -51,8 +53,8 @@ bool check_colour(vec4 colour) {
 }
 
 int get_current(vec2 offset) {
-    return int(check_colour(texture(background_display, uv + pixel * offset))) |
-    int(check_colour(texture(buffer_display, uv_flipped + pixel * offset)));
+    return int(check_colour(texture(background_display, uv + pixel_size * offset))) |
+    int(check_colour(texture(buffer_display, uv_flipped + pixel_size * offset)));
 }
 
 vec4 game_of_life() {
@@ -75,8 +77,33 @@ vec4 game_of_life() {
 }
 
 vec4 grey(sampler2D display_layer, float effect_data[effect_data_length]) {
-    vec4 colour = texture(display_layer, uv);
-    colour.rgb = mix(colour.rgb, vec3(colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722), effect_data[2]);
+//    float amount = 0.0;
+//	amount = (1.0 + sin(time * 6.0)) * 0.5;
+//	amount *= 1.0 + sin(time * 16.0) * 0.5;
+//	amount *= 1.0 + sin(time * 19.0) * 0.5;
+//	amount *= 1.0 + sin(time * 27.0) * 0.5;
+//	amount = pow(amount, 3.0);
+//	amount *= 0.05;
+//    vec4 colour;
+//    colour.r = texture(display_layer, vec2(uv.x + amount, uv.y)).r;
+//    colour.ga = texture(display_layer, uv).ga;
+//    colour.b = texture(display_layer, vec2(uv.x - amount,uv.y)).b;
+//	colour *= (1.0 - amount * 0.5);
+
+    // apply chromatic abertation to the level walls...
+//    float cut_off = 0.75;
+//    float v = abs(sin(0.1 + time));
+////    float v = texture(noise, uv * time).r;
+//    vec2 offset = v < cut_off ? vec2(0.0) : vec2(pow((v - cut_off) * 1 / (1.0 - cut_off), 2) * 0.005);
+//	vec4 colour = vec4(texture(display_layer, uv - offset).r, texture(display_layer, uv).g, texture(display_layer, uv + offset).b, texture(display_layer, uv).a);
+
+    vec2 xy = uv;
+//    xy.y += sin(5 + time) * 0.01 * effect_data[2];  // bounce up and down
+    xy.y += sin(xy.x * 5 + time) * 0.01 * effect_data[2];  // sin wave sway
+    vec4 colour = texture(display_layer, xy);
+
+//    vec4 colour = texture(display_layer, uv);
+//    colour.rgb = mix(colour.rgb, vec3(colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722), effect_data[2]);
     return colour;
 }
 
@@ -86,20 +113,40 @@ vec4 invert(sampler2D display_layer, float effect_data[effect_data_length]) {
     return colour;
 }
 
+float gaussian(vec2 i, float sigma) {
+    return 1.0 / (2.0 * pi * pow(sigma, 2)) * exp(-((pow(i.x, 2) + pow(i.y, 2)) / (2.0 * pow(sigma, 2))));
+}
+
 vec4 blur(sampler2D display_layer, float effect_data[effect_data_length]) {
-    vec4 colour;
-    for (float i = 0.0; i < int(effect_data[3]); i++) {
-            for (float j = 0.0; j < int(effect_data[3]); j++) {
-                colour += texture(display_layer, uv + pixel * (vec2(i, j) - int(effect_data[2])));
-            }
+    vec4 colour = vec4(0.0);
+    float sigma = effect_data[4] * 0.25;
+    float accum = 0.0;
+    float weight;
+    vec2 offset;
+
+    for (int x = -int(effect_data[4]) / 2; x < int(effect_data[4]) / 2; ++x) {
+        for (int y = -int(effect_data[4]) / 2; y < int(effect_data[4]) / 2; ++y) {
+            offset = vec2(x, y);
+            weight = gaussian(offset, sigma);
+            colour += texture(display_layer, uv + pixel_size * offset).rgba * weight;
+            accum += weight;
         }
-    colour /= pow(int(effect_data[3]), 2.0);
+    }
+    colour /= accum;
+
+//    vec4 colour;
+//    for (float i = 0.0; i < int(effect_data[3]); i++) {
+//            for (float j = 0.0; j < int(effect_data[3]); j++) {
+//                colour += texture(display_layer, uv + pixel_size * (vec2(i, j) - int(effect_data[2])));
+//            }
+//        }
+//    colour /= pow(int(effect_data[3]), 2.0);
     return colour;
 }
 
 vec4 pixelate(sampler2D display_layer, float effect_data[effect_data_length]) {
-    float pixel_width = effect_data[2] * pixel[0];
-    float pixel_height = effect_data[2] * pixel[1];
+    float pixel_width = effect_data[2] * pixel_size[0];
+    float pixel_height = effect_data[2] * pixel_size[1];
     vec4 colour = texture(display_layer, vec2(pixel_width * (floor(uv.x / pixel_width) + 0.5), pixel_height * (floor(uv.y / pixel_height) + 0.5)));
     return colour;
 }
@@ -115,7 +162,7 @@ float get_map(float d, float t, float effect_data[effect_data_length]) {
 
 vec4 distort(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec2 direction = uv - vec2(effect_data[4], effect_data[5]) / resolution;
-    float d = length(direction / aspect);
+    float d = length(direction / aspect_ratio);
 
     float map_r = get_map(d, effect_data[2] + 0.02, effect_data);
     float map_g = get_map(d, effect_data[2], effect_data);
@@ -130,7 +177,7 @@ vec4 distort(sampler2D display_layer, float effect_data[effect_data_length]) {
     float b = texture(display_layer, uv - displacement_b).b;
 
     vec4 colour = vec4(r, g, b, texture(display_layer, uv - displacement_g).a);
-    colour.rgb += map_g * 0.2;
+    colour.rgb += map_g * 0.25;
     return colour;
 }
 

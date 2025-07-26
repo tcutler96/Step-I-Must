@@ -9,14 +9,16 @@ class Display:
         self.screen_size = self.screen_width, self.screen_height = pg.display.get_desktop_sizes()[0]
         self.screen_centre = self.screen_half_width, self.screen_half_height = self.screen_width // 2, self.screen_height // 2
         self.size = self.width, self.height = (480, 320)
-        self.aspect_ratio = (1, self.size[0] / self.size[1])
+        self.aspect_ratio = (self.size[0] / max(self.size), self.size[1] / max(self.size))
+        self.pixel_size = (1 / self.size[0], 1 / self.size[1])
         self.centre = self.half_width, self.half_height = self.width // 2, self.height // 2
         self.scale_factor = self.main.assets.settings['video']['resolution']
         self.window_size = self.window_width, self.window_height = (self.size[0] * self.scale_factor, self.size[1] * self.scale_factor)
         self.window_centre = self.window_half_width, self.window_half_height = self.window_width // 2, self.window_height // 2
         self.display_layers = ['background', 'level_background', 'level', 'player', 'level_text', 'map', 'level_editor', 'menu', 'ui', 'transition']
         self.displays = self.load_displays()
-        if platform.system() == 'Darwin':
+        self.system = platform.system()
+        if self.system == 'Darwin':
             pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
             pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
             pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)

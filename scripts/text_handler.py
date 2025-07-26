@@ -7,6 +7,7 @@ class TextHandler:
         # add way to move text element shadow over time, have preset choices (ie sin sway)...
         # and way to move text elements so that they bounce up and down with the game cycle...
         self.text_elements = {}
+        self.sign_lines = {}
         self.add_text(text_group='main', text_id='debug', text='debug mode', position='bottom', colour='purple', size=16)
         self.add_text(text_group='main', text_id='backup_data', text='data backed up', position='top')
         self.add_text(text_group='main', text_id='backup_settings', text='settings backed up', position='top')
@@ -26,23 +27,16 @@ class TextHandler:
                       alignment=('l', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='map')
         self.add_text(text_group='map', text_id='switch', text="Switch map: 'space'", position='bottom_right', alpha_step=8.5, shadow_offset=(4, 4),
                       alignment=('r', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='map')
-        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_step=8.5, shadow_offset=(2, 2), alignment=('c', 'c'), outline_size=0, size=14, display_layer='map')
+        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_step=8.5, alignment=('c', 'c'), size=14, display_layer='map')
         for steps in range(-9, 10):
             self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='level_text')
         for collectable in self.main.assets.data['game']['collectables']:
             self.add_text(text_group='collectables', text_id=collectable, text=f'{collectable[:-1]} collected!', position='top', display_layer='level')
-        # pull sign data from game data, and have text positioned just above the sign...
-        # sign text position: level offset (112, 32) + cell position (x + 0.5, y - 0.25) * cell size (16)
-        # add functionality for multiline sign text when it is too long for one line...
-        # just have separate text elements for each line, shifting position up by ~12 for each line...
-        self.add_text(text_group='signs', text_id='(-2, 2) - (6, 8)', text='this is a sign text test', position=(216, 156), size=12, display_layer='level')
+        self.add_sign_text()
         self.game_state_text_groups = {'game': ['game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay', 'developer'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],
                                        'main_menu': ['title_screen', 'options', 'video', 'audio', 'gameplay', 'developer', 'new_game', 'are_you_sure', 'choose_level'],
                                        'splash': ['splash']}
-
-    def check_text_element(self, text_group, text_id):
-        return text_group in self.text_elements and text_id in self.text_elements[text_group]
 
     def add_text(self, text_group, text_id, text, position, alpha_step=25.5, alignment=('c', 'c'), colour='light_green', bg_colour=None, shadow_colour='dark_purple', shadow_offset=(4, 4),
                  outline_colour='dark_purple', outline_size=1, size=20, max_width=0, max_height=0, font='Alagard', style=None, display_layer='ui', menu_state=None, active=False, delay=0, duration=0,
@@ -62,6 +56,25 @@ class TextHandler:
         self.text_elements[text_group][text_id] = TextElement(main=self.main, text=text, surface=surface, position=alligned_position, alpha_step=alpha_step, shadow_offset=shadow_offset,
                                                               display_layer=display_layer, menu_state=menu_state, active=active, delay=delay * self.main.fps, duration=duration * self.main.fps,
                                                               interactable=interactable,  hovered_surface=hovered_surface, hovered_position=alligned_position, hovered_shadow_offset=hovered_shadow_offset)
+
+    def add_sign_text(self):
+        for sign_position, sign_text in self.main.assets.data['signs'].items():
+            words = sign_text.split(' ')
+            lines = [words[0]]
+            for word in words[1:]:
+                if len(lines[-1]) + len(word) < 30:
+                    lines[-1] += (" " + word)
+                else:
+                    lines.append(word)
+            cell_position = self.main.utilities.position_str_to_tuple(position=sign_position.split(' - ')[-1])
+            text_position = (112 + (cell_position[0] + 0.5) * 16, 32 + (cell_position[1] + ((len(lines) + 0.5) if cell_position[1] < 8 else -0.5)) * 16)
+            print(text_position, lines)
+            for offset, text in enumerate(reversed(lines)):
+                self.add_text(text_group='signs', text_id=f'{sign_position}_{offset}', text=text, position=(text_position[0], text_position[1] - 16 * offset), size=12, display_layer='level')
+                self.sign_lines[sign_position] = offset + 1
+
+    def check_text_element(self, text_group, text_id):
+        return text_group in self.text_elements and text_id in self.text_elements[text_group]
 
     def activate_text(self, text_group, text_id, delay=0, duration=0, offset=(0, 0)):
         if self.check_text_element(text_group=text_group, text_id=text_id):

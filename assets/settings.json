@@ -1,6 +1,6 @@
 {
   "video": {
-    "background": "gol",
+    "background": "space",
     "button_prompt": false,
     "cursor_type": "sprite",
     "hrt_shader": true,
@@ -11,8 +11,8 @@
     "shaders": true
   },
   "audio": {
-    "master_volume": 0.5,
-    "music_volume": 0.1,
+    "master_volume": 0.1,
+    "music_volume": 0.3,
     "sound_volume": 0.5
   },
   "gameplay": {
@@ -83,8 +83,8 @@
         "button",
         "option",
         [
-          "Game of Life",
-          "Space"
+          "Space",
+          "Game of Life"
         ]
       ],
       "Button Prompt": [
@@ -167,23 +167,6 @@
         "button",
         "option",
         [
-          "50%",
-          "60%",
-          "70%",
-          "80%",
-          "90%",
-          "100%",
-          "Disabled",
-          "10%",
-          "20%",
-          "30%",
-          "40%"
-        ]
-      ],
-      "Music Volume": [
-        "button",
-        "option",
-        [
           "10%",
           "20%",
           "30%",
@@ -195,6 +178,23 @@
           "90%",
           "100%",
           "Disabled"
+        ]
+      ],
+      "Music Volume": [
+        "button",
+        "option",
+        [
+          "30%",
+          "40%",
+          "50%",
+          "60%",
+          "70%",
+          "80%",
+          "90%",
+          "100%",
+          "Disabled",
+          "10%",
+          "20%"
         ]
       ],
       "Sound Volume": [

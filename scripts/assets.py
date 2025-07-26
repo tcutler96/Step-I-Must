@@ -36,7 +36,7 @@ class Assets:
                         'light_green': (142, 184, 158),
                         'bright_green': (127, 255, 127)}
         self.settings_changed = False
-        self.option_to_setting = {'video': {'background': {'game_of_life': 'gol', 'space': 'space'}, 'button_prompt': {'enabled': True, 'disabled': False}, 'hrt_shader': {'enabled': True, 'disabled': False},
+        self.option_to_setting = {'video': {'background': {'game_of_life': 'gol'}, 'button_prompt': {'enabled': True, 'disabled': False}, 'hrt_shader': {'enabled': True, 'disabled': False},
                                             'particles': {'enabled': True, 'disabled': False}, 'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4},
                                             'screen_shake': {'enabled': True, 'disabled': False}, 'shaders': {'enabled': True, 'disabled': False}},
                                  'audio': {'master_volume': {'disabled': 0.0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1.0},

@@ -189,14 +189,20 @@
       "horizontal_barrier": null
     },
     "2:1": {
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "object": null,
       "player": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "3:1": {
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "object": null,
       "player": null,
       "vertical_barrier": null,
@@ -1126,10 +1132,7 @@
     "6:8": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "sign",
-        "state": "sign"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },

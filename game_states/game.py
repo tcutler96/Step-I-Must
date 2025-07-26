@@ -250,6 +250,7 @@ class Game:
             self.player_cells = {}
             self.no_steps = True
             self.teleporter_data['standing'] = []
+            sign_data = self.sign_data
             self.sign_data = []
             self.lock_data = None
             for cell in self.level.get_cells():
@@ -281,8 +282,9 @@ class Game:
                         if not cell.check_element(name='player', state='dead'):  # players
                             self.no_steps = False
 
-                        if cell.check_element(name='sign'):  # collectables
-                            self.sign_data.append(cell.position)
+                        if cell.check_element(name='sign'):  # signs
+                            self.main.audio.play_sound(name='map_open')
+                            self.sign_data.append(self.level.name + ' - ' + str(cell.position))
 
                         for direction in cell.adjacent_directions:  # locks
                             new_cell = self.level.get_new_cell(position=cell.position, movement=direction)
@@ -321,6 +323,8 @@ class Game:
             if self.teleporter_data['standing']:
                 if len(self.teleporter_data['standing']) == 1:
                     self.teleporter_data['standing'] = self.teleporter_data['standing'][0]
+            if sign_data and sign_data != self.sign_data:
+                self.main.audio.play_sound(name='map_close')
             if steps_updated:
                 self.set_steps(steps=steps)
             elif new_level:
@@ -710,23 +714,27 @@ class Game:
 
     def update_cutscene(self):
         response = self.cutscene.update(level=self.level)
-        if response == 'show_map':
+        if response == 'open_map':
             self.main.audio.play_sound(name='map_open')
             self.map.show_map = True
             self.map.show_text = False
             self.map.show_collectables = False
+        elif response == 'close_map':
+            self.main.audio.play_sound(name='map_open')
+            self.map.show_map = False
+            self.map.show_text = True
         elif response == 'map_target_one':
             self.map.set_target(target='1')
         elif response == 'map_target_two':
             self.map.set_target(target='2')
         elif response == 'show_collectables_one':
+            self.main.audio.play_sound(name='collectable')
             self.map.show_collectables = True
             self.main.assets.data['game']['part_one'] = True
         elif response == 'show_collectables_two':
+            self.main.audio.play_sound(name='collectable')
             self.map.show_collectables = True
             self.main.assets.data['game']['part_two'] = True
-        elif response == 'show_map_text':
-            self.map.show_text = True
         return self.cutscene.active_cutscene
 
     def interpolate_blit_position(self, blit_position):
@@ -799,7 +807,7 @@ class Game:
         if self.main.menu_state:
             self.main.display.set_cursor(cursor='arrow')
             self.update_map(mouse_position=None)
-            self.main.shaders.apply_effect(display_layer=['level', 'player', 'level_text', 'map'], effect='blur')
+            self.main.shaders.apply_effect(display_layer=['level_background', 'level', 'player', 'level_text', 'map'], effect='blur', effect_data={'length': 0.5})
         else:
             if self.main.debug or self.map.show_map:
                 self.main.display.set_cursor(cursor='arrow')
@@ -883,7 +891,7 @@ class Game:
             else:
                 if not self.main.transition.fade_in:
                     # this triggers when we close the game, need to check that were transitioning levels, also it is a cool effect
-                    self.main.shaders.apply_effect(display_layer=['level', 'player', 'level_text', 'map'], effect='pixelate')
+                    self.main.shaders.apply_effect(display_layer=['level_background', 'level', 'player', 'level_text', 'map'], effect='pixelate', effect_data={'length': 0.5})
 
     def draw(self, displays):
         self.level.draw(displays=displays)
@@ -893,7 +901,9 @@ class Game:
         if not self.player_cells or self.no_steps:
             self.main.text_handler.activate_text(text_group='game', text_id='reset')
         for sign in self.sign_data:
-            self.main.text_handler.activate_text(text_group='signs', text_id=self.level.name + ' - ' + str(sign))
+            if sign in self.main.text_handler.sign_lines:
+                for offset in range(self.main.text_handler.sign_lines[sign]):
+                    self.main.text_handler.activate_text(text_group='signs', text_id=f'{sign}_{offset}')
         if self.main.debug:
             if self.teleporter_data['standing'] or self.teleporter_data['setting']:
                 self.main.text_handler.activate_text(text_group='game', text_id='set_warp')

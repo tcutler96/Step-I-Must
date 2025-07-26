@@ -60,11 +60,26 @@ import os
 # spearate menu display layer into title and everything else, then we can apply a shader to the menu title...
 # quickly unblur splash screen elements as they appear...
 # draw level walls onto seperate display layer, then we can change the colour of the walls as we please...
+# when a player exits a level while on fast movement, we can see them bump back in before the transition comes in, add longer bum?
+# only play spike sound effect if alive player on top of a spike...
+# add pulsating darkness cloud around the edge of the background or level layer...
+# picking up a collectable prevents animations from finishing...
+# add message when a collectable is got that unlocks a lock somewhere, say where...
+# dont play sign close sound when we teleport off a sign...
+# add tutorial elements into first levels...
+# tutorials: (0, 0) - wasd/ arrow keys to move
+#            (0, 1) - escape/ p to pause/ open menu
+#            (0, 2) - tab to open map
+#            (-1, 2) - z to undo, y to redo
+
+# signs: (-1, 2)(14, 9) - Stars are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.
+#        (-2, 2)(2, 1) - You can always undo and redo moves, and sometimes the solution involves restarting. Don't be afraid to experiment!
+#        (-2, 2)(3, 1) - If you're stuck in a level, you can use the map (press tab) to teleport yourself out of it!
+#        (-6, 0)(14, 2) - Don't look at the statues!
 
 
 class Main:
     def __init__(self):
-        # pg.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
         pg.init()
         self.game_name = 'Slime Steppa'
         self.fps = 60
@@ -74,6 +89,7 @@ class Main:
         self.runtime_frames = 0
         self.runtime_seconds = 0
         self.sprite_size = 16
+        self.level_offset = ()
         self.assets_path = os.path.join(os.path.abspath(os.curdir), 'assets')
         self.assets = Assets(main=self)
         self.utilities = Utilities(main=self)

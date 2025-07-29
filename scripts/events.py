@@ -12,7 +12,7 @@ class Events:
         self.mouse_movement = [0, 0]
         self.mouse_window_position = [0, 0]
         self.mouse_display_position = [0, 0]
-        self.custom_events = self.load_custom_events(events=['music_end'])
+        self.custom_events = self.load_custom_events(events=['custom_event'])
 
     def load_custom_events(self, events):
         custom_events = {}
@@ -67,10 +67,13 @@ class Events:
                     self.keys['last_pressed'].pop(0)
 
     def remove_key(self, key, action='pressed'):
-        if key in self.modifier_keys:
-            self.modifier_keys[key] = False
-        elif key in self.keys[action]:
-            self.keys[action].remove(key)
+        if not isinstance(key, list):
+            key = [key]
+        for key_key in key:
+            if key_key in self.modifier_keys:
+                self.modifier_keys[key_key] = False
+            elif key_key in self.keys[action]:
+                self.keys[action].remove(key_key)
 
     def check_key(self, key, action='pressed', modifier=None):
         if action == 'last_pressed':

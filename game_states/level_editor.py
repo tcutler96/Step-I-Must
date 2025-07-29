@@ -9,7 +9,7 @@ class LevelEditor:
         self.main = main
         self.previous = None
         self.level = Level(main=self.main)
-        self.mouse_cell = LevelCell(main=self.main, position=(-1, -1))
+        self.mouse_cell = LevelCell(main=self.main, position=(-1, -1), level_offset=self.level.level_offset)
         self.toolbar = Toolbar(main=self.main)
 
     def reset_toolbar(self, hovered=False, selected=False):
@@ -104,13 +104,13 @@ class LevelEditor:
         self.level.load_level(name=name, load_respawn=load_respawn, bump_player=bump_player)
 
     def start_up(self, previous_game_state=None):
+        self.main.audio.play_music(music_theme='edgy demo')
         if previous_game_state == 'main_menu':
             self.main.change_menu_state(menu_state='choose_level')
             self.reset_toolbar(hovered=True, selected=True)
         elif previous_game_state == 'game':
             self.main.change_menu_state()
             del self.main.assets.levels['custom']
-        self.main.audio.play_music(music_theme='main_menu')
 
     def update(self, mouse_position):
         self.main.display.set_cursor(cursor='arrow')
@@ -130,7 +130,7 @@ class LevelEditor:
                     if selected_element[1] == 'Toggle Grid':
                         self.level.show_grid = not self.level.show_grid
                     elif selected_element[1] == 'Reset Level':
-                        self.main.text_handler.deactivate_text(text_group='level_editor', text_id='saved')
+                        self.main.text_handler.deactivate_text_group(text_group='level_editor')
                         self.main.text_handler.activate_text(text_group='level_editor', text_id='reset', duration=2)
                         self.level.load_level(name='filled' if self.level.name == 'empty' else 'empty', load_respawn='level')
                     elif selected_element[1] == 'Save Level':
@@ -139,8 +139,7 @@ class LevelEditor:
                         self.reset_toolbar(hovered=True, selected=True)
                         self.main.menu_states['choose_level'].menu['Back'].button_type = 'menu_state'
                         self.main.menu_states['choose_level'].menu['Back'].button_response = None
-                        self.main.text_handler.deactivate_text(text_group='level_editor', text_id='reset')
-                        self.main.text_handler.deactivate_text(text_group='level_editor', text_id='saved')
+                        self.main.text_handler.deactivate_text_group(text_group='level_editor')
                         self.main.change_menu_state(menu_state='choose_level')
                     elif selected_element[1] == 'Quit to Main Menu':
                         self.reset_toolbar(hovered=True)

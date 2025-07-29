@@ -602,7 +602,10 @@
     "14:3": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "ice",
+        "state": "ice"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -750,7 +753,10 @@
     "14:4": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "ice",
+        "state": "ice"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -895,7 +901,10 @@
     "14:5": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "ice",
+        "state": "ice"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1037,7 +1046,10 @@
     "14:6": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "ice",
+        "state": "ice"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1176,7 +1188,10 @@
     "14:7": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "ice",
+        "state": "ice"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1318,7 +1333,10 @@
     "14:8": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "ice",
+        "state": "ice"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1463,7 +1481,10 @@
     "14:9": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "ice",
+        "state": "ice"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },

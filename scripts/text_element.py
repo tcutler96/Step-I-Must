@@ -80,7 +80,9 @@ class TextElement:
                         self.main.audio.play_sound(name='menu_highlight')
                     self.main.display.set_cursor(cursor='hand')
                     if self.main.events.check_key(key='mouse_1'):
-                        self.selected = True
+                        self.selected = 'left'
+                    elif self.main.events.check_key(key='mouse_3'):
+                        self.selected = 'right'
                 if self.duration:
                     self.timer += 1
                     if self.timer == self.duration:

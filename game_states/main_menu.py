@@ -6,8 +6,8 @@ class MainMenu:
         self.main = main
 
     def start_up(self, previous_game_state=None):
+        self.main.audio.play_music(music_theme='edgy demo')
         self.main.change_menu_state(menu_state='title_screen')
-        self.main.audio.play_music(music_theme='main_menu', fade=self.main.transition.length)
 
 
     def update(self, mouse_position):

@@ -38,7 +38,7 @@ class Audio:
         if name in self.audio['sound']:
             self.audio['sound'][name].fadeout(self.main.utilities.s_to_ms(s=fade))
 
-    def play_music(self, music_theme=None, fade=1):
+    def play_music(self, music_theme=None, fade=5):
         if music_theme != self.music_theme and music_theme in self.audio['music']:
             self.music_theme = music_theme
             self.music.load(filename=self.audio['music'][self.music_theme])

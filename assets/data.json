@@ -1,17 +1,17 @@
 {
   "game": {
-    "level": "(-1, -7)",
+    "level": "(-2, 2)",
     "respawn": [
       [
         [
-          10,
-          3
+          8,
+          8
         ]
       ],
       [
         [
-          10,
-          3
+          8,
+          8
         ]
       ],
       [
@@ -20,44 +20,26 @@
     ],
     "part_one": true,
     "part_two": true,
-    "part_one_percent": 32,
-    "part_two_percent": 2,
-    "overall_percent": 12,
+    "part_one_percent": 0.0,
+    "part_two_percent": 0.0,
+    "overall_percent": 0.0,
     "collectables": {
-      "silver keys": [
-        "(-2, 4) - (12, 9)",
-        "(-2, -1) - (9, 2)",
-        "(-1, 2) - (3, 12)"
-      ],
-      "silver gems": [
-        "(-2, 4) - (13, 15)",
-        "(-2, 5) - (8, 7)",
-        "(-2, -1) - (15, 4)",
-        "(-1, -1) - (7, 4)",
-        "(-1, 2) - (8, 5)"
-      ],
-      "gold keys": [
-        "(-1, -6) - (8, 4)"
-      ],
+      "silver keys": [],
+      "silver gems": [],
+      "gold keys": [],
       "gold gems": [],
       "cheeses": []
     },
     "discovered_levels": [
       "(0, 0)",
-      "(-2, 4)",
-      "(-2, 5)",
-      "(-1, -6)",
-      "(-1, -7)",
-      "(-2, -1)",
-      "(-1, -1)",
-      "(-2, 2)",
+      "(0, 1)",
+      "(-1, 2)",
       "(0, 2)",
-      "(-1, 2)"
+      "(-2, 2)",
+      "(-6, 0)",
+      "(-5, 0)"
     ],
-    "active_portals": [
-      "(-1, -6) - (10, 2)",
-      "(-1, -5) - (1, 10)"
-    ]
+    "active_portals": []
   },
   "locks": {
     "(-2, 2) - (0, 11)": {
@@ -287,7 +269,28 @@
     "(-5, -16)": "left end",
     "(-6, -17)": "left end",
     "(7, -17)": "bottom end",
-    "(7, -18)": "top end"
+    "(7, -18)": "top end",
+    "(-1, 0)": "single",
+    "(-1, 1)": "single",
+    "(-1, -16)": "top end",
+    "(-2, -17)": "single",
+    "(-3, -15)": "bottom end",
+    "(-3, -17)": "bottom end",
+    "(-3, -18)": "top end",
+    "(-4, -18)": "top end",
+    "(-5, -15)": "single",
+    "(-5, -18)": "top end",
+    "(1, -15)": "right end",
+    "(0, -17)": "single",
+    "(1, -18)": "single",
+    "(3, -15)": "right end",
+    "(3, -16)": "right end"
+  },
+  "signs": {
+    "(-1, 2) - (14, 9)": "Stars are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.",
+    "(-2, 2) - (2, 1)": "You can always undo and redo moves, and sometimes the solution involves restarting. Don't be afraid to experiment!",
+    "(-2, 2) - (3, 1)": "If you're stuck in a level, you can use the map (tab) to teleport yourself out of it!",
+    "(-6, 0) - (14, 2)": "Don't look at the statues!"
   },
   "teleporters": {
     "recievers": {
@@ -360,20 +363,6 @@
           5
         ],
         "destination": "(-1, -15) - (13, 5)"
-      },
-      "(-6, 2) - (13, 7)": {
-        "position": [
-          13,
-          7
-        ],
-        "destination": "(-6, 2) - (13, 7)"
-      },
-      "(-6, 2) - (11, 7)": {
-        "position": [
-          11,
-          7
-        ],
-        "destination": "(-6, 2) - (11, 7)"
       }
     },
     "senders": {
@@ -867,7 +856,7 @@
           13,
           2
         ],
-        "destination": "(1, -11) - (9, 2)"
+        "destination": null
       },
       "(1, -11) - (9, 2)": {
         "position": [
@@ -1435,6 +1424,20 @@
           3
         ],
         "destination": "(2, -13) - (7, 3)"
+      },
+      "(0, 0) - (12, 2)": {
+        "position": [
+          12,
+          2
+        ],
+        "destination": null
+      },
+      "(-1, 0) - (2, 2)": {
+        "position": [
+          2,
+          2
+        ],
+        "destination": "(0, 0) - (12, 2)"
       }
     },
     "activations": {
@@ -2127,6 +2130,18 @@
         "portals": [
           "(-1, -2) - (5, 7)",
           "(-1, -5) - (3, 11)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(0, 0) - (11, 6)": {
+        "position": [
+          11,
+          6
+        ],
+        "portals": [
+          "(0, 0) - (12, 2)",
+          "(-1, 0) - (2, 2)"
         ],
         "two_players": false,
         "activated": false

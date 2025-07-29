@@ -31,6 +31,15 @@ class MenuElement:
         self.offset_step = 5
         self.offset_start = [-50, 0]
 
+    def cycle_option(self, selected):
+        if selected == 'left':
+            self.button_response.append(self.button_response.pop(0))
+            self.option_centres.append(self.option_centres.pop(0))
+        elif selected == 'right':
+            self.button_response.insert(0, self.button_response.pop())
+            self.option_centres.insert(0, self.option_centres.pop())
+            self.main.events.remove_key(key='mouse_3')
+
     def update(self, offset, scroll):
         if self.offset[0] < 0:
             self.offset[0] += self.offset_step
@@ -39,17 +48,17 @@ class MenuElement:
             self.main.text_handler.text_elements[self.menu_name][self.name + self.button_response[0]].scroll = scroll
         if offset == [0, 0] and self.offset == [0, 0] and not self.main.transition.transitioning:
             if self.element_type == 'button':
-                if self.main.events.check_key(key=['mouse_3', 'escape']) and self.name in ['Back', 'Resume', 'No']:
-                    self.main.events.remove_key(key='mouse_3')
-                    self.main.events.remove_key(key='escape')
-                    return self.button_type, self.button_response, self.name
-                if self.main.text_handler.text_elements[self.menu_name][self.name].selected:
-                    return self.button_type, self.button_response, self.name
-                if self.button_type == 'option' and self.main.text_handler.text_elements[self.menu_name][self.name + self.button_response[0]].selected:
-                    self.offset = self.offset_start.copy()
-                    self.button_response.append(self.button_response.pop(0))
-                    self.option_centres.append(self.option_centres.pop(0))
-                    return self.button_type, self.button_response, self.name
+                selected = self.main.text_handler.text_elements[self.menu_name][self.name + (self.button_response[0] if self.button_type == 'option' else '')].selected
+                if selected:
+                    if self.button_type == 'option':
+                        self.offset = self.offset_start.copy()
+                        self.cycle_option(selected=selected)
+                        return self.button_type, self.button_response, selected
+                    elif selected == 'left':
+                        return self.button_type, self.button_response, self.name
+                elif self.main.events.check_key(key=['mouse_3', 'escape']) and self.name in ['Back', 'Resume', 'No']:
+                    self.main.events.remove_key(key=['mouse_3', 'escape'])
+                    return self.button_type, self.button_response
 
     def draw(self, offset):
         self.main.text_handler.activate_text(text_group=self.menu_name, text_id=self.name, offset=offset)

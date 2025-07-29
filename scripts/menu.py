@@ -84,7 +84,7 @@ class Menu:
                         self.main.audio.quit()
                         self.main.transition.start(response=['game_state', 'quit'], queue=(True, 'fade', (0, 0), 1))
                     elif self.main.game_state == 'main_menu' and selected_element[1] == 'game':
-                        if selected_element[2] == 'Yes':
+                        if element.name == 'Yes':
                             self.main.assets.reset_game_data()
                         self.main.menu_states['game_paused'].menu['Quit'].button_type = 'game_state'
                         self.main.menu_states['game_paused'].menu['Quit'].button_response = 'main_menu'
@@ -109,10 +109,24 @@ class Menu:
                             self.main.menu_states['options'].menu['Back'].button_response = 'game_paused'
                         self.main.assets.save_settings()
                     self.main.change_menu_state(menu_state=selected_element[1])
+                elif selected_element[0] == 'button':
+                    self.main.text_handler.deactivate_text_group(text_group='main')
+                    self.main.text_handler.activate_text(text_group='main', text_id=selected_element[1], duration=2)
+                    if selected_element[1] == 'backup_data':
+                        self.main.utilities.backup_file(file_name='data')
+                    elif selected_element[1] == 'backup_settings':
+                        self.main.utilities.backup_file(file_name='settings')
+                    elif selected_element[1] == 'restore_data':
+                        self.main.utilities.restore_file(file_name='data')
+                    elif selected_element[1] == 'restore_settings':
+                        self.main.utilities.restore_file(file_name='settings')
                 elif selected_element[0] == 'option':
-                    self.main.assets.change_setting(group=self.menu_name, name=selected_element[2].lower().replace(' ', '_'), option=selected_element[1][0].lower().replace(' ', '_'))
+                    response = self.main.assets.change_setting(group=self.menu_name, name=element.name, option=selected_element[1][0])
+                    while response:
+                        element.cycle_option(selected=selected_element[2])
+                        response = self.main.assets.change_setting(group=self.menu_name, name=element.name, option=selected_element[1][0])
                 elif selected_element[0] == 'level':
-                    if self.main.game_state == 'game' and selected_element[2] == 'Restart Level':
+                    if self.main.game_state == 'game' and element.name == 'Restart Level':
                         self.main.transition.start(style='circle', centre=element.centre, response=['level', self.main.game_states['game'].level.name, 'original', None, None], queue=(True, 'circle', 'player', 1))
                     elif self.main.game_state == 'level_editor':
                         self.main.transition.start(response=['level', selected_element[1], 'level', None, None], queue=(True, 'fade', (0, 0), 1))

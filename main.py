@@ -1,3 +1,10 @@
+# /// script
+# dependencies = [
+# 'modern_gl',
+# 'glcontext',
+# ]
+# ///
+
 from scripts.assets import Assets
 from scripts.utilities import Utilities
 from scripts.display import Display
@@ -12,8 +19,10 @@ from game_states.main_menu import MainMenu
 from game_states.game import Game
 from game_states.level_editor import LevelEditor
 import pygame as pg
+import cProfile
 import sys
 import os
+import asyncio
 
 
 # add glow effect to hud layer
@@ -31,6 +40,7 @@ import os
 # add secret with a hint on a sign that says 'fill in the gap on the map in the first level' or something a bit more cryptic, which requires the player to go back to the first level in the first world,
 # and move such that they are in the empty gap on the map when it is overlayed onto the level, this triggers a portal to level (-1, 0) for a secret (maybe add cheeses to world 1?)...
 # add a portal nexts to the sign that gives the original hint that takes us to level (-1, 1)...
+# add another clue to this along the lines of 'join the top-left queue', indicating to go to the position of the letter 'q' and top left arrow on a keyboard...
 # add room that starts very pixelated (very hard to tell what anything is) but get clearer/ less pixelated as the player moves towards some secret spot in the level...
 # add effect the end of the first game, as the player moves forward, the level gets more and more pixelated until they are standing on the teleporter to take them to the second game...
 # have collectable text move upwards on the screen and dont limit player movement...
@@ -54,7 +64,6 @@ import os
 # we play the teleport sound if we close the map by clicking on the the level we are currently in...
 # closing the game while the map is open pixelates it...
 # have map switch while in cutscene for the second world...
-# add movement shader to menu text to make it move slightly, can do the same for level text and map text...
 # add reflection shader to ice...
 # add ability when playing a sound to stop all other instances of that sound...
 # spearate menu display layer into title and everything else, then we can apply a shader to the menu title...
@@ -66,11 +75,15 @@ import os
 # picking up a collectable prevents animations from finishing...
 # add message when a collectable is got that unlocks a lock somewhere, say where...
 # dont play sign close sound when we teleport off a sign...
-# add tutorial elements into first levels...
-# tutorials: (0, 0) - wasd/ arrow keys to move
-#            (0, 1) - escape/ p to pause/ open menu
-#            (0, 2) - tab to open map
-#            (-1, 2) - z to undo, y to redo
+# undo/ redo does not save game data...
+# add all game controls (move, menu, undo, redo) to map screen?
+# add better silhouette version of fraction sprite and swap to normal sprite when all collectables of a type is collected...
+# add 5-step steve into the game inbetween world 1 and 2?
+# we need to save game data as soon as teleport data is updated...
+# add afk timer to game the changes player state to sleeping after no action taken for a while...
+# add rainbow colour effect to player when they collect a collectable and have collectable swirl around the player...
+# when map is opened during a cutscene, we need to reset the sprite timers (ie have players and teleporters show first)...
+# quiting while a cutscene is in progress messes it up the next time it tries to play...
 
 # signs: (-1, 2)(14, 9) - Stars are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.
 #        (-2, 2)(2, 1) - You can always undo and redo moves, and sometimes the solution involves restarting. Don't be afraid to experiment!
@@ -81,7 +94,7 @@ import os
 class Main:
     def __init__(self):
         pg.init()
-        self.game_name = 'Slime Steppa'
+        self.game_name = 'Slime Stepper'
         self.fps = 60
         self.true_fps = self.fps
         self.low_fps = False
@@ -117,6 +130,8 @@ class Main:
             elif game_state in self.game_states:
                 previous_game_state = self.game_state
                 self.game_state = game_state
+                if previous_game_state == 'main_menu' and self.game_state == 'game' and 'New Game' not in self.menu_states['title_screen'].menu:
+                    self.menu_states['title_screen'] = Menu(main=self, menu_name='title_screen', menu_data=self.assets.settings['menus']['title_screen'])
                 self.game_states[game_state].start_up(previous_game_state=previous_game_state)
 
     def change_menu_state(self, menu_state=None):
@@ -130,11 +145,12 @@ class Main:
         self.assets.update_choose_level_menu()
         self.menu_states['choose_level'] = Menu(main=self, menu_name='choose_level', menu_data=self.assets.settings['menus']['choose_level'])
 
-    def run(self):
+    async def main(self):
         while True:
             self.update()
             self.draw()
             self.clock.tick(self.fps)
+            await asyncio.sleep(0)
 
     def update_game_of_life(self):
         if self.shaders.background_effect == 'gol':
@@ -206,4 +222,6 @@ class Main:
 if __name__ == '__main__':
     if sys.version_info[0:3] != (3, 13, 5):
         raise Exception('Python version 3.13.5 required')
-    Main().run()
+    # cProfile.run('Main().main()', sort='tottime')
+    # Main().main()
+    asyncio.run(Main().main())

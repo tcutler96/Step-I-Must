@@ -1,13 +1,14 @@
 from scripts.text_element import TextElement
+from math import sin, cos
 
 
 class TextHandler:
     def __init__(self, main):
         self.main = main
-        # add way to move text element shadow over time, have preset choices (ie sin sway)...
-        # and way to move text elements so that they bounce up and down with the game cycle...
-        self.text_elements = {}
+        self.text_bounce = 0
+        self.shadow_sway = 0
         self.sign_lines = {}
+        self.text_elements = {}
         self.add_text(text_group='main', text_id='debug', text='debug mode', position='bottom', colour='purple', size=16)
         self.add_text(text_group='main', text_id='backup_data', text='data backed up', position='top')
         self.add_text(text_group='main', text_id='backup_settings', text='settings backed up', position='top')
@@ -23,22 +24,22 @@ class TextHandler:
         self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', display_layer='level')
         self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', display_layer='level')
         self.add_text(text_group='game', text_id='warp?', text=f"{{*<¡>*}} press 'e' to warp {{*<¡>*}}", position='top', display_layer='level', style='itallic')
-        self.add_text(text_group='map', text_id='toggle', text="Toggle map: 'tab'", position='bottom_left', alpha_step=8.5, shadow_offset=(4, 4),
+        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_step=8.5, bounce=False, alignment=('c', 'c'), size=14, display_layer='map')
+        self.add_text(text_group='map', text_id='toggle', text="Toggle map: 'tab'", position='bottom_left', alpha_step=8.5,
                       alignment=('l', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='map')
-        self.add_text(text_group='map', text_id='switch', text="Switch map: 'space'", position='bottom_right', alpha_step=8.5, shadow_offset=(4, 4),
+        self.add_text(text_group='map', text_id='switch', text="Switch map: 'space'", position='bottom_right', alpha_step=8.5,
                       alignment=('r', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='map')
-        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_step=8.5, alignment=('c', 'c'), size=14, display_layer='map')
         for steps in range(-9, 10):
             self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='level_text')
         for collectable in self.main.assets.data['game']['collectables']:
             self.add_text(text_group='collectables', text_id=collectable, text=f'{collectable[:-1]} collected!', position='top', display_layer='level')
         self.add_sign_text()
-        self.game_state_text_groups = {'game': ['game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay', 'developer'],
+        self.game_state_text_groups = {'game': ['tutorial', 'game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay', 'developer'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],
                                        'main_menu': ['title_screen', 'options', 'video', 'audio', 'gameplay', 'developer', 'new_game', 'are_you_sure', 'choose_level'],
                                        'splash': ['splash']}
 
-    def add_text(self, text_group, text_id, text, position, alpha_step=25.5, alignment=('c', 'c'), colour='light_green', bg_colour=None, shadow_colour='dark_purple', shadow_offset=(4, 4),
+    def add_text(self, text_group, text_id, text, position, bounce=3, alpha_step=25.5, alignment=('c', 'c'), colour='light_green', bg_colour=None, shadow_colour='dark_purple', shadow_offset='sway',
                  outline_colour='dark_purple', outline_size=1, size=20, max_width=0, max_height=0, font='Alagard', style=None, display_layer='ui', menu_state=None, active=False, delay=0, duration=0,
                  interactable=False, hovered_colour='green', hovered_bg_colour=None, hovered_shadow_colour=None, hovered_shadow_offset=None, hovered_outline_colour='dark_purple', hovered_outline_size=2):
         position = self.main.utilities.convert_position(position=position)
@@ -53,7 +54,7 @@ class TextHandler:
         # alligned_hovered_position = (alligned_position[0] - outline_difference, alligned_position[1] - outline_difference)
         if text_group not in self.text_elements:
             self.text_elements[text_group] = {}
-        self.text_elements[text_group][text_id] = TextElement(main=self.main, text=text, surface=surface, position=alligned_position, alpha_step=alpha_step, shadow_offset=shadow_offset,
+        self.text_elements[text_group][text_id] = TextElement(main=self.main, text=text, surface=surface, position=alligned_position, bounce=bounce, alpha_step=alpha_step, shadow_offset=shadow_offset,
                                                               display_layer=display_layer, menu_state=menu_state, active=active, delay=delay * self.main.fps, duration=duration * self.main.fps,
                                                               interactable=interactable,  hovered_surface=hovered_surface, hovered_position=alligned_position, hovered_shadow_offset=hovered_shadow_offset)
 
@@ -68,7 +69,6 @@ class TextHandler:
                     lines.append(word)
             cell_position = self.main.utilities.position_str_to_tuple(position=sign_position.split(' - ')[-1])
             text_position = (112 + (cell_position[0] + 0.5) * 16, 32 + (cell_position[1] + ((len(lines) + 0.5) if cell_position[1] < 8 else -0.5)) * 16)
-            print(text_position, lines)
             for offset, text in enumerate(reversed(lines)):
                 self.add_text(text_group='signs', text_id=f'{sign_position}_{offset}', text=text, position=(text_position[0], text_position[1] - 16 * offset), size=12, display_layer='level')
                 self.sign_lines[sign_position] = offset + 1
@@ -90,9 +90,11 @@ class TextHandler:
                 self.text_elements[text_group][text_id].deactivate()
 
     def update(self, mouse_position):
+        self.text_bounce = sin(1.5 * self.main.runtime_seconds)
+        self.shadow_sway = (2 * sin(2 * self.main.runtime_seconds), cos(self.main.runtime_seconds))
         for text_group, text_ids in self.text_elements.items():
             for text_id, text_element in text_ids.items():
-                text_element.update(mouse_position=mouse_position)
+                text_element.update(mouse_position=mouse_position, bounce=self.text_bounce, sway=self.shadow_sway)
 
     def draw(self, displays):
         for text_group, text_ids in self.text_elements.items():

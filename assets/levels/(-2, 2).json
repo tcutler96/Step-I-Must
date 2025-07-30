@@ -189,22 +189,16 @@
       "horizontal_barrier": null
     },
     "2:1": {
-      "tile": {
-        "name": "sign",
-        "state": "sign"
-      },
       "object": null,
       "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "3:1": {
-      "tile": {
-        "name": "sign",
-        "state": "sign"
-      },
       "object": null,
       "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1163,14 +1157,17 @@
     "10:8": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "11:8": {
-      "tile": null,
       "object": null,
       "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1709,12 +1706,12 @@
       "horizontal_barrier": null
     },
     "14:12": {
-      "tile": null,
-      "object": {
-        "name": "permanent flag",
-        "state": "5"
-      },
+      "object": null,
       "player": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },

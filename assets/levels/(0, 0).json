@@ -561,7 +561,10 @@
       "horizontal_barrier": null
     },
     "4:4": {
-      "object": null,
+      "object": {
+        "name": "permanent flag",
+        "state": "5"
+      },
       "player": null,
       "tile": null,
       "vertical_barrier": null,
@@ -705,10 +708,7 @@
       "horizontal_barrier": null
     },
     "6:5": {
-      "object": {
-        "name": "permanent flag",
-        "state": "5"
-      },
+      "object": null,
       "player": null,
       "tile": null,
       "vertical_barrier": null,
@@ -917,7 +917,10 @@
     },
     "2:7": {
       "tile": null,
-      "object": null,
+      "object": {
+        "name": "permanent flag",
+        "state": "5"
+      },
       "player": null,
       "vertical_barrier": null,
       "horizontal_barrier": null

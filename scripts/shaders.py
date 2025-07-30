@@ -17,10 +17,10 @@ class Shaders:
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
         self.apply_shaders = self.main.assets.settings['video']['shaders']
         self.background_effect = self.main.assets.settings['video']['background']
-        self.effect_data_length = 10
+        self.effect_data_length = 12
         self.default_effect_data = {'applied': 0, 'active': 0, 'scale': 0, 'length': 1, 'step': 0}
-        self.effect_data = {'grey': {}, 'invert': {}, 'blur': {'current': 2, 'min': 2, 'max': 15},
-                            'pixelate': {'current': 1, 'min': 1, 'max': 16},  # play around with this value to get cool low poly effects, can switch between 12 - 16, can have diffent values for x and y...
+        self.effect_data = {'grey': {}, 'invert': {}, 'blur': {'current': 2, 'min': 2, 'max': 10},
+                            'pixelate': {'current': 1, 'min': 1, 'max': 16, 'current2': 1, 'min2': 1, 'max2': 16},  # play around with this value to get cool low poly effects, can switch between 12 - 16, can have diffent values for x and y...
                             'shockwave': {'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05}, 'test': {},
                             'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False}}
         self.shaders = self.load_shaders()
@@ -99,10 +99,14 @@ class Shaders:
                 effect_data['scale'] = min(1, effect_data['scale'] + effect_data['step'])
                 if 'current' in effect_data and 'min' in effect_data and 'max' in effect_data:
                     effect_data['current'] = int(effect_data['min'] + effect_data['scale'] * (effect_data['max'] - effect_data['min']))
+                if 'current2' in effect_data and 'min2' in effect_data and 'max2' in effect_data:
+                    effect_data['current2'] = int(effect_data['min2'] + effect_data['scale'] * (effect_data['max2'] - effect_data['min2']))
         elif effect_data['scale'] > 0:
                 effect_data['scale'] = max(0, effect_data['scale'] - effect_data['step'])
                 if 'current' in effect_data and 'min' in effect_data and 'max' in effect_data:
                     effect_data['current'] = int(effect_data['min'] + effect_data['scale'] * (effect_data['max'] - effect_data['min']))
+                if 'current2' in effect_data and 'min2' in effect_data and 'max2' in effect_data:
+                    effect_data['current2'] = int(effect_data['min2'] + effect_data['scale'] * (effect_data['max2'] - effect_data['min2']))
                 if effect_data['scale'] <= 0:
                     effect_data['active'] = 0
 

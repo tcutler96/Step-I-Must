@@ -37,6 +37,9 @@ class Menu:
             elif element_name == 'Back':
                 position = (self.menu_centre[0], self.menu_centre[1] + self.data['button_size'] * rows)
             else:
+                # we need to 'add' the new game button to the title screen menu, just reload the entire menu from scracth?
+                if self.menu_name == 'title_screen' and element_name == 'New Game' and not self.main.assets.data['game']['level']:
+                    continue
                 position = (self.menu_centre[0] + self.column_positions[columns][column], self.menu_centre[1] + self.data['button_size'] * row)
                 column += 1
                 if column == columns:
@@ -84,7 +87,7 @@ class Menu:
                         self.main.audio.quit()
                         self.main.transition.start(response=['game_state', 'quit'], queue=(True, 'fade', (0, 0), 1))
                     elif self.main.game_state == 'main_menu' and selected_element[1] == 'game':
-                        if element.name == 'Yes':
+                        if not self.main.game_states['game'].level.name or element.name == 'Yes':
                             self.main.assets.reset_game_data()
                         self.main.menu_states['game_paused'].menu['Quit'].button_type = 'game_state'
                         self.main.menu_states['game_paused'].menu['Quit'].button_response = 'main_menu'
@@ -135,4 +138,4 @@ class Menu:
         if self.scrollbar:
             self.scrollbar.draw(displays=displays, scroll=self.scroll, offset=self.offset)
         for _, element in self.menu.items():
-            element.draw(offset=self.offset)
+            element.draw(displays=displays, offset=self.offset)

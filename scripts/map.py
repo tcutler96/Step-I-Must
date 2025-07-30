@@ -6,15 +6,14 @@ class Map:
         self.main = main
         self.show_map = False
         self.show_text = True
-        self.cell_size = 16
+        self.cell_size = self.main.sprite_size
         part_one_offset = (304.0, 128.0)
         part_two_offset = (240.0, 400.0)
-        target = self.get_target(level=self.main.assets.data['game']['level'])
-        self.offset_dict = {'1': part_one_offset, '2': part_two_offset, 'current': part_one_offset if target == '1' else part_two_offset, 'target': target,
+        self.offset_dict = {1: part_one_offset, 2: part_two_offset, 'current': None, 'target': 1,
                             'step': (abs(part_one_offset[0] - part_two_offset[0]) / (2 * self.cell_size), abs(part_one_offset[1] - part_two_offset[1]) / (2 * self.cell_size))}
         self.collectables = {'base_position': (384, 50), 'y_overlap': 0.35, 'types': list(self.main.assets.data['game']['collectables']),
                              'max_counts': {collectable_type: 0 for collectable_type in list(self.main.assets.data['game']['collectables'])},
-                             'sprites': {'fraction': self.main.assets.images['map']['fraction_2'].copy(), 'medal': self.main.assets.images['map']['medal'].copy()} |
+                             'sprites': {'fraction': self.main.assets.images['map']['fraction'].copy(), 'fraction_filled': self.main.assets.images['map']['fraction_filled'].copy(), 'medal': self.main.assets.images['map']['medal'].copy()} |
                                         {collectable_type[:-1]: None for collectable_type in list(self.main.assets.data['game']['collectables'])} |
                                         {f'{collectable_type[:-1]} empty': None for collectable_type in list(self.main.assets.data['game']['collectables'])}}
         self.part_data = {'part_one': {'collectable_types': ['silver keys', 'silver gems'], 'text': 'World 1: ', 'position': (424, 252)},
@@ -22,7 +21,6 @@ class Map:
                           'overall': {'collectable_types': ['silver keys', 'silver gems', 'gold keys', 'gold gems', 'cheeses'], 'text': 'Overall: ', 'position': (424, 280)}}
         self.alpha = 0
         self.alpha_step = 8.5
-        self.alpha_updated = True
         self.icons = {'alpha': {'alpha': 255, 'alpha_alt': 0, 'step': -4.25, 'timer': 120, 'delay': 120}, 'alpha_default': {'alpha': 255, 'alpha_alt': 0, 'step': -4.25, 'timer': 120, 'delay': 120},
                       'icons': {'player': {'name': 'player', 'state': 'idle', 'sprite': None}, 'teleporter': {'name': 'teleporter', 'state': 'reciever', 'sprite': None},
                                 'silver keys': {'name': 'collectable', 'state': 'silver key', 'sprite': None}, 'silver gems': {'name': 'collectable', 'state': 'silver gem', 'sprite': None},
@@ -30,8 +28,6 @@ class Map:
                                 'cheeses': {'name': 'collectable', 'state': 'cheese', 'sprite': None}}}
         self.levels = self.load_levels()
         self.map = self.load_map()
-        # add back board to collectable section...
-        # add better silhouette version of fraction sprite and swap to normal sprite when all collectables of a type is collected...
 
     def get_collectable_position(self, x, y):
         return self.collectables['base_position'][0] + x * self.main.sprite_size, self.collectables['base_position'][1] + y * self.main.sprite_size * self.collectables['y_overlap']
@@ -72,7 +68,7 @@ class Map:
                 if level_name in reciever:
                     teleporter = True
             map_cells[level_name] = MapCell(main=self.main, level_name=level_name, sprite=sprite, blit_position=blit_position,
-                                            cell_size=self.cell_size, offset=self.offset_dict['current'], discovered=level_name in self.main.assets.data['game']['discovered_levels'],
+                                            cell_size=self.cell_size, discovered=level_name in self.main.assets.data['game']['discovered_levels'],
                                             player=level_name == self.main.assets.data['game']['level'], teleporter=teleporter,
                                             collectables={'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []})
         if data_updated:
@@ -97,7 +93,7 @@ class Map:
                 self.map[level_name].collectables[collectable_type] = collectable
 
     def get_target(self, level):
-        return '1' if self.main.utilities.position_str_to_tuple(position=level)[1] > -4 else '2'
+        return 1 if self.main.utilities.position_str_to_tuple(position=level)[1] > -4 else 2
 
     def set_target(self, target):
         if self.offset_dict['current'] != self.offset_dict[target]:
@@ -122,10 +118,10 @@ class Map:
     def update_collectable_count_text(self, collectable_type):
         count = len(self.main.assets.data['game']['collectables'][collectable_type])
         max_count = self.collectables['max_counts'][collectable_type]
-        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_current', text=str(count), alignment=('c', 'c'),
+        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_current', text=str(count), alignment=('c', 'c'), bounce=0, shadow_offset=(4, 4),
                                         size=14, max_width=self.main.sprite_size * 0.75, display_layer='map', alpha_step=8.5, colour='purple' if count < max_count else 'light_green',
                                         position=self.get_collectable_position(x=self.collectables['types'].index(collectable_type) + 0.5, y=max_count + 3))
-        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_max', text=str(max_count), alignment=('c', 'c'), size=14,
+        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_max', text=str(max_count), alignment=('c', 'c'), size=14, bounce=0, shadow_offset=(4, 4),
                                         max_width=self.main.sprite_size * 0.75, display_layer='map', alpha_step=8.5, colour='purple' if count < max_count else 'light_green',
                                         position=self.get_collectable_position(x=self.collectables['types'].index(collectable_type) + 0.5, y=max_count + (6.3 if count < max_count else 6.1)))
 
@@ -139,7 +135,7 @@ class Map:
             percent = round(100 * count / max_count, 2)
             self.main.assets.data['game'][f'{part}_percent'] = percent
             self.main.text_handler.add_text(text_group='map', text_id=f'{part}_percent', text=f'{self.part_data[part]['text']}{percent:g}%', position=self.part_data[part]['position'],
-                                            alpha_step=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='map')
+                                            alpha_step=8.5, alignment=('c', 'c'), size=14, bounce=False, max_width=112, display_layer='map')
 
     def update_collectables(self, collectable_type, level_name, position):
         if collectable_type in self.collectables['types'] and position in self.map[level_name].collectables[collectable_type]:
@@ -174,7 +170,7 @@ class Map:
     def update_sprites(self):
         if self.show_map or self.alpha:
             for name, sprite in self.collectables['sprites'].items():
-                if name in ['fraction', 'medal']:
+                if name in ['fraction', 'fraction_filled', 'medal']:
                     sprite.set_alpha(self.alpha)
                 else:
                     sprite = self.main.utilities.get_sprite(name='collectable', state=name)
@@ -194,7 +190,7 @@ class Map:
                     self.set_target(target=self.get_target(level=self.main.assets.data['game']['level']))
             if self.show_map and (self.main.text_handler.text_elements['map']['switch'].selected == 'left' or self.main.events.check_key(key='space')):
                 self.main.audio.play_sound(name='map_switch')
-                self.offset_dict['target'] = '1' if self.offset_dict['target'] == '2' else '2'
+                self.offset_dict['target'] = 1 if self.offset_dict['target'] == 2 else 2
                 mouse_position = None
         self.update_icons()
         self.update_sprites()
@@ -224,12 +220,12 @@ class Map:
                 for y in list(range(collectable_count, max_count)) + list(range(collectable_count)):
                     collectable_sprite = self.collectables['sprites'][collectable_type[:-1]] if y <= collectable_count - 1 else self.collectables['sprites'][collectable_type[:-1] + ' empty']
                     displays['map'].blit(source=collectable_sprite, dest=self.get_collectable_position(x=x, y=y))
-                displays['map'].blit(source=self.collectables['sprites']['fraction'], dest=self.get_collectable_position(x=x, y=max_count + 4.1))
+                displays['map'].blit(source=self.collectables['sprites']['fraction' if collectable_count < max_count else 'fraction_filled'], dest=self.get_collectable_position(x=x, y=max_count + 4.1))
                 if self.show_map:
                     self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_current')
                     self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_max')
                 if collectable_count >= max_count:
-                    displays['map'].blit(source=self.collectables['sprites']['medal'], dest=self.get_collectable_position(x=x, y=max_count + 7.5))
+                    displays['map'].blit(source=self.collectables['sprites']['medal'], dest=self.get_collectable_position(x=x, y=max_count + 8))
 
     def draw(self, displays):
         if self.alpha:

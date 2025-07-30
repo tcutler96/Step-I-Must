@@ -36,9 +36,9 @@ class Cutscene:
                 elif self.timer == 1:
                     return 'close_map'
             elif self.active_cutscene == 'part_two':
-                if self.timer == 240:
+                if self.timer == 420:
                     return 'open_map'
-                elif self.timer == 120:
+                elif self.timer == 300:
                     return 'show_collectables_two'
                 elif self.timer == 1:
                     return 'close_map'
@@ -49,6 +49,7 @@ class Cutscene:
             for name, data in self.cutscene_data.items():
                 if data['type'] == 'level' and not data['triggered']:
                     if level.name == data['trigger']:
+                        self.main.audio.play_sound(name='cutscene')
                         self.active_cutscene = name
                         self.timer = data['length'] * self.main.fps
                         data['triggered'] = True

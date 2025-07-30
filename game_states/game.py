@@ -1,3 +1,4 @@
+from scripts.tutorials import Tutorials
 from scripts.cutscene import Cutscene
 from scripts.level import Level
 from scripts.map import Map
@@ -13,6 +14,7 @@ class Game:
         # self.main.assets.data['game']['part_two'] = False
         self.cutscene = Cutscene(main=self.main)
         self.level = Level(main=self.main)
+        self.tutorials = Tutorials(main=self.main)
         self.map = Map(main=self.main)
         self.movement_dict = {'w': 'up', 'a': 'left', 's': 'down', 'd': 'right'}
         self.movement_held = {'up': 0, 'left': 0, 'down': 0, 'right': 0}
@@ -284,7 +286,11 @@ class Game:
 
                         if cell.check_element(name='sign'):  # signs
                             self.main.audio.play_sound(name='map_open')
-                            self.sign_data.append(self.level.name + ' - ' + str(cell.position))
+                            sign_position = self.level.name + ' - ' + str(cell.position)
+                            if sign_position in self.main.assets.data['signs']:
+                                self.sign_data.append(sign_position)
+                            else:
+                                print(f'sign data for level and position {sign_position} not found...')
 
                         for direction in cell.adjacent_directions:  # locks
                             new_cell = self.level.get_new_cell(position=cell.position, movement=direction)
@@ -724,9 +730,9 @@ class Game:
             self.map.show_map = False
             self.map.show_text = True
         elif response == 'map_target_one':
-            self.map.set_target(target='1')
+            self.map.set_target(target=1)
         elif response == 'map_target_two':
-            self.map.set_target(target='2')
+            self.map.set_target(target=2)
         elif response == 'show_collectables_one':
             self.main.audio.play_sound(name='collectable')
             self.map.show_collectables = True
@@ -766,9 +772,11 @@ class Game:
     def update_undo_redo(self):
         self.check_standing = True
         self.resolve_standing()
+        self.tutorials.update_level(level_name=self.level.name)
         self.map.update_player(level_name=self.level.name)
 
     def load_level(self, name='empty', load_respawn=None, bump_player=None):
+        self.tutorials.transition_level(level_name=self.level.name)
         self.map.show_map = False
         self.map.alpha = 0
         self.level.load_level(name=name, load_respawn=load_respawn, bump_player=bump_player)
@@ -801,10 +809,13 @@ class Game:
         self.main.change_menu_state()
         self.reset_level()
         self.level.name = self.main.assets.data['game']['level'] if previous_game_state == 'main_menu' else 'custom'
+        self.tutorials.update_level(level_name=self.level.name)
+        # self.map.
         self.load_level(name=self.level.name, load_respawn='setting' if previous_game_state == 'main_menu' and self.main.assets.data['game']['respawn'] else 'level')
 
-    def update(self, mouse_position):
-        if self.main.menu_state:
+    def update(self, mouse_position):  # refactor this, draw everything all the time now that we have display layers in game and can see them all while menu is open etc...
+        self.tutorials.update()  # where should this go?
+        if self.main.menu_state:  # we need to update all game aspects (tutorial, map etc) even when the menu is open
             self.main.display.set_cursor(cursor='arrow')
             self.update_map(mouse_position=None)
             self.main.shaders.apply_effect(display_layer=['level_background', 'level', 'player', 'level_text', 'map'], effect='blur', effect_data={'length': 0.5})
@@ -816,7 +827,7 @@ class Game:
             if self.interpolating:
                 self.update_blit_positions()
             if not self.main.transition.transitioning:
-                if self.main.events.check_key(key='escape'):
+                if self.main.events.check_key(key=['escape', 'p']):
                     self.main.audio.play_sound(name='menu_select')
                     self.main.change_menu_state(menu_state='game_paused')
                 self.update_map(mouse_position=mouse_position)
@@ -825,7 +836,7 @@ class Game:
                         self.main.shaders.apply_effect(display_layer=['player'], effect='grey')
                     elif self.no_steps or not self.player_cells:  # no more steps or players, game over, you can not do anything except open menu, map, move to reset, and press 'e' to teleport...
                         # self.main.audio.play_sound(name='game_over')
-                        self.main.shaders.apply_effect(display_layer=['level', 'player'], effect='grey')
+                        self.main.shaders.apply_effect(display_layer=['level_background', 'level', 'player'], effect='grey')
                     self.update_teleporters()
                     if not self.map.show_map:
                         if self.level.update():
@@ -895,15 +906,15 @@ class Game:
 
     def draw(self, displays):
         self.level.draw(displays=displays)
+        self.tutorials.draw(displays=displays)
         self.cutscene.draw(displays=displays)
         self.map.draw(displays=displays)
         self.main.text_handler.activate_text(text_group='steps', text_id=self.level.steps)
         if not self.player_cells or self.no_steps:
             self.main.text_handler.activate_text(text_group='game', text_id='reset')
         for sign in self.sign_data:
-            if sign in self.main.text_handler.sign_lines:
-                for offset in range(self.main.text_handler.sign_lines[sign]):
-                    self.main.text_handler.activate_text(text_group='signs', text_id=f'{sign}_{offset}')
+            for offset in range(self.main.text_handler.sign_lines[sign]):
+                self.main.text_handler.activate_text(text_group='signs', text_id=f'{sign}_{offset}')
         if self.main.debug:
             if self.teleporter_data['standing'] or self.teleporter_data['setting']:
                 self.main.text_handler.activate_text(text_group='game', text_id='set_warp')

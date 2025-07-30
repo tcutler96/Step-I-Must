@@ -2,13 +2,13 @@ import pygame as pg
 
 
 class MapCell:
-    def __init__(self, main, level_name, sprite, blit_position, cell_size, offset, discovered, player, teleporter, collectables):
+    def __init__(self, main, level_name, sprite, blit_position, cell_size, discovered, player, teleporter, collectables):
         self.main = main
         self.level_name = level_name
         self.sprite = sprite
         self.blit_position = blit_position
         self.cell_size = cell_size
-        self.rect = pg.Rect((self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]), (self.cell_size, self.cell_size))
+        self.rect = None
         self.discovered = discovered
         self.player = player
         self.teleporter = teleporter

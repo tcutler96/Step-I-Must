@@ -1,25 +1,25 @@
 {
   "game": {
-    "level": "(-2, 2)",
+    "level": "(0, 1)",
     "respawn": [
       [
         [
-          8,
-          8
+          11,
+          0
         ]
       ],
       [
         [
-          8,
-          8
+          11,
+          0
         ]
       ],
       [
-        true
+        false
       ]
     ],
     "part_one": true,
-    "part_two": true,
+    "part_two": false,
     "part_one_percent": 0.0,
     "part_two_percent": 0.0,
     "overall_percent": 0.0,
@@ -32,12 +32,7 @@
     },
     "discovered_levels": [
       "(0, 0)",
-      "(0, 1)",
-      "(-1, 2)",
-      "(0, 2)",
-      "(-2, 2)",
-      "(-6, 0)",
-      "(-5, 0)"
+      "(0, 1)"
     ],
     "active_portals": []
   },
@@ -288,8 +283,8 @@
   },
   "signs": {
     "(-1, 2) - (14, 9)": "Stars are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.",
-    "(-2, 2) - (2, 1)": "You can always undo and redo moves, and sometimes the solution involves restarting. Don't be afraid to experiment!",
-    "(-2, 2) - (3, 1)": "If you're stuck in a level, you can use the map (tab) to teleport yourself out of it!",
+    "(-2, 2) - (14, 12)": "You can always undo and redo moves, and sometimes the solution involves resetting. Don't be afraid to experiment!",
+    "(-2, 2) - (10, 8)": "If you're ever stuck in a level, you can always use the map (tab) to teleport to a level that contains a teleporter, like this one!",
     "(-6, 0) - (14, 2)": "Don't look at the statues!"
   },
   "teleporters": {
@@ -1430,7 +1425,7 @@
           12,
           2
         ],
-        "destination": null
+        "destination": "(-1, 0) - (2, 2)"
       },
       "(-1, 0) - (2, 2)": {
         "position": [

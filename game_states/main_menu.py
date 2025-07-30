@@ -20,3 +20,4 @@ class MainMenu:
 
     def draw(self, displays):
         pass
+        # displays['menu'].blit(source=self.main.assets.images['other']['title'], dest=(50, 50))

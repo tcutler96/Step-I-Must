@@ -237,6 +237,12 @@ vec3 palette2(float t) {
     return 0.5 + 0.5 * cos(6.28318 * (t + vec3(0.3, 0.416, 0.557)));
 }
 
+const mat4 THRESHOLD_MATRIX = mat4(
+		vec4(1.0 / 17.0,  9.0 / 17.0,  3.0 / 17.0, 11.0 / 17.0),
+		vec4(13.0 / 17.0,  5.0 / 17.0, 15.0 / 17.0,  7.0 / 17.0),
+		vec4(4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0),
+		vec4(16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0));
+
 vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
     // reflection, pull pixels from another display layer...
 
@@ -246,6 +252,12 @@ vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
 //    vec4 colour = vec4(palette(uv.y - 0.1 * time, vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.3 * sin(time), 0.2, 0.2)), 1.0);  // gradient
 //    vec4 colour = vec4(palette(uv.x + 0.1 * time, vec3(0.8, 0.5, 0.4), vec3(0.2, 0.4, 0.2), vec3(2.0, 1.0, 1.0), vec3(0.0, 0.25, 0.25)), 1.0);  // gradient
 
+    vec4 colour = texture(display_layer, uv);  // dithering
+    vec2 uv = uv / pixel_size;
+	float player_dist = (clamp(1.0 - distance(SCREEN_UV / SCREEN_PIXEL_SIZE, player_position / SCREEN_PIXEL_SIZE) * SCREEN_PIXEL_SIZE.x / radius, 0.0, 1.0)) * player_influence * step(0.01, intensity);
+	colour.a *= step(0.0, THRESHOLD_MATRIX[int(uv.x) % 4][int(uv.y) % 4] - intensity - player_dist);
+	colour.a *= step(0.0, THRESHOLD_MATRIX[int(uv.x) % 4][int(uv.y) % 4] - (1.0 - effect_data[2]));
+
 //	vec2 uv = 2. * uv - 1.;  // galaxy fractal
 //	vec2 uvs = uv * aspect_ratio;
 //	vec3 p = vec3(uvs / 4., 0) + vec3(1., -1.3, 0.);
@@ -254,40 +266,40 @@ vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
 //	float v = (1. - exp((abs(uv.x) - 1.) * 6.)) * (1. - exp((abs(uv.y) - 1.) * 6.));
 //	vec4 colour = mix(.4, 1., v) * vec4(1.8 * t * t * t, 1.4 * t * t, t, 1.0);
 
-    vec2 uv = 2. * uv - 1.;  // galaxy fractal
-	vec2 uvs = uv * aspect_ratio;
-	vec3 p = vec3(uvs / 4., 0) + vec3(1., -1.3, 0.);
-	p += .2 * vec3(sin(time / 16.), sin(time / 12.),  sin(time / 128.));
-
-	float freqs[4];
-	freqs[0] = 1.;  // colour, blue to green
-	freqs[1] = 0.5 * sin(time / 10);  // brightness/ pink shine
-	freqs[2] = 1.;  // similar to above but less
-	freqs[3] = 0.5 * sin(time);  // darkness, edges
-
-	float t = field(p,freqs[2]);
-	float v = (1. - exp((abs(uv.x) - 1.) * 6.)) * (1. - exp((abs(uv.y) - 1.) * 6.));
-
-    //Second Layer
-	vec3 p2 = vec3(uvs / (4.+sin(time*0.11)*0.2+0.2+sin(time*0.15)*0.3+0.4), 1.5) + vec3(2., -1.3, -1.);
-	p2 += 0.25 * vec3(sin(time / 16.), sin(time / 12.),  sin(time / 128.));
-	float t2 = field2(p2,freqs[3]);
-	vec4 c2 = mix(.4, 1., v) * vec4(1.3 * t2 * t2 * t2 ,1.8  * t2 * t2 , t2* freqs[0], t2);
-
-
-	//Let's add some stars
-	vec2 seed = p.xy * 2.0;
-	seed = floor(seed * resolution.x);
-	vec3 rnd = nrand3( seed );
-	vec4 starcolor = vec4(pow(rnd.y,40.0));
-
-	//Second Layer
-	vec2 seed2 = p2.xy * 2.0;
-	seed2 = floor(seed2 * resolution.x);
-	vec3 rnd2 = nrand3( seed2 );
-	starcolor += vec4(pow(rnd2.y,40.0));
-
-	vec4 colour = mix(freqs[3]-.3, 1., v) * vec4(1.5*freqs[2] * t * t * t , 1.2*freqs[1] * t * t, freqs[3]*t, 1.0)+c2+starcolor;
+//    vec2 uv = 2. * uv - 1.;  // galaxy fractal
+//	vec2 uvs = uv * aspect_ratio;
+//	vec3 p = vec3(uvs / 4., 0) + vec3(1., -1.3, 0.);
+//	p += .2 * vec3(sin(time / 16.), sin(time / 12.),  sin(time / 128.));
+//
+//	float freqs[4];
+//	freqs[0] = 1.;  // colour, blue to green
+//	freqs[1] = 0.5 * sin(time / 10);  // brightness/ pink shine
+//	freqs[2] = 1.;  // similar to above but less
+//	freqs[3] = 0.5 * sin(time);  // darkness, edges
+//
+//	float t = field(p,freqs[2]);
+//	float v = (1. - exp((abs(uv.x) - 1.) * 6.)) * (1. - exp((abs(uv.y) - 1.) * 6.));
+//
+//    //Second Layer
+//	vec3 p2 = vec3(uvs / (4.+sin(time*0.11)*0.2+0.2+sin(time*0.15)*0.3+0.4), 1.5) + vec3(2., -1.3, -1.);
+//	p2 += 0.25 * vec3(sin(time / 16.), sin(time / 12.),  sin(time / 128.));
+//	float t2 = field2(p2,freqs[3]);
+//	vec4 c2 = mix(.4, 1., v) * vec4(1.3 * t2 * t2 * t2 ,1.8  * t2 * t2 , t2* freqs[0], t2);
+//
+//
+//	//Let's add some stars
+//	vec2 seed = p.xy * 2.0;
+//	seed = floor(seed * resolution.x);
+//	vec3 rnd = nrand3( seed );
+//	vec4 starcolor = vec4(pow(rnd.y,40.0));
+//
+//	//Second Layer
+//	vec2 seed2 = p2.xy * 2.0;
+//	seed2 = floor(seed2 * resolution.x);
+//	vec3 rnd2 = nrand3( seed2 );
+//	starcolor += vec4(pow(rnd2.y,40.0));
+//
+//	vec4 colour = mix(freqs[3]-.3, 1., v) * vec4(1.5*freqs[2] * t * t * t , 1.2*freqs[1] * t * t, freqs[3]*t, 1.0)+c2+starcolor;
 
     return colour;
 }

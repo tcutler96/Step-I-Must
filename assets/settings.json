@@ -1,6 +1,6 @@
 {
   "video": {
-    "background": "gol",
+    "background": "space",
     "button_prompt": false,
     "cursor_type": "sprite",
     "hrt_shader": true,
@@ -83,8 +83,8 @@
         "button",
         "option",
         [
-          "Game of Life",
-          "Space"
+          "Space",
+          "Game of Life"
         ]
       ],
       "Button Prompt": [

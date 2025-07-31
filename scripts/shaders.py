@@ -93,20 +93,20 @@ class Shaders:
                 else:
                     print(f"either '{display_layer}' display layer does not exist or '{effect}' effect does not exist...")
 
+    def update_effect_current(self, effect_data):
+        if 'current' in effect_data and 'min' in effect_data and 'max' in effect_data:
+            effect_data['current'] = int(effect_data['min'] + effect_data['scale'] * (effect_data['max'] - effect_data['min']))
+        if 'current2' in effect_data and 'min2' in effect_data and 'max2' in effect_data:
+            effect_data['current2'] = int(effect_data['min2'] + effect_data['scale'] * (effect_data['max2'] - effect_data['min2']))
+
     def update_effect_scale(self, effect_data):
         if effect_data['applied'] == effect_data['active']:
             if effect_data['scale'] < 1:
                 effect_data['scale'] = min(1, effect_data['scale'] + effect_data['step'])
-                if 'current' in effect_data and 'min' in effect_data and 'max' in effect_data:
-                    effect_data['current'] = int(effect_data['min'] + effect_data['scale'] * (effect_data['max'] - effect_data['min']))
-                if 'current2' in effect_data and 'min2' in effect_data and 'max2' in effect_data:
-                    effect_data['current2'] = int(effect_data['min2'] + effect_data['scale'] * (effect_data['max2'] - effect_data['min2']))
+                self.update_effect_current(effect_data=effect_data)
         elif effect_data['scale'] > 0:
                 effect_data['scale'] = max(0, effect_data['scale'] - effect_data['step'])
-                if 'current' in effect_data and 'min' in effect_data and 'max' in effect_data:
-                    effect_data['current'] = int(effect_data['min'] + effect_data['scale'] * (effect_data['max'] - effect_data['min']))
-                if 'current2' in effect_data and 'min2' in effect_data and 'max2' in effect_data:
-                    effect_data['current2'] = int(effect_data['min2'] + effect_data['scale'] * (effect_data['max2'] - effect_data['min2']))
+                self.update_effect_current(effect_data=effect_data)
                 if effect_data['scale'] <= 0:
                     effect_data['active'] = 0
 
@@ -144,7 +144,7 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('x', 'held'):
-            self.apply_effect(display_layer=['background'], effect='test')
+            self.apply_effect(display_layer=['menu', 'level'], effect='test')
             # self.apply_effect(display_layer=['menu'], effect='shockwave')
         if self.background_effect == 'gol':
             self.apply_effect(display_layer='background', effect='gol')

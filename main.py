@@ -84,6 +84,7 @@ import asyncio
 # add rainbow colour effect to player when they collect a collectable and have collectable swirl around the player...
 # when map is opened during a cutscene, we need to reset the sprite timers (ie have players and teleporters show first)...
 # quiting while a cutscene is in progress messes it up the next time it tries to play...
+# add sound for triggering portals/ cryptids...
 
 # signs: (-1, 2)(14, 9) - Stars are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.
 #        (-2, 2)(2, 1) - You can always undo and redo moves, and sometimes the solution involves restarting. Don't be afraid to experiment!
@@ -102,7 +103,6 @@ class Main:
         self.runtime_frames = 0
         self.runtime_seconds = 0
         self.sprite_size = 16
-        self.level_offset = ()
         self.assets_path = os.path.join(os.path.abspath(os.curdir), 'assets')
         self.assets = Assets(main=self)
         self.utilities = Utilities(main=self)

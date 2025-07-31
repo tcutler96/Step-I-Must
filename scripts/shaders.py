@@ -20,8 +20,8 @@ class Shaders:
         self.effect_data_length = 12
         self.default_effect_data = {'applied': 0, 'active': 0, 'scale': 0, 'length': 1, 'step': 0}
         self.effect_data = {'grey': {}, 'invert': {}, 'blur': {'current': 2, 'min': 2, 'max': 10},
-                            'pixelate': {'current': 1, 'min': 1, 'max': 16, 'current2': 1, 'min2': 1, 'max2': 16},  # play around with this value to get cool low poly effects, can switch between 12 - 16, can have diffent values for x and y...
-                            'shockwave': {'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05}, 'test': {},
+                            'pixelate': {'current': 1, 'min': 1, 'max': 16, 'current2': 1, 'min2': 1, 'max2': 16},
+                            'shockwave': {'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05}, 'test': {'x': 240, 'y': 160},
                             'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False}}
         self.shaders = self.load_shaders()
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
@@ -144,8 +144,9 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('x', 'held'):
-            self.apply_effect(display_layer=['menu', 'level'], effect='test')
+            # self.apply_effect(display_layer=['menu', 'level_background', 'level', 'player'], effect='test', effect_data={'length': 1})
             # self.apply_effect(display_layer=['menu'], effect='shockwave')
+            self.apply_effect(display_layer=['background'], effect='test')
         if self.background_effect == 'gol':
             self.apply_effect(display_layer='background', effect='gol')
         self.update_effect_data()

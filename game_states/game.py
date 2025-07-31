@@ -337,7 +337,7 @@ class Game:
                 self.set_steps(steps=5)
             if not self.main.debug:
                 if not new_level and self.level.steps == 0:
-                    self.main.audio.play_sound(name='no_steps')
+                    self.main.audio.play_sound(name='game_over')
                     self.no_steps = True
                     for cell in self.player_cells.values():
                         cell.elements['player']['state'] = 'dead'
@@ -443,7 +443,7 @@ class Game:
                                         new_cell = new_new_cell
                                         new_new_cell = self.level.get_new_cell(position=new_new_cell.position, movement=movement)
         if objects_slid:
-            self.main.audio.play_sound(name='ice')
+            self.main.audio.play_sound(name='ice', overlap=True)
         if self.players_exited:
             self.transition_level()
         elif not objects_slid:

@@ -275,7 +275,7 @@ class Level:
                     pg.draw.rect(surface=displays['level'], color=self.main.assets.colours['white'], rect=grid_rect, width=1)
             if self.current_respawn:
                 for position in self.current_respawn[1]:
-                    displays['level'].blit(source=self.main.utilities.get_sprite(name='player respawn'),
+                    displays['level_main'].blit(source=self.main.utilities.get_sprite(name='player respawn'),
                                            dest=(self.level_offset[0] + position[0] * self.main.sprite_size, self.level_offset[1] + position[1] * self.main.sprite_size))
             cells = self.get_cells()
             for cell in cells:
@@ -288,9 +288,9 @@ class Level:
                 if mouse_cell.check_element(name='player', state='idle'):
                     sprite = self.main.utilities.get_sprite(name='player respawn', state='player respawn')
                     sprite.set_alpha(self.mouse_cell_alpha)
-                    displays['level'].blit(source=sprite, dest=(self.level_offset[0] + mouse_cell.position[0] * self.main.sprite_size, self.level_offset[1] + mouse_cell.position[1] * self.main.sprite_size))
+                    displays['level_main'].blit(source=sprite, dest=(self.level_offset[0] + mouse_cell.position[0] * self.main.sprite_size, self.level_offset[1] + mouse_cell.position[1] * self.main.sprite_size))
                 mouse_cell.draw(displays=displays, animated=self.animated, alpha=self.mouse_cell_alpha, element_types=['tile'])
                 mouse_cell.draw(displays=displays, animated=self.animated, alpha=self.mouse_cell_alpha,
                                 element_types=['object', 'player', 'vertical_barrier', 'horizontal_barrier'])
-                displays['level'].blit(source=self.main.assets.images['toolbar']['marker'], dest=(self.level_offset[0] + mouse_cell.position[0] * self.main.sprite_size + self.cell_marker_offset[0],
+                displays['level_main'].blit(source=self.main.assets.images['toolbar']['marker'], dest=(self.level_offset[0] + mouse_cell.position[0] * self.main.sprite_size + self.cell_marker_offset[0],
                                                                                                   self.level_offset[1] + mouse_cell.position[1] * self.main.sprite_size + self.cell_marker_offset[1]))

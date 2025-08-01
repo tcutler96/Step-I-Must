@@ -31,14 +31,15 @@ class Audio:
             if not self.audio['sound'][name].get_num_channels() or overlap:
                 self.audio['sound'][name].play(loops=loops, fade_ms=self.main.utilities.s_to_ms(s=fade))
         elif self.main.testing:
-            # print(f"'{name}' sound file not found...")
-            self.audio['sound']['menu_select'].play(loops=loops, fade_ms=self.main.utilities.s_to_ms(s=fade))
+            if not self.audio['sound']['placeholder'].get_num_channels():
+                # print(f"'{name}' sound file not found...")
+                self.audio['sound']['placeholder'].play(loops=loops, fade_ms=self.main.utilities.s_to_ms(s=fade))
 
     def stop_sound(self, name, fade=1):
         if name in self.audio['sound']:
             self.audio['sound'][name].fadeout(self.main.utilities.s_to_ms(s=fade))
 
-    def play_music(self, music_theme=None, fade=5):
+    def play_music(self, music_theme=None, fade=10):
         if music_theme != self.music_theme and music_theme in self.audio['music']:
             self.music_theme = music_theme
             self.music.load(filename=self.audio['music'][self.music_theme])

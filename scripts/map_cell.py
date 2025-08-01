@@ -40,16 +40,16 @@ class MapCell:
     def draw_cell(self, displays, sprite, offset, alpha=None):
         if alpha:
             sprite.set_alpha(alpha)
-        displays['map'].blit(source=sprite, dest=(self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]))
+        displays['level_map'].blit(source=sprite, dest=(self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]))
 
     def draw(self, displays, icons, offset, alpha):
         if self.rect.colliderect(self.main.display.rect):
             if self.discovered or self.main.debug:
                 if self.main.assets.settings['video']['map_colour'] != 'disabled':
-                    pg.draw.rect(surface=displays['map'], color=self.main.utilities.get_colour(colour=self.main.assets.settings['video']['map_colour'], alpha=alpha), rect=self.rect)
+                    pg.draw.rect(surface=displays['level_map'], color=self.main.utilities.get_colour(colour=self.main.assets.settings['video']['map_colour'], alpha=alpha), rect=self.rect)
                 if self.hovered and alpha == 255:
                     self.main.text_handler.activate_text(text_group='map', text_id=self.level_name)
-                    pg.draw.rect(surface=displays['map'], color=self.main.utilities.get_colour(colour='cream', alpha=alpha), rect=self.rect)
+                    pg.draw.rect(surface=displays['level_map'], color=self.main.utilities.get_colour(colour='cream', alpha=alpha), rect=self.rect)
                 self.draw_cell(displays=displays, sprite=self.sprite, offset=offset, alpha=alpha)
                 if self.teleporter:
                     self.draw_cell(displays=displays, sprite=icons['teleporter']['sprite'], offset=offset)

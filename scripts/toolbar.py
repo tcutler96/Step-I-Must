@@ -97,7 +97,7 @@ class Toolbar:
                 self.main.display.set_cursor(cursor='hand')
                 self.hovered_element = button_name
                 if self.hovered_element != self.last_hovered_element:
-                    self.main.audio.play_sound(name='level_editor_highlight')
+                    self.main.audio.play_sound(name='menu_highlight', overlap=True)
                 if self.main.events.check_key(key='mouse_1'):
                     selected_elememt = ['button', button_name]
         if not selected_elememt:
@@ -108,7 +108,7 @@ class Toolbar:
                     if rect.collidepoint(mouse_position):
                         self.hovered_element = [element_name, count]
                         if self.hovered_element != self.last_hovered_element:
-                            self.main.audio.play_sound(name='level_editor_highlight')
+                            self.main.audio.play_sound(name='menu_highlight', overlap=True)
                         self.main.display.set_cursor(cursor='hand')
                         if self.main.events.check_key(key='mouse_1'):
                             if element_data['element_type'] == 'object':
@@ -123,24 +123,25 @@ class Toolbar:
 
     def draw(self, displays):
         for background_rect in self.toolbar['background_rects']:
-            pg.draw.rect(surface=displays['level_editor'], color=self.main.assets.colours['dark_purple'], rect=background_rect, border_radius=5)
+            pg.draw.rect(surface=displays['ui'], color=self.main.assets.colours['dark_purple'], rect=background_rect, border_radius=5)
+            # pg.draw.rect(surface=displays['ui'], color=self.main.assets.colours['cream'], rect=background_rect, width=1, border_radius=5)
         for button_name, button_data in self.toolbar['buttons'].items():
-            displays['level_editor'].blit(source=button_data['sprite'], dest=button_data['position'])
+            displays['ui'].blit(source=button_data['sprite'], dest=button_data['position'])
             if button_name == self.hovered_element:
                 self.main.text_handler.activate_text(text_group='toolbar', text_id=button_name)
-                displays['level_editor'].blit(source=self.main.assets.images['toolbar']['marker'], dest=(button_data['position'][0] + self.cell_marker_offset[0], button_data['position'][1]  + self.cell_marker_offset[1]))
+                displays['ui'].blit(source=self.main.assets.images['toolbar']['marker'], dest=(button_data['position'][0] + self.cell_marker_offset[0], button_data['position'][1]  + self.cell_marker_offset[1]))
         for element_name, element_data in self.toolbar['elements'].items():
             if element_name == self.hovered_element[0] and element_data['num_choices'] > 1:
                 self.main.text_handler.activate_text(text_group='toolbar', text_id=element_name + element_data['states'][self.hovered_element[1]])
-                pg.draw.rect(surface=displays['level_editor'], color=self.main.assets.colours['cream'], rect=element_data['hover_rect'], border_radius=5)
+                pg.draw.rect(surface=displays['ui'], color=self.main.assets.colours['cream'], rect=element_data['hover_rect'], border_radius=5)
             if element_name != self.hovered_element[0] and element_name == (self.selected_object[0] if element_data['element_type'] == 'object' else self.selected_tile[0]):
-                pg.draw.rect(surface=displays['level_editor'], color=self.main.assets.colours['bright_green'], rect=pg.Rect(element_data['position'][0][0] - 2, element_data['position'][0][1] - 2, 20, 20), border_radius=3)
+                pg.draw.rect(surface=displays['ui'], color=self.main.assets.colours['bright_green'], rect=pg.Rect(element_data['position'][0][0] - 2, element_data['position'][0][1] - 2, 20, 20), border_radius=3)
                 if element_name == 'player' and element_data['states'][self.selected_object[1]] == 'idle':
                     sprite = self.main.utilities.get_sprite(name='player respawn')
                     sprite.blit(source=self.main.utilities.get_sprite(name='player', state='idle'), dest=(0, 0))
                 else:
                     sprite = self.main.utilities.get_sprite(name=element_name, state=element_data['states'][self.selected_object[1] if element_data['element_type'] == 'object' else self.selected_tile[1]])
-                displays['level_editor'].blit(source=sprite, dest=element_data['position'][0])
+                displays['ui'].blit(source=sprite, dest=element_data['position'][0])
             else:
                 for count, (position, state) in enumerate(zip(element_data['position'] if element_name == self.hovered_element[0] else [element_data['position'][0]],
                                             element_data['states'] if element_name == self.hovered_element[0] else [element_data['states'][0]])):
@@ -150,8 +151,8 @@ class Toolbar:
                     else:
                         sprite = self.main.utilities.get_sprite(name=element_name, state=state)
                     if [element_name, count] == (self.selected_object if element_data['element_type'] == 'object' else self.selected_tile):
-                        pg.draw.rect(surface=displays['level_editor'], color=self.main.assets.colours['bright_green'], rect=pg.Rect(position[0] - 2, position[1] - 2, 20, 20), border_radius=3)
-                    displays['level_editor'].blit(source=sprite, dest=position)
+                        pg.draw.rect(surface=displays['ui'], color=self.main.assets.colours['bright_green'], rect=pg.Rect(position[0] - 2, position[1] - 2, 20, 20), border_radius=3)
+                    displays['ui'].blit(source=sprite, dest=position)
                     if element_name == self.hovered_element[0] and count == self.hovered_element[1]:
-                        displays['level_editor'].blit(source=self.main.assets.images['toolbar']['marker'], dest=(position[0] + self.cell_marker_offset[0], position[1] + self.cell_marker_offset[1]))
+                        displays['ui'].blit(source=self.main.assets.images['toolbar']['marker'], dest=(position[0] + self.cell_marker_offset[0], position[1] + self.cell_marker_offset[1]))
                         self.main.text_handler.activate_text(text_group='toolbar', text_id=element_name + element_data['states'][self.hovered_element[1]])

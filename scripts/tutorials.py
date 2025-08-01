@@ -3,7 +3,7 @@
 class Tutorials:
     def __init__(self, main):
         self.main = main
-        self.display_layer = 'level_background'
+        self.display_layer = 'level_main'
         self.level_name = self.main.assets.data['game']['level']
         self.keys_counter = self.main.fps * 4
         self.tutorials = self.load_tutorials(tutorials_data={'(0, 0)': {'action': [{'text': 'move', 'position': (12, 8)}], 'keys': [{'text': ['w', '^'], 'position': (12, 6)}, {'text': ['a', '<'], 'position': (11, 7)},

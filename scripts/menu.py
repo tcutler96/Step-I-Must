@@ -87,7 +87,7 @@ class Menu:
                         self.main.audio.quit()
                         self.main.transition.start(response=['game_state', 'quit'], queue=(True, 'fade', (0, 0), 1))
                     elif self.main.game_state == 'main_menu' and selected_element[1] == 'game':
-                        if not self.main.game_states['game'].level.name or element.name == 'Yes':
+                        if not self.main.assets.data['game']['level'] or element.name == 'Yes':
                             self.main.assets.reset_game_data()
                         self.main.menu_states['game_paused'].menu['Quit'].button_type = 'game_state'
                         self.main.menu_states['game_paused'].menu['Quit'].button_response = 'main_menu'

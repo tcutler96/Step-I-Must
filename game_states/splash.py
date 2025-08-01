@@ -4,7 +4,7 @@ class Splash:
     def __init__(self, main):
         self.main = main
         self.timer = 0
-        self.timers = {'timer': 0, 'text_id': None, 160: 'tcgame', 320: 'hoolio', 480: 'end'}
+        self.timers = {'timer': 0, 'text_id': None, 160: 'tcgame', 330: 'hoolio', 500: 'end'}
 
     def start_up(self, previous_game_state=None):
         self.main.audio.play_music(music_theme='edgy demo')

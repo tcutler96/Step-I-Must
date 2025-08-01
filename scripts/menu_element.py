@@ -73,7 +73,7 @@ class MenuElement:
 
     def draw(self, displays, offset):
         if self.sprite:
-            displays['menu'].blit(source=self.sprite, dest=(self.sprite_position[0], self.sprite_position[1] + offset[1] + self.main.text_handler.text_bounce * 3))
+            displays['ui'].blit(source=self.sprite, dest=(self.sprite_position[0], self.sprite_position[1] + offset[1] + self.main.text_handler.text_bounce * 3))
         self.main.text_handler.activate_text(text_group=self.menu_name, text_id=self.name, offset=offset)
         if self.element_type == 'button' and self.button_type == 'option':
             self.main.text_handler.activate_text(text_group=self.menu_name, text_id=self.name + self.button_response[0], offset=[sum(x) for x in zip(offset, self.offset)])

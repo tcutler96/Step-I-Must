@@ -15,24 +15,24 @@ class TextHandler:
         self.add_text(text_group='main', text_id='restore_data', text='data restored', position='top')
         self.add_text(text_group='main', text_id='restore_settings', text='settings restored', position='top')
         self.add_text(text_group='main', text_id='conway', text="conway's game of life", position='top', colour='cream', shadow_colour=None, outline_colour=None, display_layer='background')
-        self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_step=8.5, colour='purple', size=24, shadow_offset='mouse')
-        self.add_text(text_group='splash', text_id='hoolio', text='with hoolio audio', position='centre', alpha_step=8.5, colour='purple', size=24, shadow_offset='mouse')
-        self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_step=8.5, colour='purple', size=24)
+        self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_step=8.5, size=24, shadow_offset='mouse')
+        self.add_text(text_group='splash', text_id='hoolio', text='with hoolio audio', position='centre', alpha_step=8.5, size=28, shadow_offset='mouse')
+        self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_step=8.5, colour='purple', size=28)
         self.add_text(text_group='level_editor', text_id='reset', text='level reset', position='bottom_right', alignment=('r', 'c'))
         self.add_text(text_group='level_editor', text_id='saved', text='level saved', position='bottom_right', alignment=('r', 'c'))
-        self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', display_layer='level_text')
-        self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', display_layer='level')
-        self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', display_layer='level')
-        self.add_text(text_group='game', text_id='warp?', text=f"{{*<¡>*}} press 'e' to warp {{*<¡>*}}", position='top', display_layer='level', style='itallic')
-        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_step=8.5, bounce=False, alignment=('c', 'c'), size=14, display_layer='map')
+        self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', display_layer='level_ui')
+        self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', display_layer='level_main')
+        self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', display_layer='level_main')
+        self.add_text(text_group='game', text_id='warp?', text=f"{{*<¡>*}} press 'e' to warp {{*<¡>*}}", position='top', display_layer='level_main', style='itallic')
+        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_step=8.5, bounce=False, alignment=('c', 'c'), size=14, display_layer='level_map')
         self.add_text(text_group='map', text_id='toggle', text="Toggle map: 'tab'", position='bottom_left', alpha_step=8.5,
-                      alignment=('l', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='map')
+                      alignment=('l', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='level_map')
         self.add_text(text_group='map', text_id='switch', text="Switch map: 'space'", position='bottom_right', alpha_step=8.5,
-                      alignment=('r', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='map')
+                      alignment=('r', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='level_map')
         for steps in range(-9, 10):
-            self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='level_text')
+            self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='level_main')
         for collectable in self.main.assets.data['game']['collectables']:
-            self.add_text(text_group='collectables', text_id=collectable, text=f'{collectable[:-1]} collected!', position='top', display_layer='level')
+            self.add_text(text_group='collectables', text_id=collectable, text=f'{collectable[:-1]} collected!', position='top', display_layer='level_main')
         self.add_sign_text()
         self.game_state_text_groups = {'game': ['tutorial', 'game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay', 'developer'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],

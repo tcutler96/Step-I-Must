@@ -1,17 +1,17 @@
 {
   "video": {
-    "background": "gol",
+    "background": "galaxy",
     "button_prompt": false,
     "cursor_type": "sprite",
     "hrt_shader": true,
     "map_colour": "green",
     "particles": false,
-    "resolution": 1,
+    "resolution": 3,
     "screen_shake": true,
     "shaders": true
   },
   "audio": {
-    "master_volume": 0.5,
+    "master_volume": 0.3,
     "music_volume": 0.1,
     "sound_volume": 0.5
   },
@@ -83,8 +83,9 @@
         "button",
         "option",
         [
+          "Galaxy",
           "Game of Life",
-          "Space"
+          "Disabled"
         ]
       ],
       "Button Prompt": [
@@ -133,10 +134,10 @@
         "button",
         "option",
         [
-          "(448, 320)",
-          "(896, 640)",
           "(1344, 960)",
-          "(1792, 1280)"
+          "(1792, 1280)",
+          "(448, 320)",
+          "(896, 640)"
         ]
       ],
       "Screen Shake": [
@@ -167,6 +168,8 @@
         "button",
         "option",
         [
+          "30%",
+          "40%",
           "50%",
           "60%",
           "70%",
@@ -175,9 +178,7 @@
           "100%",
           "Disabled",
           "10%",
-          "20%",
-          "30%",
-          "40%"
+          "20%"
         ]
       ],
       "Music Volume": [

@@ -818,7 +818,7 @@ class Game:
         if self.main.menu_state:  # we need to update all game aspects (tutorial, map etc) even when the menu is open
             self.main.display.set_cursor(cursor='arrow')
             self.update_map(mouse_position=None)
-            self.main.shaders.apply_effect(display_layer=['level_background', 'level', 'player', 'level_text', 'map'], effect='blur', effect_data={'length': 0.5})
+            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui', 'level_map'], effect='blur', effect_data={'length': 0.5})
         else:
             if self.main.debug or self.map.show_map:
                 self.main.display.set_cursor(cursor='arrow')
@@ -833,10 +833,10 @@ class Game:
                 self.update_map(mouse_position=mouse_position)
                 if not self.update_cutscene():
                     if self.player_cells and self.level.steps == 1:
-                        self.main.shaders.apply_effect(display_layer=['player'], effect='grey')
+                        self.main.shaders.apply_effect(display_layer=['level_player'], effect='grey')
                     elif self.no_steps or not self.player_cells:  # no more steps or players, game over, you can not do anything except open menu, map, move to reset, and press 'e' to teleport...
                         # self.main.audio.play_sound(name='game_over')
-                        self.main.shaders.apply_effect(display_layer=['level_background', 'level', 'player'], effect='grey')
+                        self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player'], effect='grey')
                     self.update_teleporters()
                     if not self.map.show_map:
                         if self.level.update():
@@ -902,7 +902,7 @@ class Game:
             else:
                 if not self.main.transition.fade_in:
                     # this triggers when we close the game, need to check that were transitioning levels, also it is a cool effect
-                    self.main.shaders.apply_effect(display_layer=['level_background', 'level', 'player', 'level_text', 'map'], effect='pixelate', effect_data={'length': 0.5})
+                    self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui', 'level_map'], effect='pixelate', effect_data={'length': 0.5})
 
     def draw(self, displays):
         self.level.draw(displays=displays)

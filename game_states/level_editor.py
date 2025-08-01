@@ -119,7 +119,7 @@ class LevelEditor:
             self.mouse_cell.position = self.level.display_to_grid(position=mouse_position)
             selected_element = self.toolbar.update(mouse_position=mouse_position)
             if selected_element:
-                self.main.audio.play_sound(name='level_editor_select')
+                self.main.audio.play_sound(name='menu_select')
                 if selected_element[0] == 'button':
                     if selected_element[1] == 'Play Level':
                         self.reset_toolbar(hovered=True, selected=True)

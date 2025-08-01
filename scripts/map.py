@@ -196,7 +196,7 @@ class Map:
         self.update_sprites()
         if self.show_map:
             interpolating = self.update_interpolation()
-            self.main.shaders.apply_effect(display_layer=['level_background', 'level', 'player', 'level_text'], effect='blur', effect_data={'length': 0.5})
+            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui'], effect='blur', effect_data={'length': 0.5})
             if self.alpha < 255:
                 self.alpha = min(self.alpha + self.alpha_step, 255)
             selected_level = [None, None]
@@ -219,13 +219,13 @@ class Map:
                 max_count = self.collectables['max_counts'][collectable_type]
                 for y in list(range(collectable_count, max_count)) + list(range(collectable_count)):
                     collectable_sprite = self.collectables['sprites'][collectable_type[:-1]] if y <= collectable_count - 1 else self.collectables['sprites'][collectable_type[:-1] + ' empty']
-                    displays['map'].blit(source=collectable_sprite, dest=self.get_collectable_position(x=x, y=y))
-                displays['map'].blit(source=self.collectables['sprites']['fraction' if collectable_count < max_count else 'fraction_filled'], dest=self.get_collectable_position(x=x, y=max_count + 4.1))
+                    displays['level_map'].blit(source=collectable_sprite, dest=self.get_collectable_position(x=x, y=y))
+                displays['level_map'].blit(source=self.collectables['sprites']['fraction' if collectable_count < max_count else 'fraction_filled'], dest=self.get_collectable_position(x=x, y=max_count + 4.1))
                 if self.show_map:
                     self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_current')
                     self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_max')
                 if collectable_count >= max_count:
-                    displays['map'].blit(source=self.collectables['sprites']['medal'], dest=self.get_collectable_position(x=x, y=max_count + 8))
+                    displays['level_map'].blit(source=self.collectables['sprites']['medal'], dest=self.get_collectable_position(x=x, y=max_count + 8))
 
     def draw(self, displays):
         if self.alpha:

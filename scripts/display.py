@@ -15,7 +15,7 @@ class Display:
         self.scale_factor = self.main.assets.settings['video']['resolution']
         self.window_size = self.window_width, self.window_height = (self.size[0] * self.scale_factor, self.size[1] * self.scale_factor)
         self.window_centre = self.window_half_width, self.window_half_height = self.window_width // 2, self.window_height // 2
-        self.display_layers = ['background', 'level_background', 'level', 'player', 'level_text', 'map', 'level_editor', 'menu', 'ui', 'transition']
+        self.display_layers = ['background', 'level_background', 'level_main', 'level_player', 'level_ui', 'level_map', 'ui', 'transition']
         self.displays = self.load_displays()
         self.system = platform.system()
         if self.system == 'Darwin':
@@ -59,12 +59,7 @@ class Display:
     def update(self):
         for display_layer, display_surface in self.displays.items():
             if display_layer == 'background':
-                if self.main.assets.settings['video']['background'] == 'gol':
-                    display_surface.fill(color=self.main.assets.colours['purple'])
-                    # if self.main.events.check_key(key='b', action='held'):
-                    #     display_surface.blit(source=self.main.assets.images['other']['test'], dest=(0, 0))
-                elif self.main.assets.settings['video']['background'] == 'space':
-                    display_surface.blit(source=self.main.assets.images['other']['space4'], dest=(0, 0))
+                display_surface.fill(color=self.main.assets.colours['purple'])
             else:
                 display_surface.fill(color=(0, 0, 0, 0))
         pg.display.set_caption(self.main.game_name + (f' - running at {round(self.main.true_fps)} fps for {round(self.main.runtime_seconds, 2)}s' if self.main.debug else ''))

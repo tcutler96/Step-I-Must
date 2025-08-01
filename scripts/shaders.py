@@ -11,24 +11,27 @@ class Shaders:
         self.program = self.context.program(vertex_shader=self.vertex_shader, fragment_shader=self.fragment_shader)
         self.set_uniforms(uniforms={'fps': self.main.fps, 'resolution': self.main.display.size, 'aspect_ratio': self.main.display.aspect_ratio, 'pixel_size': self.main.display.pixel_size})
         self.render_object = self.context.vertex_array(program=self.program, content=[(self.quad_buffer, '2f 2f', 'vert', 'texcoord')], mode=mgl.TRIANGLE_STRIP)
-        self.extra_textures = ['noise', 'buffer']
+        self.extra_textures = ['buffer']
         self.textures = self.create_textures()
         self.render_buffer = self.context.renderbuffer(size=self.main.display.size)
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
         self.apply_shaders = self.main.assets.settings['video']['shaders']
         self.background_effect = self.main.assets.settings['video']['background']
-        self.effect_data_length = 12
+        self.effect_data_length = 10
         self.default_effect_data = {'applied': 0, 'active': 0, 'scale': 0, 'length': 1, 'step': 0}
-        self.effect_data = {'grey': {}, 'invert': {}, 'blur': {'current': 2, 'min': 2, 'max': 10},
-                            'pixelate': {'current': 1, 'min': 1, 'max': 16, 'current2': 1, 'min2': 1, 'max2': 16},
-                            'shockwave': {'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05}, 'test': {'x': 240, 'y': 160},
-                            'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False}}
+        self.effect_data = {'grey': {}, 'invert': {}, 'blur': {'current': 2, 'min': 2, 'max': 8},
+                            'pixelate': {'current': 1, 'min': 1, 'max': 16, 'current_2': 1, 'min_2': 1, 'max_2': 16},
+                            'shockwave': {'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05},
+                            'galaxy': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False},
+                            'test': {'x': 240, 'y': 160}}
         self.shaders = self.load_shaders()
+        print("Max fragment uniform components:", self.context.info['GL_MAX_FRAGMENT_UNIFORM_COMPONENTS'])
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
         # how inefficient is it to have one fragment shader, would we get better frames from individual shaders?
         # pass in shader effect variables so we can control them (ie only greyscale the player layer slightly when we only have 1 step left but fully pixealte on teleport)...
         # add distortion effect to grey effect that is used when low/ out of steps...
         # add shader options (fancy, simple, disabled), scale effects by some value?
+        # bluring level background adds a nice fade effect to a level exit, is there a less intensive way to recreate this look?
 
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)
@@ -85,8 +88,8 @@ class Shaders:
                         apply_effect_data['active'] = self.effect_data[effect]['index']
                         apply_effect_data['step'] = (1 / self.main.fps) / apply_effect_data['length']
                         del apply_effect_data['length']
-                        if len(apply_effect_data) >= self.effect_data_length:
-                            print(f'increase shader effect size (by at least {len(apply_effect_data) + 1 - self.effect_data_length})...')
+                        if len(apply_effect_data) > self.effect_data_length:
+                            print(f'warning: {effect} effect data exceeds limit, increase effect data length by at least {len(apply_effect_data) - self.effect_data_length}...')
                         self.shaders[display_layer] = apply_effect_data
                     elif not self.shaders[display_layer]['applied']:
                         self.shaders[display_layer]['applied'] = self.effect_data[effect]['index']
@@ -96,8 +99,8 @@ class Shaders:
     def update_effect_current(self, effect_data):
         if 'current' in effect_data and 'min' in effect_data and 'max' in effect_data:
             effect_data['current'] = int(effect_data['min'] + effect_data['scale'] * (effect_data['max'] - effect_data['min']))
-        if 'current2' in effect_data and 'min2' in effect_data and 'max2' in effect_data:
-            effect_data['current2'] = int(effect_data['min2'] + effect_data['scale'] * (effect_data['max2'] - effect_data['min2']))
+        if 'current_2' in effect_data and 'min_2' in effect_data and 'max_2' in effect_data:
+            effect_data['current_2'] = int(effect_data['min_2'] + effect_data['scale'] * (effect_data['max_2'] - effect_data['min_2']))
 
     def update_effect_scale(self, effect_data):
         if effect_data['applied'] == effect_data['active']:
@@ -144,11 +147,10 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('x', 'held'):
-            # self.apply_effect(display_layer=['menu', 'level_background', 'level', 'player'], effect='test', effect_data={'length': 1})
-            # self.apply_effect(display_layer=['menu'], effect='shockwave')
-            self.apply_effect(display_layer=['background'], effect='test')
-        if self.background_effect == 'gol':
-            self.apply_effect(display_layer='background', effect='gol')
+            # self.apply_effect(display_layer=['menu', 'level_background', 'level_main', 'level_player'], effect='test', effect_data={'length': 1})
+            self.apply_effect(display_layer=['level_player'], effect='test')
+        if self.background_effect:  # display flashes upside down when switching to gol...
+            self.apply_effect(display_layer=['background'], effect=self.background_effect, effect_data={'length': 0.1})
         self.update_effect_data()
         self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_position': mouse_position} | self.get_effect_data_uniforms())
 

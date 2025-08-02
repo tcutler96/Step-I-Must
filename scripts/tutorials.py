@@ -7,14 +7,14 @@ class Tutorials:
         self.level_name = self.main.assets.data['game']['level']
         self.keys_counter = self.main.fps * 4
         self.tutorials = self.load_tutorials(tutorials_data={'(0, 0)': {'action': [{'text': 'move', 'position': (12, 8)}], 'keys': [{'text': ['w', '^'], 'position': (12, 6)}, {'text': ['a', '<'], 'position': (11, 7)},
-                                                                                                                                    {'text': ['s', '.'], 'position': (12, 7)}, {'text': ['d', '>'], 'position': (13, 7)}]},
+                                                                                                                                    {'text': ['s', ''], 'position': (12, 7)}, {'text': ['d', '>'], 'position': (13, 7)}]},
                                                              '(0, 1)': {'action': [{'text': 'menu', 'position': (3, 11)}], 'keys': [{'text': ['esc', 'p'], 'position': (3, 10)}]},
                                                              '(0, 2)': {'action': [{'text': 'map', 'position': (12, 12)}], 'keys': [{'text': ['tab'], 'position': (12, 11)}]},
                                                              '(-1, 2)': {'action': [{'text': 'undo', 'position': (3, 4)}, {'text': 'redo', 'position': (12, 4)}], 'keys': [{'text': ['z'], 'position': (3, 3)},
                                                                                                                                                                            {'text': ['y'], 'position': (12, 3)}]}})
 
     def get_position(self, position, element_type=None):
-        return ((108 if element_type == 'tutorial_key_long' else 112) + (position[0] + (0.5 if element_type=='text' else 0)) * self.main.sprite_size,
+        return ((104 if element_type == 'button_5' else 108 if element_type == 'button_3' else 112) + (position[0] + (0.5 if element_type=='text' else 0)) * self.main.sprite_size,
                 (31 if element_type=='text' else 32) + (position[1] + (0.5 if element_type=='text' else 0)) * self.main.sprite_size)
 
     def load_tutorials(self, tutorials_data):
@@ -32,7 +32,7 @@ class Tutorials:
                     max_length = max(max_length, len(key_text))
                     self.main.text_handler.add_text(text_group='tutorial', text_id=f'{level_name}_{key_text}', text=key_text, size=10, alpha_up=8.5, alpha_down=8.5, bounce=-3,
                                                     position=self.get_position(position=key_data['position'], element_type='text'), shadow_colour=None, display_layer=self.display_layer)
-                sprite_type = 'tutorial_key' if max_length == 1 else 'tutorial_key_long'
+                sprite_type = f'button_{max_length}'
                 tutorial_data['sprites'].append({'type': sprite_type, 'position': self.get_position(position=key_data['position'], element_type=sprite_type)})
         return tutorials_data
 

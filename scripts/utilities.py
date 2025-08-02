@@ -57,13 +57,16 @@ class Utilities:
             images.append(self.load_image(path=path + '/' + image_name))
         return images
 
-    def get_sprite(self, name, state=None, animated=True):
+    def get_sprite(self, name, state=None, animated=True, alpha=None):
         if name in ['no object', 'no tile']:
             return self.main.assets.images['toolbar']['empty']
         if not state:
             state = name
         if name in self.main.assets.images['sprite_list'] and state in self.main.assets.images['sprites_data'][name]['state_list']:
-            return self.main.assets.images['sprites'][name][state][self.main.assets.images['sprites_data'][name]['frame_data'][state]['frame_index'] if animated else 0].copy()
+            sprite = self.main.assets.images['sprites'][name][state][self.main.assets.images['sprites_data'][name]['frame_data'][state]['frame_index'] if animated else 0].copy()
+            if alpha is not None:
+                sprite.set_alpha(alpha)
+            return sprite
 
     def get_colour(self, colour, alpha=0):
         if colour in self.main.assets.colours:

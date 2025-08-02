@@ -80,7 +80,7 @@ class Menu:
                 self.scroll_down()
         for _, element in self.menu.items():
             selected_element = element.update(offset=self.offset, scroll=self.scroll)
-            if selected_element and not self.main.transition.transitioning:
+            if selected_element and not self.main.transition.active:
                 self.main.audio.play_sound(name='menu_select')
                 if selected_element[0] == 'game_state':
                     if self.main.game_state == 'main_menu' and selected_element[1] == 'quit':

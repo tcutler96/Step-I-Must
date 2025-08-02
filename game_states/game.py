@@ -32,7 +32,7 @@ class Game:
         self.interpolating = False
         self.players_exited = None
         self.player_cells = None
-        self.player_afk = 36
+        self.player_afk = 3600
         self.player_afk_timer = 0
         self.no_steps = False
         self.teleporter_data = None
@@ -829,7 +829,7 @@ class Game:
                 self.main.display.set_cursor(cursor=None)
             if self.interpolating:
                 self.update_blit_positions()
-            if not self.main.transition.transitioning:
+            if not self.main.transition.active:
                 if self.main.events.check_key(key=['escape', 'p']):
                     self.main.audio.play_sound(name='menu_select')
                     self.main.change_menu_state(menu_state='game_paused')

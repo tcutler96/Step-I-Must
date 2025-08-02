@@ -114,7 +114,7 @@ class LevelEditor:
 
     def update(self, mouse_position):
         self.main.display.set_cursor(cursor='arrow')
-        if not self.main.menu_state and not self.main.transition.transitioning:
+        if not self.main.menu_state and not self.main.transition.active:
             self.level.update()
             self.mouse_cell.position = self.level.display_to_grid(position=mouse_position)
             selected_element = self.toolbar.update(mouse_position=mouse_position)
@@ -174,5 +174,5 @@ class LevelEditor:
     def draw(self, displays):
         if not self.main.menu_state:
             self.toolbar.draw(displays=displays)
-            self.level.draw(displays=displays, mouse_cell=self.mouse_cell if (not self.main.transition.transitioning and self.level.position_on_grid(position=self.mouse_cell.position)
+            self.level.draw(displays=displays, mouse_cell=self.mouse_cell if (not self.main.transition.active and self.level.position_on_grid(position=self.mouse_cell.position)
                                                                               and not self.toolbar.hovered_element[0]) else None)

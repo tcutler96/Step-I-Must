@@ -13,7 +13,7 @@ class Splash:
 
     def update(self, mouse_position):
         self.timers['timer'] += 1
-        if not self.main.transition.transitioning:
+        if not self.main.transition.active:
             self.main.display.set_cursor(cursor='arrow')
             if self.timers['timer'] in self.timers:
                 self.timers['text_id'] = self.timers[self.timers['timer']]

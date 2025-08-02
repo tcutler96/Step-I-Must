@@ -157,7 +157,7 @@ class Main:
 
     def update_game_of_life(self):
         if self.shaders.background_effect == 'gol':
-            self.draw_gol = self.display.cursor.cursor and self.events.check_key(key='mouse_3', action='held') and not self.transition.transitioning
+            self.draw_gol = self.display.cursor.cursor and self.events.check_key(key='mouse_3', action='held') and not self.transition.active
             self.clear_gol = self.events.check_key(key='escape') and self.game_state != 'game'
             if self.conway:
                 self.conway -= 1

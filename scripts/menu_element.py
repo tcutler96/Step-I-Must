@@ -53,7 +53,7 @@ class MenuElement:
             self.main.text_handler.text_elements[self.menu_name][self.name].scroll = scroll
             if self.element_type == 'button' and self.button_type == 'option':
                 self.main.text_handler.text_elements[self.menu_name][self.name + self.button_response[0]].scroll = scroll
-            if offset == [0, 0] and self.offset == [0, 0] and not self.main.transition.transitioning:
+            if offset == [0, 0] and self.offset == [0, 0] and not self.main.transition.active:
                 if self.element_type == 'button':
                     selected = self.main.text_handler.text_elements[self.menu_name][self.name + (self.button_response[0] if self.button_type == 'option' else '')].selected
                     if selected:

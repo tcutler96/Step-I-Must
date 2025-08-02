@@ -20,7 +20,7 @@ class Tutorials:
     def load_tutorials(self, tutorials_data):
         for level_name, tutorial_data in tutorials_data.items():
             for action_data in tutorial_data['action']:
-                self.main.text_handler.add_text(text_group='tutorial', text_id=f'{level_name}_{action_data['text']}', text=action_data['text'], size=18, alpha_step=8.5,
+                self.main.text_handler.add_text(text_group='tutorial', text_id=f'{level_name}_{action_data['text']}', text=action_data['text'], size=18, alpha_up=8.5, alpha_down=8.5, bounce=-3,
                                                 position=self.get_position(position=action_data['position'], element_type='text'), shadow_colour=None, display_layer=self.display_layer)
             tutorial_data['sprites'] = []
             tutorial_data['active_keys'] = 0
@@ -30,7 +30,7 @@ class Tutorials:
                 max_length = 0
                 for key_text in key_data['text']:
                     max_length = max(max_length, len(key_text))
-                    self.main.text_handler.add_text(text_group='tutorial', text_id=f'{level_name}_{key_text}', text=key_text, size=10, alpha_step=8.5,
+                    self.main.text_handler.add_text(text_group='tutorial', text_id=f'{level_name}_{key_text}', text=key_text, size=10, alpha_up=8.5, alpha_down=8.5, bounce=-3,
                                                     position=self.get_position(position=key_data['position'], element_type='text'), shadow_colour=None, display_layer=self.display_layer)
                 sprite_type = 'tutorial_key' if max_length == 1 else 'tutorial_key_long'
                 tutorial_data['sprites'].append({'type': sprite_type, 'position': self.get_position(position=key_data['position'], element_type=sprite_type)})
@@ -65,4 +65,4 @@ class Tutorials:
             for key in tutorial_data['keys']:
                 self.main.text_handler.activate_text(text_group='tutorial', text_id=f'{self.level_name}_{key['text'][tutorial_data['active_keys']]}')
             for sprite in tutorial_data['sprites']:
-                displays[self.display_layer].blit(source=self.main.assets.images['other'][sprite['type']], dest=(sprite['position'][0], sprite['position'][1] + self.main.text_handler.text_bounce * 3))
+                displays[self.display_layer].blit(source=self.main.assets.images['other'][sprite['type']], dest=(sprite['position'][0], sprite['position'][1] + self.main.text_handler.text_bounce * -3))

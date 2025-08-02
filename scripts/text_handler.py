@@ -15,33 +15,35 @@ class TextHandler:
         self.add_text(text_group='main', text_id='restore_data', text='data restored', position='top')
         self.add_text(text_group='main', text_id='restore_settings', text='settings restored', position='top')
         self.add_text(text_group='main', text_id='conway', text="conway's game of life", position='top', colour='cream', shadow_colour=None, outline_colour=None, display_layer='background')
-        self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_step=8.5, size=24, shadow_offset='mouse')
-        self.add_text(text_group='splash', text_id='hoolio', text='with hoolio audio', position='centre', alpha_step=8.5, size=28, shadow_offset='mouse')
-        self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_step=8.5, colour='purple', size=28)
+        self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_up=8.5, alpha_down=8.5, size=24, shadow_offset='mouse')
+        self.add_text(text_group='splash', text_id='hoolio', text='with hoolio audio', position='centre', alpha_up=8.5, alpha_down=8.5, size=28, shadow_offset='mouse')
+        self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_up=8.5, alpha_down=8.5, colour='purple', size=28)
         self.add_text(text_group='level_editor', text_id='reset', text='level reset', position='bottom_right', alignment=('r', 'c'))
         self.add_text(text_group='level_editor', text_id='saved', text='level saved', position='bottom_right', alignment=('r', 'c'))
         self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', display_layer='level_ui')
         self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', display_layer='level_main')
         self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', display_layer='level_main')
         self.add_text(text_group='game', text_id='warp?', text=f"{{*<¡>*}} press 'e' to warp {{*<¡>*}}", position='top', display_layer='level_main', style='itallic')
-        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_step=8.5, bounce=False, alignment=('c', 'c'), size=14, display_layer='level_map')
-        self.add_text(text_group='map', text_id='toggle', text="Toggle map: 'tab'", position='bottom_left', alpha_step=8.5,
+        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_up=8.5, alpha_down=8.5, bounce=False, alignment=('c', 'c'), size=14, display_layer='level_map')
+        self.add_text(text_group='map', text_id='toggle', text="Toggle map: 'tab'", position='bottom_left', alpha_up=8.5, alpha_down=8.5,
                       alignment=('l', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='level_map')
-        self.add_text(text_group='map', text_id='switch', text="Switch map: 'space'", position='bottom_right', alpha_step=8.5,
+        self.add_text(text_group='map', text_id='switch', text="Switch map: 'space'", position='bottom_right', alpha_up=8.5, alpha_down=8.5,
                       alignment=('r', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='level_map')
         for steps in range(-9, 10):
             self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='level_main')
         for collectable in self.main.assets.data['game']['collectables']:
             self.add_text(text_group='collectables', text_id=collectable, text=f'{collectable[:-1]} collected!', position='top', display_layer='level_main')
         self.add_sign_text()
-        self.game_state_text_groups = {'game': ['tutorial', 'game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay', 'developer'],
+        self.game_state_text_groups = {'game': ['tutorial', 'cutscene', 'game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay', 'developer'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],
                                        'main_menu': ['title_screen', 'options', 'video', 'audio', 'gameplay', 'developer', 'new_game', 'are_you_sure', 'choose_level'],
                                        'splash': ['splash']}
 
-    def add_text(self, text_group, text_id, text, position, bounce=3, alpha_step=25.5, alignment=('c', 'c'), colour='light_green', bg_colour=None, shadow_colour='dark_purple', shadow_offset='sway',
+    def add_text(self, text_group, text_id, text, position, bounce=3, alpha_up=25.5, alpha_down=25.5, alignment=('c', 'c'), colour='light_green', bg_colour=None, shadow_colour='dark_purple', shadow_offset='sway',
                  outline_colour='dark_purple', outline_size=1, size=20, max_width=0, max_height=0, font='Alagard', style=None, display_layer='ui', menu_state=None, active=False, delay=0, duration=0,
                  interactable=False, hovered_colour='green', hovered_bg_colour=None, hovered_shadow_colour=None, hovered_shadow_offset=None, hovered_outline_colour='dark_purple', hovered_outline_size=2):
+        if self.check_text_element(text_group=text_group, text_id=text_id):
+            del self.text_elements[text_group][text_id]
         position = self.main.utilities.convert_position(position=position)
         colour, bg_colour, shadow_colour, hovered_colour, hovered_bg_colour, hovered_shadow_colour = (
             self.main.utilities.convert_colours(colours=[colour, bg_colour, shadow_colour, hovered_colour, hovered_bg_colour, hovered_shadow_colour]))
@@ -54,7 +56,7 @@ class TextHandler:
         # alligned_hovered_position = (alligned_position[0] - outline_difference, alligned_position[1] - outline_difference)
         if text_group not in self.text_elements:
             self.text_elements[text_group] = {}
-        self.text_elements[text_group][text_id] = TextElement(main=self.main, text=text, surface=surface, position=alligned_position, bounce=bounce, alpha_step=alpha_step, shadow_offset=shadow_offset,
+        self.text_elements[text_group][text_id] = TextElement(main=self.main, text=text, surface=surface, position=alligned_position, bounce=bounce, alpha_up=alpha_up, alpha_down=alpha_down, shadow_offset=shadow_offset,
                                                               display_layer=display_layer, menu_state=menu_state, active=active, delay=delay * self.main.fps, duration=duration * self.main.fps,
                                                               interactable=interactable,  hovered_surface=hovered_surface, hovered_position=alligned_position, hovered_shadow_offset=hovered_shadow_offset)
 
@@ -70,7 +72,7 @@ class TextHandler:
             cell_position = self.main.utilities.position_str_to_tuple(position=sign_position.split(' - ')[-1])
             text_position = (112 + (cell_position[0] + 0.5) * 16, 32 + (cell_position[1] + ((len(lines) + 0.5) if cell_position[1] < 8 else -0.5)) * 16)
             for offset, text in enumerate(reversed(lines)):
-                self.add_text(text_group='signs', text_id=f'{sign_position}_{offset}', text=text, position=(text_position[0], text_position[1] - 16 * offset), size=12, display_layer='level')
+                self.add_text(text_group='signs', text_id=f'{sign_position}_{offset}', text=text, position=(text_position[0], text_position[1] - 16 * offset), size=12, bounce=-3, display_layer='level_main')
                 self.sign_lines[sign_position] = offset + 1
 
     def check_text_element(self, text_group, text_id):

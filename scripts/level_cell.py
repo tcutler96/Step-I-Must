@@ -219,5 +219,5 @@ class LevelCell:
                         position = self.object_data[element_type]['blit_position'][0]
                     else:
                         position = self.position
-                    displays['level_player' if element_type == 'level_player' else 'level_main'].blit(source=sprite, dest=(self.level_offset[0] + position[0] * self.main.sprite_size + (self.barrier_offset if element_type == 'vertical_barrier' else 0),
+                    displays['level_player' if element_type == 'player' else 'level_main'].blit(source=sprite, dest=(self.level_offset[0] + position[0] * self.main.sprite_size + (self.barrier_offset if element_type == 'vertical_barrier' else 0),
                                                                 self.level_offset[1] + position[1] * self.main.sprite_size + (self.barrier_offset if element_type == 'horizontal_barrier' else 0)))

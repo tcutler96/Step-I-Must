@@ -2,7 +2,8 @@ import pygame as pg
 
 
 class TextElement:
-    def __init__(self, main, text, surface, position, bounce, alpha_step, shadow_offset, display_layer, menu_state, active, delay, duration, interactable, hovered_surface, hovered_position, hovered_shadow_offset):
+    def __init__(self, main, text, surface, position, bounce, alpha_up, alpha_down, shadow_offset, display_layer, menu_state, active, delay, duration,
+                 interactable, hovered_surface, hovered_position, hovered_shadow_offset):
         self.main = main
         self.text = text
         if isinstance(surface, tuple):
@@ -16,7 +17,8 @@ class TextElement:
         self.base_position = position
         self.bounce = bounce
         self.alpha = 0.0
-        self.alpha_step = alpha_step
+        self.alpha_up = alpha_up
+        self.alpha_down = alpha_down
         self.shadow_offset = shadow_offset
         self.base_shadow_offset = shadow_offset
         self.offset = [0, 0]
@@ -80,7 +82,7 @@ class TextElement:
             if not self.delay:
                 self.update_positions(mouse_position=mouse_position, bounce=bounce, sway=sway)
                 if self.alpha < 255:
-                    self.alpha = min(self.alpha + self.alpha_step, 255)
+                    self.alpha = min(self.alpha + self.alpha_up, 255)
                     self.surface.set_alpha(self.alpha)
                     if self.shadow_surface:
                         self.shadow_surface.set_alpha(self.alpha)
@@ -100,7 +102,7 @@ class TextElement:
                 else:
                     self.active = False
         elif self.alpha:
-            self.alpha = max(self.alpha - self.alpha_step, 0)
+            self.alpha = max(self.alpha - self.alpha_down, 0)
             self.surface.set_alpha(self.alpha)
             if self.shadow_surface:
                 self.shadow_surface.set_alpha(self.alpha)

@@ -48,12 +48,12 @@ class Level:
             position = tuple(int(pos) for pos in position.split(':'))
             if game:
                 if self.current_respawn and position in self.current_respawn[0]:
-                    elements['player'] = {'name': 'player', 'state': 'idle'}
+                    elements['player'] = {'name': 'player', 'state': 'idle' if bump_player else 'sleeping'}
                     if not self.main.debug and (elements['object'] and elements['object']['name'] not in ['permanent flag', 'temporary flag']):
                         elements['object'] = None
                 if ((elements['tile'] and elements['tile']['name'] == 'player spawner') and (not self.main.debug)
                         and ((not elements['object'] and not elements['player']) or (elements['object'] and elements['object']['name'] in ['permanent flag', 'temporary flag']))):
-                        elements['player'] = {'name': 'player', 'state': 'idle'}
+                        elements['player'] = {'name': 'player', 'state': 'sleeping'}
                 if elements['tile'] and elements['tile']['name'] == 'teleporter' and elements['tile']['state'] == 'portal' and self.name + ' - ' + str(position) in self.main.assets.data['game']['active_portals']:
                     elements['tile']['state'] += ' animated'
             elif self.current_respawn and position in self.current_respawn[0]:

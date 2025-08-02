@@ -32,6 +32,8 @@ class Game:
         self.interpolating = False
         self.players_exited = None
         self.player_cells = None
+        self.player_afk = 36
+        self.player_afk_timer = 0
         self.no_steps = False
         self.teleporter_data = None
         self.sign_data = None
@@ -307,7 +309,7 @@ class Game:
                                 two_players = False
                                 for direction in cell.adjacent_directions:
                                     new_cell = self.level.get_new_cell(position=cell.position, movement=direction)
-                                    if new_cell and new_cell.check_element(name='player', state=['idle', 'moving']):
+                                    if new_cell and new_cell.check_element(name='player', state=['idle', 'moving', 'sleeping']):
                                         two_players = True
                                 if not two_players:
                                     break
@@ -320,7 +322,7 @@ class Game:
                                     for count, level in enumerate(levels):
                                         if portal.startswith(level['name']):
                                             level_cell = level['level'][tuple(self.main.assets.data['teleporters']['portals'][portal]['position'])]
-                                            if not level_cell.elements['tile']['state'].endswith(' animated'):
+                                            if level_cell.check_element(name='teleporter', state='portal'):
                                                 level_cell.elements['tile']['state'] += ' animated'
 
                         if cell.check_element(name='teleporter', state=['reciever', 'sender', 'portal animated']):  # teleporters
@@ -363,7 +365,7 @@ class Game:
                     new_cell.object_data[object_type]['facing_right'] = True
                 elif movement[0] < 0:
                     new_cell.object_data[object_type]['facing_right'] = False
-                if new_cell.elements['player']['state'] == 'idle':
+                if new_cell.elements['player']['state'] in ['idle', 'sleeping']:
                     new_cell.elements['player']['state'] = 'moving'
             return True
         else:
@@ -384,7 +386,7 @@ class Game:
             self.players_exited = []
             player_moved = False
             for cell in self.level.get_cells():
-                if cell.check_element(name='player', state='idle') and not cell.object_data['player']['moved']:
+                if cell.check_element(name='player', state=['idle', 'sleeping']) and not cell.object_data['player']['moved']:
                     if self.move_object(cell=cell, object_type='player', movement=movement):
                         player_moved = True
             if self.players_exited:
@@ -538,7 +540,7 @@ class Game:
 
     def resolve_statues(self):
         for cell in self.level.get_cells():
-            if cell.check_element(name='player', state=['idle', 'moving']):
+            if cell.check_element(name='player', state=['idle', 'moving', 'sleeping']):
                 next_position = cell.position
                 movement = (1, 0) if cell.object_data['player']['facing_right'] else (-1, 0)
                 while True:
@@ -790,6 +792,7 @@ class Game:
         self.interpolating = False
         self.players_exited = None
         self.player_cells = None
+        self.player_afk_timer = 0
         self.no_steps = False
         self.teleporter_data = {'standing': None, 'setting': None}
         self.sign_data = None
@@ -849,6 +852,7 @@ class Game:
                         if keys_pressed[0] in self.movement_dict:
                             keys_pressed[0] = self.movement_dict[keys_pressed[0]]
                         self.move_timer = 0
+                        self.player_afk_timer = 0
                         self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0, keys_pressed[0]: 1}
                     keys_unpressed = self.main.events.check_key(key=list(self.movement_directions.keys()), action='unpressed')
                     if keys_unpressed:
@@ -880,6 +884,13 @@ class Game:
                                 self.reset_objects_end()
                                 self.level.cache_level()
                         else:
+                            if self.player_afk_timer < self.player_afk:
+                                self.player_afk_timer += 1
+                                if self.player_afk_timer == self.player_afk:
+                                    for player_cell in self.player_cells.values():
+                                        if player_cell.check_element(name='player', state='idle'):
+                                            self.main.audio.play_sound(name='sleep')
+                                            player_cell.elements['player']['state'] = 'sleeping'
                             if not self.map.show_map:
                                 if self.main.debug or (not self.main.debug and not self.no_steps):
                                     if self.stored_movement:

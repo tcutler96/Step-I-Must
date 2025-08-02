@@ -5,10 +5,13 @@ class Cutscene:
         self.main = main
         self.active_cutscene = False
         self.timer = 0
+        self.cutscene_data2 = self.main.assets.data['cutscenes']
+        print(self.cutscene_data2)
         self.cutscene_data = {'part_one': {'type': 'level', 'triggered': self.main.assets.data['game']['part_one'], 'trigger': '(0, 0)', 'length': 9, 'position': (301, 61)},
                               'part_two': {'type': 'level', 'triggered': self.main.assets.data['game']['part_two'], 'trigger': '(-1, -5)', 'length': 9, 'position': (157, 205)},
                               'collectable': {'type': 'collectable', 'triggered': False, 'trigger': 'collectable', 'length': 3, 'position': None}}
         # move text element shadow sway and mouse options to the utilities draw text function?
+        # add rainbow colour effect to player and have collectable swirl around player...
         # cutscenes are triggered the firdt time the player enters a certain level, can add them for all the starting levels?
         # change intro cutscene, have black bars come from the top and bottom to simulate movie resolution, then have big player sprite appear with some text to introduce the setting and goal...
         # first room just shows the player how to move
@@ -21,6 +24,10 @@ class Cutscene:
         self.rect_offset = 0
         self.test_text = 'dialogue test with text appearing one character at a time...'
         self.text_index = 0
+        # put cutscene data/ dialogue into data file
+        # 'Where and what is this strange place I find myself in?', 'I am but a slime in this strange and wonderful place'
+        # 'And why is there a step counter in the corner?', 'I'm just a slime with no legs to take steps', 'Though I have no legs, I must be wary of each and every step I take'
+        # 'Guess the only think to do is press forward'
 
     def reset(self):
         self.cutscene_data['part_one']['triggered'] = self.main.assets.data['game']['part_one']

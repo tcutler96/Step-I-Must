@@ -75,6 +75,14 @@ class TextHandler:
                 self.add_text(text_group='signs', text_id=f'{sign_position}_{offset}', text=text, position=(text_position[0], text_position[1] - 16 * offset), size=12, bounce=-3, display_layer='level_main')
                 self.sign_lines[sign_position] = offset + 1
 
+    def remove_text(self, text_group, text_id):
+        if self.check_text_element(text_group=text_group, text_id=text_id):
+            del self.text_elements[text_group][text_id]
+
+    def remove_text_group(self, text_group):
+        if text_group in self.text_elements:
+            del self.text_elements[text_group]
+
     def check_text_element(self, text_group, text_id):
         return text_group in self.text_elements and text_id in self.text_elements[text_group]
 

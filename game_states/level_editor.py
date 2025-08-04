@@ -60,6 +60,12 @@ class LevelEditor:
             level_data['tilemap'][str(position[0]) + ':' + str(position[1])] = elements
         self.main.assets.levels['custom'] = level_data
 
+    def compare_cells(self, cell_1, cell_2):
+        for cell in [cell_1, cell_2]:
+            if cell.elements['tile'] and cell.elements['tile']['name'] == 'wall':
+                cell.elements['tile']['state'] = 'auto-tile'
+        return cell_1.elements == cell_2.elements
+
     def check_unique_elements(self, cell):
         element_type, name, state = None, None, None
         if cell.check_element(name='player', state='idle'):
@@ -90,7 +96,7 @@ class LevelEditor:
                 self.level.current_respawn = [[cell.position], [cell.position], [True]]
             elif self.level.current_respawn and cell.position in self.level.current_respawn[0]:
                 self.level.current_respawn = None
-            if self.level.level[cell.position].elements != cell.elements:
+            if not self.compare_cells(cell_1=self.level.level[cell.position], cell_2=cell):
                 if cell.is_empty():
                     self.clear_cell(position=cell.position)
                 else:
@@ -143,7 +149,7 @@ class LevelEditor:
                         self.main.change_menu_state(menu_state='choose_level')
                     elif selected_element[1] == 'Quit to Main Menu':
                         self.reset_toolbar(hovered=True)
-                        self.main.transition.start(response=['game_state', 'main_menu'], queue=(True, 'fade', (0, 0), 1))
+                        self.main.transition.start_transition(response=['game_state', 'main_menu'], queue=(True, 'fade', (0, 0), 1))
                 else:
                     self.mouse_cell.add_element(element=selected_element)
                     if selected_element[0] == 'tile' and not self.mouse_cell.elements['object'] and not self.mouse_cell.elements['player'] :

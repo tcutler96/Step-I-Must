@@ -19,10 +19,10 @@ class Transition:
         self.scale = 0
         self.response = None
         self.queue = None
-        self.start(fade_in=True, length=2)
+        self.start_transition(fade_in=True, length=2)
         # add another transition style that is a black square moves from one side of the screen to the other relative to player movement, triggered whenever we exit/ enter a new level...
 
-    def start(self, fade_in=False, style='fade', centre=(0, 0), length=1, response=None, queue=None):
+    def start_transition(self, fade_in=False, style='fade', centre=(0, 0), length=1, response=None, queue=None):
         # if active to quit game state then overide current transition...
         # need to take current transition state/ display and fade it to black...
         if not self.active:
@@ -67,7 +67,7 @@ class Transition:
                         self.main.game_states[self.main.game_state].load_level(name=self.response[1], load_respawn=self.response[2], bump_player=self.response[3])
                     self.response = None
                 if self.queue:
-                    self.start(*self.queue)
+                    self.start_transition(*self.queue)
                     self.queue = None
 
     def draw(self, displays):

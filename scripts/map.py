@@ -163,8 +163,8 @@ class Map:
                     self.icons['alpha']['step'] *= -1
                     self.icons['alpha']['timer'] = self.icons['alpha']['delay']
             for icon in self.icons['icons'].values():
-                sprite = self.main.utilities.get_sprite(name=icon['name'], state=icon['state'])
-                sprite.set_alpha(min(self.icons['alpha']['alpha'], self.alpha) if icon['name'] in ['player', 'teleporter'] else min(self.icons['alpha']['alpha_alt'], self.alpha))
+                sprite = self.main.utilities.get_sprite(name=icon['name'], state=icon['state'],
+                                                        alpha=min(self.icons['alpha']['alpha'], self.alpha) if icon['name'] in ['player', 'teleporter'] else min(self.icons['alpha']['alpha_alt'], self.alpha))
                 icon['sprite'] = sprite
 
     def update_sprites(self):
@@ -173,8 +173,7 @@ class Map:
                 if name in ['fraction', 'fraction_filled', 'medal']:
                     sprite.set_alpha(self.alpha)
                 else:
-                    sprite = self.main.utilities.get_sprite(name='collectable', state=name)
-                    sprite.set_alpha(self.alpha)
+                    sprite = self.main.utilities.get_sprite(name='collectable', state=name, alpha=self.alpha)
                     self.collectables['sprites'][name] = sprite
 
     def update(self, mouse_position, active_cutscene):

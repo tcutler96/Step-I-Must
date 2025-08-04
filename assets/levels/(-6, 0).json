@@ -447,7 +447,7 @@
     "13:2": {
       "tile": {
         "name": "wall",
-        "state": "top end"
+        "state": "top left"
       },
       "object": null,
       "player": null,
@@ -458,8 +458,8 @@
       "object": null,
       "player": null,
       "tile": {
-        "name": "sign",
-        "state": "sign"
+        "name": "wall",
+        "state": "top"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -469,7 +469,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "top left"
+        "state": "top"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -598,7 +598,7 @@
     "13:3": {
       "tile": {
         "name": "wall",
-        "state": "left-tr"
+        "state": "left"
       },
       "object": null,
       "player": null,
@@ -608,7 +608,7 @@
     "14:3": {
       "tile": {
         "name": "wall",
-        "state": "top"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -620,7 +620,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "centre-tl"
+        "state": "centre"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null

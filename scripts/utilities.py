@@ -30,6 +30,10 @@ class Utilities:
     def get_opposite_movement(self, movement):
         return movement[0] * -1, movement[1] * -1
 
+    def get_text_bounce(self, bounce=0):
+        if bounce:
+            return self.main.text_handler.text_bounce * bounce
+
     def check_collectable(self, collectable_type, count=True):
         if collectable_type == 'all':
             collectable_type = list(self.main.assets.data['game']['collectables'])
@@ -64,7 +68,7 @@ class Utilities:
             state = name
         if name in self.main.assets.images['sprite_list'] and state in self.main.assets.images['sprites_data'][name]['state_list']:
             sprite = self.main.assets.images['sprites'][name][state][self.main.assets.images['sprites_data'][name]['frame_data'][state]['frame_index'] if animated else 0].copy()
-            if alpha is not None:
+            if alpha is not None and alpha != 255:
                 sprite.set_alpha(alpha)
             return sprite
 

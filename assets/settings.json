@@ -18,11 +18,11 @@
   "gameplay": {
     "hold_to_move": 5,
     "hold_to_undo": 15,
-    "movement": 0.125
+    "movement": 0.25
   },
   "menus": {
     "title_screen": {
-      "Slime Stepper": "title",
+      "Step I Must": "title",
       "Play": [
         "button",
         "game_state",
@@ -245,8 +245,8 @@
         "button",
         "option",
         [
-          "Slow",
-          "Fast"
+          "Fast",
+          "Slow"
         ]
       ],
       "Back": [

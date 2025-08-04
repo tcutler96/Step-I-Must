@@ -11,6 +11,7 @@ class Audio:
         self.music_volume = self.get_volume(audio_type='music')
         self.music_volume_current = self.music_volume
         self.music_volume_step = 0.005
+        self.missing_sounds = []
 
     def load_audio(self):
         audio = self.main.assets.audio
@@ -31,8 +32,10 @@ class Audio:
             if not self.audio['sound'][name].get_num_channels() or overlap:
                 self.audio['sound'][name].play(loops=loops, fade_ms=self.main.utilities.s_to_ms(s=fade))
         elif self.main.testing:
+            if name not in self.missing_sounds:
+                print(f"'{name}' sound file not found...")
+                self.missing_sounds.append(name)
             if not self.audio['sound']['placeholder'].get_num_channels():
-                # print(f"'{name}' sound file not found...")
                 self.audio['sound']['placeholder'].play(loops=loops, fade_ms=self.main.utilities.s_to_ms(s=fade))
 
     def stop_sound(self, name, fade=1):

@@ -64,16 +64,14 @@ class MenuElement:
                         elif selected == 'left':
                             return self.button_type, self.button_response, self.name
                     elif self.name in ['Back', 'Resume', 'No']:
-                        if self.main.events.check_key(key=['mouse_3', 'escape']):
-                            self.main.events.remove_key(key=['mouse_3', 'escape'])
+                        if self.main.events.check_key(key=['mouse_3', 'escape'], remove=True):
                             return self.button_type, self.button_response
-                        elif self.main.events.check_key(key='p') and self.menu_name == 'game_paused':
-                            self.main.events.remove_key(key='p')
+                        elif self.main.events.check_key(key='p', remove=True) and self.menu_name == 'game_paused':
                             return self.button_type, self.button_response
 
     def draw(self, displays, offset):
         if self.sprite:
-            displays['ui'].blit(source=self.sprite, dest=(self.sprite_position[0], self.sprite_position[1] + offset[1] + self.main.text_handler.text_bounce * 3))
+            displays['ui'].blit(source=self.sprite, dest=(self.sprite_position[0], self.sprite_position[1] + offset[1] + self.main.utilities.get_text_bounce(bounce=3)))
         self.main.text_handler.activate_text(text_group=self.menu_name, text_id=self.name, offset=offset)
         if self.element_type == 'button' and self.button_type == 'option':
             self.main.text_handler.activate_text(text_group=self.menu_name, text_id=self.name + self.button_response[0], offset=[sum(x) for x in zip(offset, self.offset)])

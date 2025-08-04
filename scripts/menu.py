@@ -85,21 +85,22 @@ class Menu:
                 if selected_element[0] == 'game_state':
                     if self.main.game_state == 'main_menu' and selected_element[1] == 'quit':
                         self.main.audio.quit()
-                        self.main.transition.start(response=['game_state', 'quit'], queue=(True, 'fade', (0, 0), 1))
+                        self.main.transition.start_transition(response=['game_state', 'quit'], queue=(True, 'fade', (0, 0), 1))
                     elif self.main.game_state == 'main_menu' and selected_element[1] == 'game':
                         if not self.main.assets.data['game']['level'] or element.name == 'Yes':
                             self.main.assets.reset_game_data()
+                            self.main.game_states['game'].cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(0, 0)', 'force': True})
                         self.main.menu_states['game_paused'].menu['Quit'].button_type = 'game_state'
                         self.main.menu_states['game_paused'].menu['Quit'].button_response = 'main_menu'
-                        self.main.transition.start(style='circle', centre=element.centre, response=['game_state', 'game'], queue=(True, 'circle', 'player', 1))
+                        self.main.transition.start_transition(style='circle', centre=element.centre, response=['game_state', 'game'], queue=(True, 'circle', 'player', 1))
                     elif self.main.game_state == 'main_menu' and selected_element[1] == 'level_editor':
                         self.main.menu_states['choose_level'].menu['Back'].button_type = 'game_state'
                         self.main.menu_states['choose_level'].menu['Back'].button_response = 'main_menu'
                         self.main.change_game_state(game_state='level_editor')
                     elif self.main.game_state == 'game' and selected_element[1] == 'main_menu':
-                        self.main.transition.start(response=['game_state', 'main_menu'], queue=(True, 'fade', (0, 0), 1))
+                        self.main.transition.start_transition(response=['game_state', 'main_menu'], queue=(True, 'fade', (0, 0), 1))
                     elif self.main.game_state == 'game' and selected_element[1] == 'level_editor':
-                        self.main.transition.start(response=['game_state', 'level_editor'], queue=(True, 'fade', (0, 0), 1))
+                        self.main.transition.start_transition(response=['game_state', 'level_editor'], queue=(True, 'fade', (0, 0), 1))
                     else:
                         self.main.change_game_state(game_state=selected_element[1])
                 elif selected_element[0] == 'menu_state':
@@ -130,9 +131,10 @@ class Menu:
                         response = self.main.assets.change_setting(group=self.menu_name, name=element.name, option=selected_element[1][0])
                 elif selected_element[0] == 'level':
                     if self.main.game_state == 'game' and element.name == 'Restart Level':
-                        self.main.transition.start(style='circle', centre=element.centre, response=['level', self.main.game_states['game'].level.name, 'original', None, None], queue=(True, 'circle', 'player', 1))
+                        self.main.transition.start_transition(style='circle', centre=element.centre, response=['level', self.main.game_states['game'].level.name, 'original', None, None],
+                                                              queue=(True, 'circle', 'player', 1))
                     elif self.main.game_state == 'level_editor':
-                        self.main.transition.start(response=['level', selected_element[1], 'level', None, None], queue=(True, 'fade', (0, 0), 1))
+                        self.main.transition.start_transition(response=['level', selected_element[1], 'level', None, None], queue=(True, 'fade', (0, 0), 1))
 
     def draw(self, displays):
         if self.scrollbar:

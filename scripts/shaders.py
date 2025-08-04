@@ -25,6 +25,8 @@ class Shaders:
                             'galaxy': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False},
                             'test': {'x': 240, 'y': 160}}
         self.shaders = self.load_shaders()
+        self.missing_display_layers = []
+        self.missing_effects = []
         print("Max fragment uniform components:", self.context.info['GL_MAX_FRAGMENT_UNIFORM_COMPONENTS'])
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
         # how inefficient is it to have one fragment shader, would we get better frames from individual shaders?
@@ -94,7 +96,12 @@ class Shaders:
                     elif not self.shaders[display_layer]['applied']:
                         self.shaders[display_layer]['applied'] = self.effect_data[effect]['index']
                 else:
-                    print(f"either '{display_layer}' display layer does not exist or '{effect}' effect does not exist...")
+                    if display_layer not in self.main.display.display_layers and display_layer not in self.missing_display_layers:
+                        print(f"'{display_layer}' display layer not found...")
+                        self.missing_display_layers.append(display_layer)
+                    if effect not in self.effect_data and effect not in self.missing_effects:
+                        print(f"'{effect}' shader effect not found...")
+                        self.missing_effects.append(effect)
 
     def update_effect_current(self, effect_data):
         if 'current' in effect_data and 'min' in effect_data and 'max' in effect_data:

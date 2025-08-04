@@ -29,7 +29,7 @@ class Events:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.main.audio.quit()
-                self.main.transition.start(response=['game_state', 'quit'])
+                self.main.transition.start_transition(response=['game_state', 'quit'])
             if event.type == list(self.custom_events.values()):
                 pass  # trigger custom event...
             if event.type == pg.KEYDOWN:
@@ -75,7 +75,7 @@ class Events:
             elif key_key in self.keys[action]:
                 self.keys[action].remove(key_key)
 
-    def check_key(self, key, action='pressed', modifier=None):
+    def check_key(self, key, action='pressed', modifier=None, remove=False):
         if action == 'last_pressed':
             if ''.join(self.keys['last_pressed']).endswith(key):
                 self.keys['last_pressed'] = []
@@ -96,6 +96,11 @@ class Events:
             if isinstance(key, list):
                 keys = list(set(key) & set(self.keys[action]))
                 if keys:
+                    if remove:
+                        for key in keys:
+                            self.keys[action].remove(key)
                     return keys
             elif key in self.keys[action]:
+                if remove:
+                    self.keys[action].remove(key)
                 return True

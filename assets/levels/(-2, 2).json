@@ -1701,17 +1701,20 @@
     "13:12": {
       "object": null,
       "player": null,
-      "tile": null,
-      "vertical_barrier": null,
-      "horizontal_barrier": null
-    },
-    "14:12": {
-      "object": null,
-      "player": null,
       "tile": {
         "name": "sign",
         "state": "sign"
       },
+      "vertical_barrier": null,
+      "horizontal_barrier": null
+    },
+    "14:12": {
+      "object": {
+        "name": "permanent flag",
+        "state": "5"
+      },
+      "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },

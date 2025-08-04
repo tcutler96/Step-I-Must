@@ -209,10 +209,8 @@ class LevelCell:
     def draw(self, displays, animated, alpha=255, element_types=None):
         for element_type, element in self.elements.items():
             if element_type in element_types and element:
-                sprite = self.main.utilities.get_sprite(name=element['name'], state=element['state'], animated=animated)
+                sprite = self.main.utilities.get_sprite(name=element['name'], state=element['state'], animated=animated, alpha=alpha)
                 if sprite:
-                    if alpha != 255:
-                        sprite.set_alpha(alpha)
                     if element_type in ['object', 'player'] and self.object_data[element_type] and not self.object_data[element_type]['facing_right']:
                         sprite = pg.transform.flip(surface=sprite, flip_x=True, flip_y=False)
                     if element_type in self.object_data and self.object_data[element_type]:

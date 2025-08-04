@@ -1,47 +1,33 @@
 {
   "game": {
-    "level": "(0, 0)",
+    "level": "(-1, 2)",
     "respawn": [
       [
         [
-          7,
-          7
+          15,
+          12
         ]
       ],
       [
         [
-          7,
-          7
+          15,
+          12
         ]
       ],
       [
-        true
+        false
       ]
     ],
     "part_one": true,
     "part_two": true,
-    "part_one_percent": 56.0,
+    "part_one_percent": 4.0,
     "part_two_percent": 0.0,
-    "overall_percent": 17.95,
+    "overall_percent": 1.28,
     "collectables": {
       "silver keys": [
-        "(-1, 2) - (3, 12)",
-        "(-2, 4) - (12, 9)",
-        "(-2, -1) - (9, 2)",
-        "(-3, 0) - (2, 11)",
-        "(-7, 1) - (12, 5)"
+        "(-1, 2) - (3, 12)"
       ],
-      "silver gems": [
-        "(-1, 2) - (8, 5)",
-        "(-2, 5) - (8, 7)",
-        "(-2, 4) - (13, 15)",
-        "(-2, -1) - (15, 4)",
-        "(-1, -1) - (7, 4)",
-        "(-3, 0) - (1, 6)",
-        "(-3, 0) - (12, 14)",
-        "(-6, 1) - (9, 14)",
-        "(-6, 1) - (1, 14)"
-      ],
+      "silver gems": [],
       "gold keys": [],
       "gold gems": [],
       "cheeses": []
@@ -49,28 +35,10 @@
     "discovered_levels": [
       "(0, 0)",
       "(0, 1)",
-      "(-1, 2)",
-      "(-2, 5)",
-      "(-5, 2)",
-      "(-6, 2)",
-      "(-7, 2)",
-      "(-6, 3)",
-      "(-7, 3)",
-      "(-1, 0)",
       "(0, 2)",
-      "(-2, 4)",
-      "(-2, -1)",
-      "(-1, -1)",
-      "(-3, 0)",
-      "(-6, 1)",
-      "(-7, 1)",
-      "(-5, 0)",
-      "(-5, -1)"
+      "(-1, 2)"
     ],
-    "active_portals": [
-      "(0, 0) - (12, 2)",
-      "(-1, 0) - (2, 2)"
-    ]
+    "active_portals": []
   },
   "locks": {
     "(-2, 2) - (0, 11)": {
@@ -320,9 +288,13 @@
   "cutscenes": {},
   "signs": {
     "(-1, 2) - (14, 9)": "Gems are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.",
-    "(-2, 2) - (14, 12)": "You can always undo and redo moves, and sometimes the solution involves resetting. Don't be afraid to experiment!",
-    "(-2, 2) - (10, 8)": "If you're ever stuck in a level, you can always use the map (tab) to teleport to a level that contains a teleporter, like this one!",
-    "(-6, 0) - (14, 2)": "Don't look at the statues!"
+    "(-2, 2) - (13, 12)": "You can always undo and redo moves, and sometimes the solution involves resetting. Don't be afraid to experiment!",
+    "(-2, 2) - (10, 8)": "If you're ever stuck in a level, you can always use the map to teleport back to a level that contains a teleporter, like this one!",
+    "(-7, 3) - (8, 11)": "The following puzzles are extremely difficult.",
+    "(-7, 3) - (8, 12)": "They use a wide variety of techniques and objects, including some you might not know about yet.",
+    "(-7, 3) - (8, 13)": "If you don't want to solve these, use the map to teleport to a different level.",
+    "(-7, 3) - (8, 14)": "Otherwise, you may proceed.",
+    "(-7, 3) - (8, 15)": "Good luck!"
   },
   "teleporters": {
     "recievers": {
@@ -431,7 +403,7 @@
           8,
           7
         ],
-        "destination": null
+        "destination": "(-5, 2) - (8, 7)"
       },
       "(-7, 7) - (10, 14)": {
         "position": [

@@ -83,14 +83,14 @@ class Cutscene:
     def start_cutscene(self, cutscene_type=None, cutscene_data=None):
         if not self.active:
             if cutscene_type == 'level':
-                if ('level_name' in cutscene_data and cutscene_data['level_name'] in self.cutscenes['levels'] and
+                if ('level_name' in cutscene_data and cutscene_data['level_name'] in self.cutscene_data['levels'] and
                         (cutscene_data['level_name'] not in self.main.assets.data['game']['discovered_levels'] or 'force' in cutscene_data)):
                     self.active = True
-                    self.text = self.cutscenes['levels'][cutscene_data['level_name']]
+                    self.text = self.cutscene_data['levels'][cutscene_data['level_name']]
             elif cutscene_type == 'collectable':
                 if 'collectable_type' in cutscene_data and cutscene_data['collectable_type'] in self.main.assets.data['game']['collectables']:  # and 'collectable_position' in cutscene_data:
                     self.active = True
-                    self.text = self.cutscenes['collectables'][cutscene_data['collectable_type']]
+                    self.text = self.cutscene_data['collectables'][cutscene_data['collectable_type']]
                     # cutscene_data = self.cutscene_data['collectable']
                     # self.active_cutscene = 'collectable'
                     # self.timer = cutscene_data['length'] * self.main.fps

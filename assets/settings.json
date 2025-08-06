@@ -1,14 +1,14 @@
 {
   "video": {
-    "background": false,
+    "background": "galaxy",
     "button_prompt": false,
     "cursor_type": "sprite",
     "hrt_shader": false,
-    "map_colour": false,
+    "map_colour": "green",
     "particles": false,
     "resolution": 3,
     "screen_shake": true,
-    "shaders": false
+    "shaders": true
   },
   "audio": {
     "master_volume": 0.2,
@@ -83,9 +83,9 @@
         "button",
         "option",
         [
-          "Disabled",
           "Galaxy",
-          "Game of Life"
+          "Game of Life",
+          "Disabled"
         ]
       ],
       "Button Prompt": [
@@ -116,10 +116,10 @@
         "button",
         "option",
         [
-          "Disabled",
           "Green",
           "Light Purple",
-          "Dark Purple"
+          "Dark Purple",
+          "Disabled"
         ]
       ],
       "Particles": [
@@ -152,8 +152,8 @@
         "button",
         "option",
         [
-          "Disabled",
-          "Enabled"
+          "Enabled",
+          "Disabled"
         ]
       ],
       "Back": [

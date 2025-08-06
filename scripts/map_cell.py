@@ -43,7 +43,7 @@ class MapCell:
     def draw(self, displays, icons, offset, alpha):
         if self.rect.colliderect(self.main.display.rect):
             if self.discovered or self.main.debug:
-                if self.main.assets.settings['video']['map_colour'] != 'disabled':
+                if self.main.assets.settings['video']['map_colour']:
                     pg.draw.rect(surface=displays['level_map'], color=self.main.utilities.get_colour(colour=self.main.assets.settings['video']['map_colour'], alpha=alpha), rect=self.rect)
                 if self.hovered and alpha == 255:
                     self.main.text_handler.activate_text(text_group='map', text_id=self.level_name)

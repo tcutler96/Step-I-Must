@@ -32,6 +32,7 @@ class Cutscene:
         # develop collectable cutscene, add rainbow colour effect to player and have collectable swirl around player...
         # need to enable collectables on map when first on is collected...
         # maybe still automatically open the map for the player once they reach the first hub level, to show the two paths they can/ must take and the collectables they hold...
+        # add more stuff to the collectable cutscene, shockwave, swirling sprite into players mouth...
 
         # intro and movement (0, 0), menu (0, 1), map (0, 2), undo/ redo (-1, 2), collectables (-1, 2)?*, locks/ paths (-2, 2), teleporter (-2, 2)?*, ice (-2, 3),
         # conveyors (-2, 1), blue flags (-4, 2), spikes (-5, 3), player spawner (-6, 2), reviving dead players (-4, 0), statues (-6, 0), splitters (-5, -2)
@@ -91,13 +92,7 @@ class Cutscene:
                 if 'collectable_type' in cutscene_data and cutscene_data['collectable_type'] in self.main.assets.data['game']['collectables']:  # and 'collectable_position' in cutscene_data:
                     self.active = True
                     self.text = self.cutscene_data['collectables'][cutscene_data['collectable_type']]
-                    # cutscene_data = self.cutscene_data['collectable']
-                    # self.active_cutscene = 'collectable'
-                    # self.timer = cutscene_data['length'] * self.main.fps
-                    # cutscene_data['position'] = collectable_position
-                    # self.main.text_handler.activate_text(text_group='collectables', text_id=collectable_type, duration=3)
             if self.active:
-                self.main.audio.play_sound(name='cutscene_start')
                 self.show_bars = True
                 self.bars_offset = 0
                 self.main.text_handler.add_text(text_group='cutscene', text_id='space', text='space', size=10, alpha_up=self.alpha_step, alpha_down=self.alpha_step, bounce=-3, shadow_colour=None,
@@ -109,10 +104,12 @@ class Cutscene:
 
     def update_bars(self):
         if self.show_bars:
-            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player'], effect='blur', effect_data={'length': 1})
+            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player'], effect='pixelate', effect_data={'length': 1})
+            if not self.bars_offset:
+                self.main.audio.play_sound(name='cutscene_start')
             if self.bars_offset < self.bars_max_offset:
                 if self.main.events.check_key(key='space', remove=True):
-                    self.main.audio.play_sound(name='cutscene_skip')
+                    self.main.audio.play_sound(name='cutscene_skip', overlap=True)
                     self.bars_offset = self.bars_max_offset
                 else:
                     self.bars_offset = min(self.bars_offset + self.bars_speed, self.bars_max_offset)
@@ -124,7 +121,7 @@ class Cutscene:
                     self.character_index = 0
         elif self.bars_offset:
             if self.main.events.check_key(key='space'):
-                self.main.audio.play_sound(name='cutscene_skip')
+                self.main.audio.play_sound(name='cutscene_skip', overlap=True)
                 self.bars_offset = 0
             else:
                 self.bars_offset = max(self.bars_offset - self.bars_speed, 0)
@@ -138,20 +135,21 @@ class Cutscene:
         if self.show_text:
             if self.line_timer:
                 if self.main.events.check_key(key='space'):
-                    self.main.audio.play_sound(name='cutscene_skip')
+                    self.main.audio.play_sound(name='cutscene_skip', overlap=True)
                     self.line_timer = 0
                 else:
                     self.line_timer -= 1
             elif self.character_index < len(self.text[self.page_index][self.line_index]):
+                if not self.character_index:
+                    self.main.audio.play_sound(name='cutscene_dialogue', overlap=True)
                 character_index = self.character_index
                 if self.main.events.check_key(key='space', remove=True):
-                    self.main.audio.play_sound(name='cutscene_skip')
+                    self.main.audio.play_sound(name='cutscene_skip', overlap=True)
                     self.character_index = len(self.text[self.page_index][self.line_index])
                     self.line_timer = 1
                 else:
                     self.character_index = min(self.character_index + self.text_speed, len(self.text[self.page_index][self.line_index]))
                 if int(character_index) != int(self.character_index):
-                    self.main.audio.play_sound(name='dialogue')
                     text = self.text[self.page_index][self.line_index][:int(self.character_index)]
                     self.main.text_handler.add_text(text_group='cutscene', text_id=text, text=text, position=(self.text_position[0], self.text_position[1] + 16 * self.line_index), display_layer='level_ui',
                                                     size=14, max_width=self.main.display.width - 32, alpha_up=255, alpha_down=self.alpha_step, style='itallic')
@@ -174,7 +172,7 @@ class Cutscene:
                 self.button_alpha += self.alpha_step
                 self.button.set_alpha(self.button_alpha)
             if self.main.events.check_key(key='space'):
-                self.main.audio.play_sound(name='cutscene_skip')
+                self.main.audio.play_sound(name='cutscene_skip', overlap=True)
                 self.show_button = False
                 if self.page_index == len(self.text) - 1:
                     self.main.audio.play_sound(name='cutscene_end')

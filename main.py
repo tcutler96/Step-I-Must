@@ -81,6 +81,7 @@ import asyncio
 # setting certain cells in the level editor spams the sound effect: any player on a flag, any cell on a barrier...
 # add slight pause before continually undoing/ redoing, as we sometimes acidentally undo/ redo more then we mean to...
 # we could add more display layers back in, as hooleys crash was not caused by too manu uniforms...
+# add way in game to reset game data so that the only menu option is new game, add to develop menu...
 
 
 class Main:
@@ -156,7 +157,7 @@ class Main:
         self.true_fps = self.clock.get_fps()
         if self.true_fps:
             self.runtime_frames += 1
-            self.runtime_seconds = self.runtime_seconds + 1 / self.true_fps
+            self.runtime_seconds += 1 / self.true_fps
             self.low_fps = False
             if self.true_fps < 0.5 * self.fps:
                 self.low_fps = True

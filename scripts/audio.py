@@ -6,7 +6,7 @@ class Audio:
         self.main = main
         self.mixer = pg.mixer
         self.mixer.set_num_channels(16)
-        self.volume_adjustments = {'conveyor': 0.25}
+        self.volume_adjustments = {'name of sound file': 'volume adjustment in the range 0-1', 'conveyor': 0.25, 'cutscene_dialogue': 2}
         self.audio, self.music = self.load_audio()
         self.music_theme = None
         self.music_volume = self.get_volume(audio_type='music')

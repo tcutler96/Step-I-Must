@@ -6,6 +6,10 @@ class Map:
         self.main = main
         self.show_map = False
         self.show_text = True
+        self.show_switch_text = False  # load from game data...
+        self.show_collectables_1 = False
+        self.show_collectables_2 = False
+        self.show_tracker = False
         self.cell_size = self.main.sprite_size
         part_one_offset = (304.0, 128.0)
         part_two_offset = (240.0, 400.0)
@@ -228,6 +232,13 @@ class Map:
                     displays['level_map'].blit(source=self.collectables['sprites']['medal'], dest=self.get_collectable_position(x=x, y=max_count + 8, bounce=True))
 
     def draw(self, displays):
+        self.main.text_handler.activate_text(text_group='map', text_id='move')
+        self.main.text_handler.activate_text(text_group='map', text_id='move_2')
+        self.main.text_handler.activate_text(text_group='map', text_id='menu')
+        self.main.text_handler.activate_text(text_group='map', text_id='toggle_map')
+        self.main.text_handler.activate_text(text_group='map', text_id='undo')
+        self.main.text_handler.activate_text(text_group='map', text_id='redo')
+        self.main.text_handler.activate_text(text_group='map', text_id='switch_map')
         if self.alpha:
             for map_cell in self.map.values():
                 map_cell.draw(displays=displays, icons=self.icons['icons'], offset=self.offset_dict['current'], alpha=self.alpha)

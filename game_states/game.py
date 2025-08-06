@@ -8,8 +8,8 @@ from copy import deepcopy
 class Game:
     def __init__(self, main):
         self.main = main
-        self.main.assets.data['game']['part_one'] = True
-        self.main.assets.data['game']['part_two'] = True
+        # self.main.assets.data['game']['part_one'] = True
+        # self.main.assets.data['game']['part_two'] = True
         # self.main.assets.data['game']['part_one'] = False
         # self.main.assets.data['game']['part_two'] = False
         self.cutscene = Cutscene(main=self.main)
@@ -21,8 +21,8 @@ class Game:
         self.movement_directions = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0), 'up': (0, -1), 'left': (-1, 0), 'down': (0, 1), 'right': (1, 0)}
         self.move_delay = self.main.assets.settings['gameplay']['hold_to_move']
         self.move_timer = 0
-        self.hold_move_delay = 15
-        self.movement_speed = self.main.assets.settings['gameplay']['movement']
+        self.hold_move_delay = 30
+        self.movement_speed = self.main.assets.settings['gameplay']['movement_speed']
         self.bump_amount = 0.4
         self.last_movement = None
         self.no_movement = False
@@ -78,6 +78,10 @@ class Game:
         if self.level.name != 'custom':
             self.main.assets.data['game']['collectables'][collectable_type].append(self.main.utilities.level_and_position(level=self.level.name, position=cell.object_data['object']['original_position']))
             self.map.update_collectables(collectable_type=collectable_type, level_name=self.level.name, position=cell.object_data['object']['original_position'])
+            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': collectable_type,
+                                                                                     'collectable_position': (self.level.level_offset[0] + self.level.sprite_size * (cell.position[0] + 0.5),
+                                                                                                              self.level.level_offset[1] + self.level.sprite_size * (cell.position[1] + 0.5))})
+            self.main.assets.save_data()
         levels = self.level.cached_levels
         levels.append({'name': self.level.name, 'level': self.level.level})
         for count, level in enumerate(levels):
@@ -102,10 +106,6 @@ class Game:
         cell.object_data['object'] = None
         # we sometimes get stuck in moving animation when we collect something...
         # need to resolve level loop (ie let things change states) still while cutscene is happening or pause all that until after cutscene?
-        self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': collectable_type})
-        # self.cutscene.start(collectable_type=collectable_type, position=(self.level.level_offset[0] + self.level.sprite_size * (cell.position[0] + 0.5),
-        #                                                                  self.level.level_offset[1] + self.level.sprite_size * (cell.position[1] + 0.5)))
-        self.main.assets.save_data()
 
     def resolve_object_conflict(self, revert_cell, revert_object_type, revert_movement, bump_cell, bump_object_type, bump_movement):
         count = self.revert_object(cell=revert_cell, object_type=revert_object_type, movement=revert_movement)
@@ -396,7 +396,7 @@ class Game:
                 self.no_movement = False
                 self.transition_level()
             elif player_moved:
-                self.main.audio.play_sound(name='player_move')
+                self.main.audio.play_sound(name='player_move', overlap=True)
                 self.level.clear_cache_redo()
                 self.reset_animations(force_reset=True)
                 self.no_movement = False
@@ -823,15 +823,15 @@ class Game:
         # separate into general updates, player updates (which only happen when we have control of the player), etc...
         self.tutorials.update()  # where should this go?
         if self.main.events.check_key(key='g'):
-            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'silver keys'})
+            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'silver keys', 'collectable_position': self.main.display.centre})
         if self.main.events.check_key(key='h'):
-            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'silver gems'})
+            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'silver gems', 'collectable_position': self.main.display.centre})
         if self.main.events.check_key(key='j'):
-            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'gold keys'})
+            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'gold keys', 'collectable_position': self.main.display.centre})
         if self.main.events.check_key(key='k'):
-            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'gold gems'})
+            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'gold gems', 'collectable_position': self.main.display.centre})
         if self.main.events.check_key(key='l'):
-            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'cheeses'})
+            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'cheeses', 'collectable_position': self.main.display.centre})
         if self.main.events.check_key(key='1'):
             self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(0, 0)'})
         if self.main.events.check_key(key='2'):
@@ -871,7 +871,7 @@ class Game:
             if self.interpolating:
                 self.update_blit_positions()
             if not self.main.transition.active:
-                if self.main.events.check_key(key=['escape', 'p']):
+                if self.main.events.check_key(key=['escape', 'p']) and not self.cutscene.active:
                     self.main.audio.play_sound(name='menu_select')
                     self.main.change_menu_state(menu_state='game_paused')
                 self.update_map(mouse_position=mouse_position)

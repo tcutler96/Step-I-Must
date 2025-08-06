@@ -14,8 +14,8 @@ class MainMenu:
         self.main.display.set_cursor(cursor='arrow')
         if self.main.menu_state == 'title_screen':
             if self.main.events.check_key(key='space'):  # temporary for testing
-                self.main.menu_states['game_paused'].menu['Quit'].button_type = 'game_state'
-                self.main.menu_states['game_paused'].menu['Quit'].button_response = 'main_menu'
+                self.main.menu_states['game_paused'].menu['Main Menu'].button_type = 'game_state'
+                self.main.menu_states['game_paused'].menu['Main Menu'].button_response = 'main_menu'
                 self.main.change_game_state(game_state='game')
 
     def draw(self, displays):

@@ -38,10 +38,11 @@ class Assets:
         self.settings_changed = False
         self.option_to_setting = {'video': {'background': {'game_of_life': 'gol'}, 'button_prompt': {}, 'hrt_shader': {}, 'particles': {},
                                             'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4}, 'screen_shake': {}, 'shaders': {}},
-                                 'audio': {'master_volume': {'disabled': 0.0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1.0},
-                                           'music_volume': {'disabled': 0.0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1.0},
-                                           'sound_volume': {'disabled': 0.0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1.0}},
-                                 'gameplay': {'hold_to_move': {'disabled': -1, 'slow': 15, 'fast': 5}, 'hold_to_undo': {'disabled': -1, 'slow': 15, 'fast': 5}, 'movement': {'slow': 0.125, 'fast': 0.25}}}
+                                 'audio': {'master_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1},
+                                           'music_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1},
+                                           'sound_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1}},
+                                 'gameplay': {'cutscene_speed': {'slow': 0, 'fast': 1}, 'hold_to_move': {'disabled': -1, 'slow': 15, 'fast': 5},
+                                              'hold_to_undo': {'disabled': -1, 'slow': 15, 'fast': 5}, 'movement_speed': {'slow': 0.125, 'fast': 0.25}}}
 
     def post_load(self):
         self.images = self.load_images()
@@ -151,13 +152,12 @@ class Assets:
         name = name.lower().replace(' ', '_')
         option = option.lower().replace(' ', '_')
         self.settings_changed = True
-        if option == 'enabled':
+        if name in self.option_to_setting[group] and option in self.option_to_setting[group][name]:
+            option = self.option_to_setting[group][name][option]
+        elif option == 'enabled':
             option = True
         elif option == 'disabled':
             option = False
-        else:
-            if name in self.option_to_setting[group] and option in self.option_to_setting[group][name]:
-                option = self.option_to_setting[group][name][option]
         self.settings[group][name] = option
         if group == 'video':
             if name == 'background':
@@ -181,12 +181,16 @@ class Assets:
         elif group == 'audio':
             self.main.audio.change_volume(audio_type=name)
         elif group == 'gameplay':
-            if name == 'hold_to_move':
+            if name == 'cutscene_speed':
+                self.main.game_states['game'].cutscene.bars_speed = self.main.game_states['game'].cutscene.bars_max_offset / (((1 - option) * 1 + option * 0.5) * self.main.fps)
+                self.main.game_states['game'].cutscene.text_speed = (1 - option) * 0.5 + option * 1
+                self.main.game_states['game'].cutscene.line_pause = (1 - option) * 1 + option * 0.25
+            elif name == 'hold_to_move':
                 self.main.game_states['game'].move_delay = option
             elif name == 'hold_to_undo':
                 self.main.game_states['game'].level.undo_redo_delay = option
                 self.main.game_states['level_editor'].level.undo_redo_delay = option
-            elif name == 'movement':
+            elif name == 'movement_speed':
                 self.main.game_states['game'].movement_speed = option
 
     def save_data(self):
@@ -201,11 +205,9 @@ class Assets:
             with open(os.path.join(self.assets_path, 'settings.json'), 'w') as file:
                 json.dump(obj=settings, fp=file, indent=2)
 
-    def reset_game_data(self):
-        self.data['game'] = {'level': '(0, 0)', 'respawn': [[[12, 2]], [[12, 2]], [False]], 'part_one': False, 'part_two': False, 'part_one_percent': 0, 'part_two_percent': 0, 'overall_percent': 0,
+    def reset_game_data(self, clear=False):
+        self.data['game'] = {'level': '(0, 0)' if not clear else None, 'respawn': [[[12, 2]], [[12, 2]], [False]], 'part_one': False, 'part_two': False, 'part_one_percent': 0, 'part_two_percent': 0, 'overall_percent': 0,
                              'collectables': {'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []}, 'discovered_levels': ['(0, 0)'], 'active_portals': []}
-        # self.data['game'] = {'level': '(-2, 2)', 'respawn': [[[15, 12]], [[15, 12]], [False]], 'part_one': False, 'part_two': False, 'part_one_percentage': 0, 'part_two_percentage': 0, 'overall_percentage': 0,
-        #                      'collectables': {'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []}, 'discovered_levels': ['(0, 0)'], 'active_portals': []}
         self.save_data()
 
     def update_choose_level_menu(self):

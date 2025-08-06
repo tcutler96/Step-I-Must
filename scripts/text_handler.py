@@ -12,6 +12,7 @@ class TextHandler:
         self.add_text(text_group='main', text_id='debug', text='debug mode', position='bottom', colour='purple', size=16)
         self.add_text(text_group='main', text_id='backup_data', text='data backed up', position='top')
         self.add_text(text_group='main', text_id='backup_settings', text='settings backed up', position='top')
+        self.add_text(text_group='main', text_id='clear_game_data', text='game data cleared', position='top')
         self.add_text(text_group='main', text_id='restore_data', text='data restored', position='top')
         self.add_text(text_group='main', text_id='restore_settings', text='settings restored', position='top')
         self.add_text(text_group='main', text_id='conway', text="conway's game of life", position='top', colour='cream', shadow_colour=None, outline_colour=None, display_layer='background')
@@ -29,6 +30,13 @@ class TextHandler:
                       alignment=('l', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='level_map')
         self.add_text(text_group='map', text_id='switch', text="Switch map: 'space'", position='bottom_right', alpha_up=8.5, alpha_down=8.5,
                       alignment=('r', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='level_map')
+        self.add_text(text_group='map', text_id='move', text='Move: wasd', position=(56, 100), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
+        self.add_text(text_group='map', text_id='move_2', text='Move: arrows', position=(56, 116), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
+        self.add_text(text_group='map', text_id='menu', text='Menu: escape', position=(56, 132), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
+        self.add_text(text_group='map', text_id='toggle_map', text='Toggle map: tab', position=(56, 148), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
+        self.add_text(text_group='map', text_id='undo', text='Undo: z', position=(56, 164), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
+        self.add_text(text_group='map', text_id='redo', text='Redo: y', position=(56, 180), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
+        self.add_text(text_group='map', text_id='switch_map', text='Switch map: space', position=(56, 196), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
         for steps in range(-9, 10):
             self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='level_main')
         self.add_sign_text()

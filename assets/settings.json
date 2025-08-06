@@ -18,7 +18,8 @@
   "gameplay": {
     "hold_to_move": 5,
     "hold_to_undo": 5,
-    "movement": 0.25
+    "movement_speed": 0.25,
+    "cutscene_speed": 1
   },
   "menus": {
     "title_screen": {
@@ -43,7 +44,7 @@
         "menu_state",
         "options"
       ],
-      "Quit": [
+      "Quit Game": [
         "button",
         "game_state",
         "quit"
@@ -223,6 +224,14 @@
     },
     "gameplay": {
       "Gameplay": "title",
+      "Cutscene speed": [
+        "button",
+        "option",
+        [
+          "Fast",
+          "Slow"
+        ]
+      ],
       "Hold to Move": [
         "button",
         "option",
@@ -241,7 +250,7 @@
           "Slow"
         ]
       ],
-      "Movement": [
+      "Movement Speed": [
         "button",
         "option",
         [
@@ -262,17 +271,22 @@
         "button",
         "backup_data"
       ],
-      "Retore Data": [
-        "button",
-        "button",
-        "restore_data"
-      ],
       "Backup Settings": [
         "button",
         "button",
         "backup_settings"
       ],
-      "Retore Settings": [
+      "Clear Game Data": [
+        "button",
+        "button",
+        "clear_game_data"
+      ],
+      "Restore Data": [
+        "button",
+        "button",
+        "restore_data"
+      ],
+      "Restore Settings": [
         "button",
         "button",
         "restore_settings"
@@ -290,20 +304,25 @@
         "menu_state",
         null
       ],
-      "Options": [
-        "button",
-        "menu_state",
-        "options"
-      ],
       "Restart Level": [
         "button",
         "level",
         null
       ],
-      "Quit": [
+      "Options": [
+        "button",
+        "menu_state",
+        "options"
+      ],
+      "Main Menu": [
         "button",
         "game_state",
         "menu_menu"
+      ],
+      "Quit Game": [
+        "button",
+        "game_state",
+        "quit"
       ]
     },
     "new_game": {

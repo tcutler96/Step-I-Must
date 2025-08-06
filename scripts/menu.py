@@ -83,15 +83,15 @@ class Menu:
             if selected_element and not self.main.transition.active:
                 self.main.audio.play_sound(name='menu_select')
                 if selected_element[0] == 'game_state':
-                    if self.main.game_state == 'main_menu' and selected_element[1] == 'quit':
+                    if self.main.game_state in ['main_menu', 'game'] and selected_element[1] == 'quit':
                         self.main.audio.quit()
                         self.main.transition.start_transition(response=['game_state', 'quit'], queue=(True, 'fade', (0, 0), 1))
                     elif self.main.game_state == 'main_menu' and selected_element[1] == 'game':
                         if not self.main.assets.data['game']['level'] or element.name == 'Yes':
                             self.main.assets.reset_game_data()
                             self.main.game_states['game'].cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(0, 0)', 'force': True})
-                        self.main.menu_states['game_paused'].menu['Quit'].button_type = 'game_state'
-                        self.main.menu_states['game_paused'].menu['Quit'].button_response = 'main_menu'
+                        self.main.menu_states['game_paused'].menu['Main Menu'].button_type = 'game_state'
+                        self.main.menu_states['game_paused'].menu['Main Menu'].button_response = 'main_menu'
                         self.main.transition.start_transition(style='circle', centre=element.centre, response=['game_state', 'game'], queue=(True, 'circle', 'player', 1))
                     elif self.main.game_state == 'main_menu' and selected_element[1] == 'level_editor':
                         self.main.menu_states['choose_level'].menu['Back'].button_type = 'game_state'
@@ -112,18 +112,26 @@ class Menu:
                             self.main.menu_states['options'].menu['Back'].button_type = 'menu_state'
                             self.main.menu_states['options'].menu['Back'].button_response = 'game_paused'
                         self.main.assets.save_settings()
-                    self.main.change_menu_state(menu_state=selected_element[1])
+                    if selected_element[1] == 'developer' and not self.main.debug:
+                        pass
+                    else:
+                        self.main.change_menu_state(menu_state=selected_element[1])
                 elif selected_element[0] == 'button':
-                    self.main.text_handler.deactivate_text_group(text_group='main')
-                    self.main.text_handler.activate_text(text_group='main', text_id=selected_element[1], duration=2)
-                    if selected_element[1] == 'backup_data':
-                        self.main.utilities.backup_file(file_name='data')
-                    elif selected_element[1] == 'backup_settings':
-                        self.main.utilities.backup_file(file_name='settings')
-                    elif selected_element[1] == 'restore_data':
-                        self.main.utilities.restore_file(file_name='data')
-                    elif selected_element[1] == 'restore_settings':
-                        self.main.utilities.restore_file(file_name='settings')
+                    if self.main.menu_state == 'developer' and not self.main.debug:
+                        pass
+                    else:
+                        self.main.text_handler.deactivate_text_group(text_group='main')
+                        self.main.text_handler.activate_text(text_group='main', text_id=selected_element[1], duration=2)
+                        if selected_element[1] == 'backup_data':
+                            self.main.utilities.backup_file(file_name='data')
+                        elif selected_element[1] == 'backup_settings':
+                            self.main.utilities.backup_file(file_name='settings')
+                        elif selected_element[1] == 'clear_game_data':
+                            self.main.assets.reset_game_data(clear=True)
+                        elif selected_element[1] == 'restore_data':
+                            self.main.utilities.restore_file(file_name='data')
+                        elif selected_element[1] == 'restore_settings':
+                            self.main.utilities.restore_file(file_name='settings')
                 elif selected_element[0] == 'option':
                     response = self.main.assets.change_setting(group=self.menu_name, name=element.name, option=selected_element[1][0])
                     while response:

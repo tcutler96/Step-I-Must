@@ -129,8 +129,8 @@ class LevelEditor:
                 if selected_element[0] == 'button':
                     if selected_element[1] == 'Play Level':
                         self.reset_toolbar(hovered=True, selected=True)
-                        self.main.menu_states['game_paused'].menu['Quit'].button_type = 'game_state'
-                        self.main.menu_states['game_paused'].menu['Quit'].button_response = 'level_editor'
+                        self.main.menu_states['game_paused'].menu['Main Menu'].button_type = 'game_state'
+                        self.main.menu_states['game_paused'].menu['Main Menu'].button_response = 'level_editor'
                         self.temp_save_tilemap()
                         self.main.change_game_state(game_state='game')
                     if selected_element[1] == 'Toggle Grid':

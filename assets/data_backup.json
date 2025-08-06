@@ -1,28 +1,28 @@
 {
   "game": {
-    "level": "(0, 2)",
+    "level": null,
     "respawn": [
       [
         [
-          0,
-          0
+          12,
+          2
         ]
       ],
       [
         [
-          0,
-          0
+          12,
+          2
         ]
       ],
       [
         false
       ]
     ],
-    "part_one": true,
-    "part_two": true,
-    "part_one_percent": 0.0,
-    "part_two_percent": 0.0,
-    "overall_percent": 0.0,
+    "part_one": false,
+    "part_two": false,
+    "part_one_percent": 0,
+    "part_two_percent": 0,
+    "overall_percent": 0,
     "collectables": {
       "silver keys": [],
       "silver gems": [],
@@ -31,10 +31,7 @@
       "cheeses": []
     },
     "discovered_levels": [
-      "(0, 0)",
-      "(0, 1)",
-      "(0, 2)",
-      "(-1, 2)"
+      "(0, 0)"
     ],
     "active_portals": []
   },
@@ -283,11 +280,16 @@
     "(3, -15)": "right end",
     "(3, -16)": "right end"
   },
+  "cutscenes": {},
   "signs": {
-    "(-1, 2) - (14, 9)": "Stars are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.",
-    "(-2, 2) - (14, 12)": "You can always undo and redo moves, and sometimes the solution involves resetting. Don't be afraid to experiment!",
-    "(-2, 2) - (10, 8)": "If you're ever stuck in a level, you can always use the map (tab) to teleport to a level that contains a teleporter, like this one!",
-    "(-6, 0) - (14, 2)": "Don't look at the statues!"
+    "(-1, 2) - (14, 9)": "Gems are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.",
+    "(-2, 2) - (13, 12)": "You can always undo and redo moves, and sometimes the solution involves resetting. Don't be afraid to experiment!",
+    "(-2, 2) - (10, 8)": "If you're ever stuck in a level, you can always use the map to teleport back to a level that contains a teleporter, like this one!",
+    "(-7, 3) - (8, 11)": "The following puzzles are extremely difficult.",
+    "(-7, 3) - (8, 12)": "They use a wide variety of techniques and objects, including some you might not know about yet.",
+    "(-7, 3) - (8, 13)": "If you don't want to solve these, use the map to teleport to a different level.",
+    "(-7, 3) - (8, 14)": "Otherwise, you may proceed.",
+    "(-7, 3) - (8, 15)": "Good luck!"
   },
   "teleporters": {
     "recievers": {
@@ -396,7 +398,7 @@
           8,
           7
         ],
-        "destination": null
+        "destination": "(-5, 2) - (8, 7)"
       },
       "(-7, 7) - (10, 14)": {
         "position": [
@@ -452,7 +454,7 @@
           5,
           8
         ],
-        "destination": null
+        "destination": "(-5, 2) - (8, 7)"
       },
       "(-5, -7) - (8, 5)": {
         "position": [

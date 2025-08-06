@@ -136,9 +136,9 @@ vec4 shockwave(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec2 direction = uv - vec2(effect_data[4], effect_data[5]) / resolution;
     float magnitude = length(direction * aspect_ratio);
 
-    float map_r = get_map(magnitude, effect_data[effect_scale] + 2, effect_data);
+    float map_r = get_map(magnitude, effect_data[effect_scale] + 0.2, effect_data);
     float map_g = get_map(magnitude, effect_data[effect_scale], effect_data);
-    float map_b = get_map(magnitude, effect_data[effect_scale] - 2, effect_data);
+    float map_b = get_map(magnitude, effect_data[effect_scale] - 0.2, effect_data);
 
     vec2 displacement_r = normalize(direction) * effect_data[6] * map_r;
     vec2 displacement_g = normalize(direction) * effect_data[6] * map_g;

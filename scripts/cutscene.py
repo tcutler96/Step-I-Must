@@ -1,45 +1,55 @@
 import pygame as pg
+from math import sin, cos
 
 class Cutscene:
     def __init__(self, main):
         self.main = main
+        self.cutscene_speed = self.main.assets.settings['gameplay']['cutscene_speed']
         self.active = False
+        self.cutscene_type = None
         self.alpha_step = 8.5
         self.show_bars = False
         self.bars_offset = 0
         self.bars_max_offset = 96
-        self.bars_speed = self.bars_max_offset / self.main.fps
+        self.bars_speed = self.bars_max_offset / (((1 - self.cutscene_speed) * 1 + self.cutscene_speed * 0.5) * self.main.fps)
         self.bars = [pg.Rect(0, -self.bars_max_offset, self.main.display.width, self.bars_max_offset),
                      pg.Rect(0, self.main.display.height, self.main.display.width, self.bars_max_offset)]
         self.sprite = None
         self.sprite_position = (self.main.display.half_width - self.main.sprite_size // 2, self.bars_max_offset + (self.main.display.half_height - self.bars_max_offset - self.main.sprite_size) // 2)
         self.show_text = False
+        self.text_id = None
         self.text = None
         self.text_position = (self.main.display.half_width, self.main.display.half_height - 8)
         self.page_index = 0
         self.line_index = 0
         self.character_index = 0
-        self.text_speed = 0.5  # swap these values from menu option, slow and fast...
-        self.line_pause = 1 * self.main.fps
+        self.text_speed = (1 - self.cutscene_speed) * 0.5 + self.cutscene_speed * 1
+        self.line_pause = (1 - self.cutscene_speed) * 1 + self.cutscene_speed * 0.25
         self.line_timer = 0
         self.show_button = False
         self.button = self.main.assets.images['other']['button_5']
         self.button_position = (self.main.display.half_width - self.button.get_width() // 2, self.main.display.height - self.bars_max_offset - self.button.get_height() * 1.5)
         self.button_alpha = 0
-        # we can open the menu while a cutscene is playing, which is a good thing, but we can press restart level which restarts the level but doesnt effect the cutscene...
-        # either disable that button while a cutscene is happening (ie clicking it does nothing) or turn the cutscene off/ finish it...
-        # or just disable the game menu while we are in a cutscene...
-        # develop collectable cutscene, add rainbow colour effect to player and have collectable swirl around player...
-        # need to enable collectables on map when first on is collected...
-        # maybe still automatically open the map for the player once they reach the first hub level, to show the two paths they can/ must take and the collectables they hold...
-        # add more stuff to the collectable cutscene, shockwave, swirling sprite into players mouth...
+        # map text needs to always be shown, that is, press tab to toggle...
+        # automatically open map when we collect first collectable, enable collectable title and percentage text and collectable icons fade in on map, to show all the rest that the player needs to find...
+        # add all controls to left side of map so that it feels more filled out/ complete, show controls one by one as the player progresses through the initial tutorial levels...
+        # switch map text only appears when we first go to second world...
+        # initially, only show 'overall' percentage in first world (when first collectabl collected) but then when we go to second world 'overall' becomes 'world 1' and we see 'world 2' and 'overall' underneathe...
+        self.collectable_pause = 2
+        self.collectable_timer = 0
+        self.collectable_type = None
+        self.collectable_position = None
+        self.collectable_sprite = None
+        self.collectable_sprite_position = None
+
+        # game pause menu, add quit to game menu and quit entire game...
 
         # intro and movement (0, 0), menu (0, 1), map (0, 2), undo/ redo (-1, 2), collectables (-1, 2)?*, locks/ paths (-2, 2), teleporter (-2, 2)?*, ice (-2, 3),
         # conveyors (-2, 1), blue flags (-4, 2), spikes (-5, 3), player spawner (-6, 2), reviving dead players (-4, 0), statues (-6, 0), splitters (-5, -2)
-        # add cutscenes for: moving flags/ respawning at original position, final stretch of first game, intro to second game ('i though we were done, but it seems we are only just beginning')
-        # have player 'eat' collectables in cutscene, need simple animation with players mouth open and have the collectable fly into it...
-        # can we still have the shockwave effect when we get a collectable?
+        # add cutscenes for: collectables, teleporters, moving flags/ respawning at original position, final stretch of first game,
+        # intro to second game ('i though we were done, but it seems we are only just beginning', 'i can always return to the first place...')
         # add a more unique text id for text elements so that we can repeat text in lines...
+        # add sprites for each new game mechanic (ie ice, conveyor, spike, player spawner, blue flag, splitter)
         self.cutscene_data = {'collectables': {'silver keys': [["A silver key, a hopeful chime.", "Yet all it give is more lost time.", "For I am slime, and step I must."],
                                                                ["Each opened lock, a question grows.", "How deep this endless puzzle goes.", "For I am slime, and step I must."]],
                                                'silver gems': [["A silver gem, once left behind.", "Now claimed by me, no longer blind.", "For I am slime, and step I must."],
@@ -79,24 +89,29 @@ class Cutscene:
                                          '(-6, 0)': [["The statue's gaze is cold and wide.", "Looked at straight, there's no place to hide.", "For I am slime, and step I must."],
                                                      ["But turn away and slip on past.", "Their stony grip won't hold me fast.", "For I am slime, and step I must."]],
                                          '(-5, -2)': [["A single step, then comes the tear.", "Another me, now stands there.", "For I am slime, and step I must."],
-                                                      ["Though of two bodies, our minds remain the same.", "Working together with one shared aim.", "For I am slime, and step I must."]]}}
+                                                      ["Though of two bodies, our minds the same.", "Working together with one shared aim.", "For I am slime, and step I must."]]}}
 
     def start_cutscene(self, cutscene_type=None, cutscene_data=None):
         if not self.active:
             if cutscene_type == 'level':
                 if ('level_name' in cutscene_data and cutscene_data['level_name'] in self.cutscene_data['levels'] and
-                        (cutscene_data['level_name'] not in self.main.assets.data['game']['discovered_levels'] or 'force' in cutscene_data)):
+                        (cutscene_data['level_name'] not in self.main.assets.data['game']['discovered_levels'] or 'force' in cutscene_data and cutscene_data['force'])):
                     self.active = True
-                    self.text = self.cutscene_data['levels'][cutscene_data['level_name']]
+                    self.show_bars = True
             elif cutscene_type == 'collectable':
-                if 'collectable_type' in cutscene_data and cutscene_data['collectable_type'] in self.main.assets.data['game']['collectables']:  # and 'collectable_position' in cutscene_data:
+                if 'collectable_type' in cutscene_data and cutscene_data['collectable_type'] in self.main.assets.data['game']['collectables'] and 'collectable_position' in cutscene_data:
                     self.active = True
-                    self.text = self.cutscene_data['collectables'][cutscene_data['collectable_type']]
+                    self.collectable_timer = self.collectable_pause * self.main.fps
+                    self.collectable_type = cutscene_data['collectable_type'][:-1]
+                    self.collectable_position = cutscene_data['collectable_position']
+                    self.main.audio.play_sound(name='collectable')  # temmporary for testing
             if self.active:
-                self.show_bars = True
+                self.cutscene_type = cutscene_type
                 self.bars_offset = 0
+                self.text_id = cutscene_data['level_name' if cutscene_type == 'level' else 'collectable_type']
+                self.text = self.cutscene_data[f'{cutscene_type}s'][cutscene_data['level_name' if cutscene_type == 'level' else 'collectable_type']]
                 self.main.text_handler.add_text(text_group='cutscene', text_id='space', text='space', size=10, alpha_up=self.alpha_step, alpha_down=self.alpha_step, bounce=-3, shadow_colour=None,
-                                                position=(self.main.display.half_width, self.main.display.height - self.bars_max_offset - self.button.get_height()), display_layer='level_ui')
+                                                position=(self.main.display.half_width, self.main.display.height - self.bars_max_offset - self.button.get_height()), display_layer='ui')
 
     def update_bars_positions(self):
         self.bars[0].y = -self.bars_max_offset + self.bars_offset
@@ -104,7 +119,8 @@ class Cutscene:
 
     def update_bars(self):
         if self.show_bars:
-            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player'], effect='pixelate', effect_data={'length': 1})
+            # only draw game reset text and apply grey effect after cutscene has finished?
+            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui'], effect='pixelate', effect_data={'length': 1})
             if not self.bars_offset:
                 self.main.audio.play_sound(name='cutscene_start')
             if self.bars_offset < self.bars_max_offset:
@@ -128,6 +144,7 @@ class Cutscene:
             self.update_bars_positions()
             if self.bars_offset == 0:
                 self.active = False
+                self.cutscene_type = None
                 self.button_alpha = 0
                 self.main.text_handler.remove_text_group(text_group='cutscene')
 
@@ -150,14 +167,15 @@ class Cutscene:
                 else:
                     self.character_index = min(self.character_index + self.text_speed, len(self.text[self.page_index][self.line_index]))
                 if int(character_index) != int(self.character_index):
+                    text_id = f'{self.text_id}_{self.page_index}_{self.line_index}_{int(self.character_index)}'
                     text = self.text[self.page_index][self.line_index][:int(self.character_index)]
-                    self.main.text_handler.add_text(text_group='cutscene', text_id=text, text=text, position=(self.text_position[0], self.text_position[1] + 16 * self.line_index), display_layer='level_ui',
-                                                    size=14, max_width=self.main.display.width - 32, alpha_up=255, alpha_down=self.alpha_step, style='itallic')
+                    self.main.text_handler.add_text(text_group='cutscene', text_id=text_id, text=text, position=(self.text_position[0], self.text_position[1] + 16 * self.line_index),
+                                                    display_layer='ui', size=14, max_width=self.main.display.width - 32, alpha_up=255, alpha_down=self.alpha_step, style='itallic')
                     if self.character_index == len(self.text[self.page_index][self.line_index]):  # end of line
                         if self.line_timer:
                             self.line_timer = 0
                         else:
-                            self.line_timer = self.line_pause
+                            self.line_timer = self.line_pause * self.main.fps
                         if self.line_index == len(self.text[self.page_index]) - 1:
                             self.show_button = True
                             self.button_alpha = 0
@@ -188,27 +206,54 @@ class Cutscene:
             if self.button_alpha == 0:
                 self.show_button = False
 
+    def get_sprite_alpha(self):
+        return 255 * self.bars_offset / self.bars_max_offset
+
+    def stop_cutscene(self):
+        self.active = False
+        self.show_bars = False
+        self.collectable_timer = 0
+        self.collectable_sprite = None
+        self.show_text = False
+        self.show_button = False
+        self.button_alpha = 0
+        self.button.set_alpha(self.button_alpha)
+
     def update(self):
         if self.active:
-            self.sprite = self.main.utilities.get_sprite(name='player', state='thinking', alpha=255 * self.bars_offset / self.bars_max_offset)
-            self.update_bars()
-            self.update_text()
-            self.update_button()
-            # self.main.shaders.apply_effect(display_layer='level_main', effect='shockwave', effect_data={'x': self.cutscene_data['collectable']['position'][0],
-            #                                                                                             'y': self.cutscene_data['collectable']['position'][1], 'length': 2})
+            if self.main.debug and self.main.events.check_key(key='escape'):
+                self.stop_cutscene()
+            else:
+                self.sprite = self.main.utilities.get_sprite(name='player', state='thinking', alpha=self.get_sprite_alpha())
+                if self.cutscene_type == 'collectable':
+                    if self.collectable_timer:
+                        self.main.shaders.apply_effect(display_layer='level_main', effect='shockwave', effect_data={'length': self.collectable_pause, 'x': self.collectable_position[0], 'y': self.collectable_position[1]})
+                        self.collectable_timer -= 1
+                        if not self.collectable_timer:
+                            self.main.shaders.apply_effect(display_layer='level_main', effect=None)
+                            self.show_bars = True
+                    else:
+                        self.collectable_sprite = self.main.utilities.get_sprite(name='collectable', state=self.collectable_type, alpha=self.get_sprite_alpha())
+                        self.collectable_sprite_position = (self.main.display.half_width - self.main.sprite_size // 2 + 32 * cos(2 * self.main.runtime_seconds),
+                                                            self.bars_max_offset + (self.main.display.half_height - self.bars_max_offset - self.main.sprite_size) // 2 + 16 * sin(2 * self.main.runtime_seconds))
+                self.update_bars()
+                self.update_text()
+                self.update_button()
         return self.active  # do we really need to return this?
 
     def draw(self, displays):
-        if self.active:
+        if self.active and not self.collectable_timer:
             for bar in self.bars:
-                pg.draw.rect(surface=displays['level_ui'], color=self.main.assets.colours['dark_purple'], rect=bar)
+                pg.draw.rect(surface=displays['ui'], color=self.main.assets.colours['dark_purple'], rect=bar)
             if self.sprite:
-                displays['level_ui'].blit(source=self.sprite, dest=(self.sprite_position[0], self.sprite_position[1] + self.main.utilities.get_text_bounce(bounce=-3)))
+                displays['ui'].blit(source=self.sprite, dest=(self.sprite_position[0], self.sprite_position[1] + self.main.utilities.get_text_bounce(bounce=-3)))
+            if self.collectable_sprite:
+                displays['ui'].blit(source=self.collectable_sprite, dest=(self.collectable_sprite_position[0], self.collectable_sprite_position[1] + self.main.utilities.get_text_bounce(bounce=-3)))
             if self.show_text:
                 for line_index in range(self.line_index + 1):
-                    character_index = int(self.character_index) if line_index == self.line_index else len(self.text[self.page_index][line_index])
-                    self.main.text_handler.activate_text(text_group='cutscene', text_id=self.text[self.page_index][line_index][:character_index])
+                    text_id = f'{self.text_id}_{self.page_index}_{line_index}_{int(self.character_index) if line_index == self.line_index else len(self.text[self.page_index][line_index])}'
+                    self.main.text_handler.activate_text(text_group='cutscene', text_id=text_id)
             if self.button_alpha:
-                displays['level_ui'].blit(source=self.button, dest=(self.button_position[0], self.button_position[1] + self.main.utilities.get_text_bounce(bounce=-3)))
+                displays['ui'].blit(source=self.button, dest=(self.button_position[0], self.button_position[1] + self.main.utilities.get_text_bounce(bounce=-3)))
             if self.show_button and not self.line_timer:
                 self.main.text_handler.activate_text(text_group='cutscene', text_id='space')

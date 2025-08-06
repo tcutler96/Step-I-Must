@@ -3,7 +3,7 @@
     "background": "galaxy",
     "button_prompt": false,
     "cursor_type": "sprite",
-    "hrt_shader": true,
+    "hrt_shader": false,
     "map_colour": "green",
     "particles": false,
     "resolution": 3,
@@ -11,18 +11,19 @@
     "shaders": true
   },
   "audio": {
-    "master_volume": 0.3,
+    "master_volume": 0.2,
     "music_volume": 0.1,
     "sound_volume": 0.5
   },
   "gameplay": {
     "hold_to_move": 5,
-    "hold_to_undo": 15,
-    "movement": 0.125
+    "hold_to_undo": 5,
+    "movement_speed": 0.25,
+    "cutscene_speed": 1
   },
   "menus": {
     "title_screen": {
-      "Slime Stepper": "title",
+      "Step I Must": "title",
       "Play": [
         "button",
         "game_state",
@@ -108,8 +109,8 @@
         "button",
         "option",
         [
-          "Enabled",
-          "Disabled"
+          "Disabled",
+          "Enabled"
         ]
       ],
       "Map Colour": [
@@ -168,6 +169,7 @@
         "button",
         "option",
         [
+          "20%",
           "30%",
           "40%",
           "50%",
@@ -177,8 +179,7 @@
           "90%",
           "100%",
           "Disabled",
-          "10%",
-          "20%"
+          "10%"
         ]
       ],
       "Music Volume": [
@@ -223,6 +224,14 @@
     },
     "gameplay": {
       "Gameplay": "title",
+      "Cutscene speed": [
+        "button",
+        "option",
+        [
+          "Fast",
+          "Slow"
+        ]
+      ],
       "Hold to Move": [
         "button",
         "option",
@@ -236,17 +245,17 @@
         "button",
         "option",
         [
-          "Slow",
           "Fast",
-          "Disabled"
+          "Disabled",
+          "Slow"
         ]
       ],
-      "Movement": [
+      "Movement Speed": [
         "button",
         "option",
         [
-          "Slow",
-          "Fast"
+          "Fast",
+          "Slow"
         ]
       ],
       "Back": [
@@ -262,17 +271,22 @@
         "button",
         "backup_data"
       ],
-      "Retore Data": [
-        "button",
-        "button",
-        "restore_data"
-      ],
       "Backup Settings": [
         "button",
         "button",
         "backup_settings"
       ],
-      "Retore Settings": [
+      "Clear Game Data": [
+        "button",
+        "button",
+        "clear_game_data"
+      ],
+      "Restore Data": [
+        "button",
+        "button",
+        "restore_data"
+      ],
+      "Restore Settings": [
         "button",
         "button",
         "restore_settings"

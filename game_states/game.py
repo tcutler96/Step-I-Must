@@ -96,8 +96,8 @@ class Game:
             if collectable_type == lock_data['collectable_type']:
                 difference = lock_data['collectable_amount'] - len(self.main.assets.data['game']['collectables'][collectable_type])
                 if difference > 0:
-                    self.main.text_handler.add_text(text_group='locks', text_id=lock, text=f'collect {difference} more {collectable_type[:-1] 
-                    if difference == 1 else collectable_type}', position='top')
+                    self.main.text_handler.add_text(text_group='locks', text_id=lock, text=f'collect {difference} more {collectable_type[:-1] if difference == 1 else collectable_type}',
+                                                    position='top', display_layer='level_main')
         cell.elements['object'] = None
         cell.object_data['object'] = None
         # we sometimes get stuck in moving animation when we collect something...
@@ -244,7 +244,7 @@ class Game:
         elif isinstance(steps, int):
             self.level.steps = steps
         if self.level.steps not in self.main.text_handler.text_elements['steps']:
-            self.main.text_handler.add_text(text_group='steps', text_id=self.level.steps, text=str(self.level.steps), position='top_left', alignment=('l', 'c'))
+            self.main.text_handler.add_text(text_group='steps', text_id=self.level.steps, text=str(self.level.steps), position='top_left', alignment=('l', 'c'), display_layer='level_main')
 
     def resolve_standing(self, new_level=False):
         if self.check_standing or new_level or self.main.debug:
@@ -289,7 +289,7 @@ class Game:
                             self.no_steps = False
 
                         if cell.check_element(name='sign'):  # signs
-                            self.main.audio.play_sound(name='map_open')
+                            self.main.audio.play_sound(name='scroll_open')
                             sign_position = self.level.name + ' - ' + str(cell.position)
                             if sign_position in self.main.assets.data['signs']:
                                 self.sign_data.append(sign_position)
@@ -334,7 +334,7 @@ class Game:
                 if len(self.teleporter_data['standing']) == 1:
                     self.teleporter_data['standing'] = self.teleporter_data['standing'][0]
             if sign_data and sign_data != self.sign_data:
-                self.main.audio.play_sound(name='map_close')
+                self.main.audio.play_sound(name='scroll_close')
             if steps_updated:
                 self.set_steps(steps=steps)
             elif new_level:
@@ -396,7 +396,7 @@ class Game:
                 self.no_movement = False
                 self.transition_level()
             elif player_moved:
-                self.main.audio.play_sound(name='player_move', overlap=True)
+                self.main.audio.play_sound(name='player_move')
                 self.level.clear_cache_redo()
                 self.reset_animations(force_reset=True)
                 self.no_movement = False
@@ -809,7 +809,7 @@ class Game:
                 difference = lock_data['collectable_amount'] - len(self.main.assets.data['game']['collectables'][lock_data['collectable_type']])
                 if difference > 0:
                     self.main.text_handler.add_text(text_group='locks', text_id=lock, text=f'collect {difference} more {lock_data['collectable_type'][:-1] 
-                    if difference == 1 else lock_data['collectable_type']}', position='top', display_layer='level')
+                    if difference == 1 else lock_data['collectable_type']}', position='top', display_layer='level_main')
 
     def start_up(self, previous_game_state=None):
         self.main.audio.play_music(music_theme='chill idea')
@@ -822,15 +822,15 @@ class Game:
     def update(self, mouse_position):  # refactor this, draw everything all the time now that we have display layers in game and can see them all while menu is open etc...
         # separate into general updates, player updates (which only happen when we have control of the player), etc...
         self.tutorials.update()  # where should this go?
-        if self.main.events.check_key(key='t'):
+        if self.main.events.check_key(key='g'):
             self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'silver keys'})
-        if self.main.events.check_key(key='y'):
+        if self.main.events.check_key(key='h'):
             self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'silver gems'})
-        if self.main.events.check_key(key='u'):
+        if self.main.events.check_key(key='j'):
             self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'gold keys'})
-        if self.main.events.check_key(key='i'):
+        if self.main.events.check_key(key='k'):
             self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'gold gems'})
-        if self.main.events.check_key(key='o'):
+        if self.main.events.check_key(key='l'):
             self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'cheeses'})
         if self.main.events.check_key(key='1'):
             self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(0, 0)'})
@@ -862,7 +862,7 @@ class Game:
         if self.main.menu_state:  # we need to update all game aspects (tutorial, map etc) even when the menu is open
             self.main.display.set_cursor(cursor='arrow')
             self.update_map(mouse_position=None)
-            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui', 'level_map'], effect='blur', effect_data={'length': 0.5})
+            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui', 'level_map'], effect='pixelate', effect_data={'length': 0.5})
         else:
             if self.main.debug or self.map.show_map:
                 self.main.display.set_cursor(cursor='arrow')
@@ -930,7 +930,7 @@ class Game:
                                 if self.player_afk_timer == self.player_afk:
                                     for player_cell in self.player_cells.values():
                                         if player_cell.check_element(name='player', state='idle'):
-                                            self.main.audio.play_sound(name='sleep')
+                                            self.main.audio.play_sound(name='player_sleep')
                                             player_cell.elements['player']['state'] = 'sleeping'
                             if not self.map.show_map:
                                 if self.main.debug or (not self.main.debug and not self.no_steps):

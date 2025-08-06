@@ -29,8 +29,9 @@ class Map:
         self.levels = self.load_levels()
         self.map = self.load_map()
 
-    def get_collectable_position(self, x, y):
-        return self.collectables['base_position'][0] + x * self.main.sprite_size, self.collectables['base_position'][1] + y * self.main.sprite_size * self.collectables['y_overlap']
+    def get_collectable_position(self, x, y, bounce=False):
+        return (self.collectables['base_position'][0] + x * self.main.sprite_size,
+                self.collectables['base_position'][1] + y * self.main.sprite_size * self.collectables['y_overlap'] + (self.main.text_handler.text_bounce * 3 if bounce else 0))
 
     def load_levels(self):
         levels = {}
@@ -118,11 +119,11 @@ class Map:
     def update_collectable_count_text(self, collectable_type):
         count = len(self.main.assets.data['game']['collectables'][collectable_type])
         max_count = self.collectables['max_counts'][collectable_type]
-        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_current', text=str(count), alignment=('c', 'c'), bounce=0, shadow_offset=(4, 4),
-                                        size=14, max_width=self.main.sprite_size * 0.75, display_layer='map', alpha_up=8.5, alpha_down=8.5, colour='purple' if count < max_count else 'light_green',
+        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_current', text=str(count), alignment=('c', 'c'), shadow_offset=(4, 4),
+                                        size=14, max_width=self.main.sprite_size * 0.75, display_layer='level_map', alpha_up=8.5, alpha_down=8.5, colour='purple' if count < max_count else 'light_green',
                                         position=self.get_collectable_position(x=self.collectables['types'].index(collectable_type) + 0.5, y=max_count + 3))
-        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_max', text=str(max_count), alignment=('c', 'c'), size=14, bounce=0, shadow_offset=(4, 4),
-                                        max_width=self.main.sprite_size * 0.75, display_layer='map', alpha_up=8.5, alpha_down=8.5, colour='purple' if count < max_count else 'light_green',
+        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_max', text=str(max_count), alignment=('c', 'c'), size=14, shadow_offset=(4, 4),
+                                        max_width=self.main.sprite_size * 0.75, display_layer='level_map', alpha_up=8.5, alpha_down=8.5, colour='purple' if count < max_count else 'light_green',
                                         position=self.get_collectable_position(x=self.collectables['types'].index(collectable_type) + 0.5, y=max_count + (6.3 if count < max_count else 6.1)))
 
     def update_part_percents(self):
@@ -135,7 +136,7 @@ class Map:
             percent = round(100 * count / max_count, 2)
             self.main.assets.data['game'][f'{part}_percent'] = percent
             self.main.text_handler.add_text(text_group='map', text_id=f'{part}_percent', text=f'{self.part_data[part]['text']}{percent:g}%', position=self.part_data[part]['position'],
-                                            alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, bounce=False, max_width=112, display_layer='map')
+                                            alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
 
     def update_collectables(self, collectable_type, level_name, position):
         if collectable_type in self.collectables['types'] and position in self.map[level_name].collectables[collectable_type]:
@@ -181,21 +182,21 @@ class Map:
             if self.main.text_handler.text_elements['map']['toggle'].selected == 'left' or self.main.events.check_key(key='tab'):
                 self.show_map = not self.show_map
                 if not self.show_map:
-                    self.main.audio.play_sound(name='map_close')
+                    self.main.audio.play_sound(name='map_close', overlap=True)
                 else:
-                    self.main.audio.play_sound(name='map_open')
+                    self.main.audio.play_sound(name='map_open', overlap=True)
                     self.alpha = 0
                     self.icons['alpha'] = self.icons['alpha_default'].copy()
                     self.set_target(target=self.get_target(level=self.main.assets.data['game']['level']))
             if self.show_map and (self.main.text_handler.text_elements['map']['switch'].selected == 'left' or self.main.events.check_key(key='space')):
-                self.main.audio.play_sound(name='map_switch')
+                self.main.audio.play_sound(name='map_switch', overlap=True)
                 self.offset_dict['target'] = 1 if self.offset_dict['target'] == 2 else 2
                 mouse_position = None
         self.update_icons()
         self.update_sprites()
         if self.show_map:
             interpolating = self.update_interpolation()
-            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui'], effect='blur', effect_data={'length': 0.5})
+            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui'], effect='pixelate', effect_data={'length': 0.5})
             if self.alpha < 255:
                 self.alpha = min(self.alpha + self.alpha_step, 255)
             selected_level = [None, None]
@@ -218,13 +219,13 @@ class Map:
                 max_count = self.collectables['max_counts'][collectable_type]
                 for y in list(range(collectable_count, max_count)) + list(range(collectable_count)):
                     collectable_sprite = self.collectables['sprites'][collectable_type[:-1]] if y <= collectable_count - 1 else self.collectables['sprites'][collectable_type[:-1] + ' empty']
-                    displays['level_map'].blit(source=collectable_sprite, dest=self.get_collectable_position(x=x, y=y))
-                displays['level_map'].blit(source=self.collectables['sprites']['fraction' if collectable_count < max_count else 'fraction_filled'], dest=self.get_collectable_position(x=x, y=max_count + 4.1))
+                    displays['level_map'].blit(source=collectable_sprite, dest=self.get_collectable_position(x=x, y=y, bounce=True))
+                displays['level_map'].blit(source=self.collectables['sprites']['fraction' if collectable_count < max_count else 'fraction_filled'], dest=self.get_collectable_position(x=x, y=max_count + 4.1, bounce=True))
                 if self.show_map:
                     self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_current')
                     self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_max')
                 if collectable_count >= max_count:
-                    displays['level_map'].blit(source=self.collectables['sprites']['medal'], dest=self.get_collectable_position(x=x, y=max_count + 8))
+                    displays['level_map'].blit(source=self.collectables['sprites']['medal'], dest=self.get_collectable_position(x=x, y=max_count + 8, bounce=True))
 
     def draw(self, displays):
         if self.alpha:

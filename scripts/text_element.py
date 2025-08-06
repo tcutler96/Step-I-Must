@@ -24,7 +24,7 @@ class TextElement:
         self.offset = [0, 0]
         self.scroll = 0
         self.rect = pg.Rect(self.position, self.size)
-        self.display_layer = display_layer if display_layer in self.main.display.display_layers else 'ui'
+        self.display_layer = display_layer
         self.menu_state = menu_state
         self.active = active
         self.timer = 0

@@ -6,6 +6,7 @@ class Audio:
         self.main = main
         self.mixer = pg.mixer
         self.mixer.set_num_channels(16)
+        self.volume_adjustments = {'conveyor': 0.25}
         self.audio, self.music = self.load_audio()
         self.music_theme = None
         self.music_volume = self.get_volume(audio_type='music')
@@ -17,8 +18,9 @@ class Audio:
         audio = self.main.assets.audio
         for audio_type, audio_data in audio.items():
             for audio_name, audio_file in audio_data.items():
+                sound_volume = self.get_volume(audio_type='sound')
                 if audio_type == 'sound':
-                    audio_file.set_volume(self.get_volume(audio_type='sound'))
+                    audio_file.set_volume(sound_volume * (self.volume_adjustments[audio_name] if audio_name in self.volume_adjustments else 1))
         music = self.mixer.music
         music.set_volume(self.get_volume(audio_type='music'))
         return audio, music
@@ -54,8 +56,9 @@ class Audio:
 
     def change_volume(self, audio_type):
         if audio_type in ['sound_volume', 'master_volume']:
+            sound_volume = self.get_volume(audio_type='sound')
             for sound in self.audio['sound'].values():
-                sound.set_volume(self.get_volume(audio_type='sound'))
+                sound.set_volume(sound_volume * (self.volume_adjustments[sound] if sound in self.volume_adjustments else 1))
         if audio_type in ['music_volume', 'master_volume']:
             self.music_volume = self.get_volume(audio_type='music')
 

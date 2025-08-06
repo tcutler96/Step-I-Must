@@ -15,7 +15,7 @@ class MapCell:
         self.collectables = collectables
         self.hovered = False
         self.was_hovered = False
-        self.main.text_handler.add_text(text_group='map', text_id=self.level_name, text=self.level_name, position='top_right', alignment=('r', 'c'), display_layer='map')
+        self.main.text_handler.add_text(text_group='map', text_id=self.level_name, text=self.level_name, position='top_right', alignment=('r', 'c'), display_layer='level_map')
 
     def update_rect(self, offset):
         self.rect = pg.Rect((self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]), (self.cell_size, self.cell_size))
@@ -29,13 +29,11 @@ class MapCell:
             self.hovered = True
             if self.teleporter or self.main.debug:
                 if not self.was_hovered:
-                    self.main.audio.play_sound(name='map_highlight_teleporter')
+                    self.main.audio.play_sound(name='menu_highlight', overlap=True)
                 self.main.display.set_cursor(cursor='hand')
                 if self.main.events.check_key(key='mouse_1'):
                     self.main.audio.play_sound(name='teleport', overlap=True)
                     return self.rect.center
-            elif not self.was_hovered:
-                self.main.audio.play_sound(name='map_highlight')
 
     def draw_cell(self, displays, sprite, offset, alpha=None):
         if alpha:

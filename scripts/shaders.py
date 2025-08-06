@@ -19,21 +19,22 @@ class Shaders:
         self.background_effect = self.main.assets.settings['video']['background']
         self.effect_data_length = 10
         self.default_effect_data = {'applied': 0, 'active': 0, 'scale': 0, 'length': 1, 'step': 0}
-        self.effect_data = {'grey': {}, 'invert': {}, 'blur': {'current': 2, 'min': 2, 'max': 8},
-                            'pixelate': {'current': 1, 'min': 1, 'max': 16, 'current_2': 1, 'min_2': 1, 'max_2': 16},
+        self.effect_data = {'grey': {}, 'invert': {}, 'blur': {'current': 2, 'min': 2, 'max': 5},
+                            'pixelate': {'current': 1, 'min': 1, 'max': 4},
                             'shockwave': {'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05},
                             'galaxy': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False},
                             'test': {'x': 240, 'y': 160}}
         self.shaders = self.load_shaders()
         self.missing_display_layers = []
         self.missing_effects = []
-        print("Max fragment uniform components:", self.context.info['GL_MAX_FRAGMENT_UNIFORM_COMPONENTS'])
+        # print("Max fragment uniform components:", self.context.info['GL_MAX_FRAGMENT_UNIFORM_COMPONENTS'])
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
-        # how inefficient is it to have one fragment shader, would we get better frames from individual shaders?
-        # pass in shader effect variables so we can control them (ie only greyscale the player layer slightly when we only have 1 step left but fully pixealte on teleport)...
         # add distortion effect to grey effect that is used when low/ out of steps...
         # add shader options (fancy, simple, disabled), scale effects by some value?
-        # bluring level background adds a nice fade effect to a level exit, is there a less intensive way to recreate this look?
+        # have pixelate effect dull the colours a bit so that the map/ menu stands out more, if we are no longer using blur...
+        # when we get colour in fragment shader, add check to see if current pixel is turned on in that display layer, would that improve performance?
+        # add darken/ lighten shaders effects...
+        # add more stuff to the collectable cutscene, shockwave, swirling sprite into players mouth...
 
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)
@@ -104,9 +105,9 @@ class Shaders:
                         self.missing_effects.append(effect)
 
     def update_effect_current(self, effect_data):
-        if 'current' in effect_data and 'min' in effect_data and 'max' in effect_data:
+        if all(data in effect_data for data in ['current', 'min', 'max']):
             effect_data['current'] = int(effect_data['min'] + effect_data['scale'] * (effect_data['max'] - effect_data['min']))
-        if 'current_2' in effect_data and 'min_2' in effect_data and 'max_2' in effect_data:
+        if all(data in effect_data for data in ['current_2', 'min_2', 'max_2']):
             effect_data['current_2'] = int(effect_data['min_2'] + effect_data['scale'] * (effect_data['max_2'] - effect_data['min_2']))
 
     def update_effect_scale(self, effect_data):
@@ -154,8 +155,8 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('x', 'held'):
-            # self.apply_effect(display_layer=['menu', 'level_background', 'level_main', 'level_player'], effect='test', effect_data={'length': 1})
-            self.apply_effect(display_layer=['level_player'], effect='test')
+            self.apply_effect(display_layer=['ui', 'level_background', 'level_main', 'level_player'], effect='blur', effect_data={'length': 1})
+            # self.apply_effect(display_layer=['level_player'], effect='test')
         if self.background_effect:  # display flashes upside down when switching to gol...
             self.apply_effect(display_layer=['background'], effect=self.background_effect, effect_data={'length': 0.1})
         self.update_effect_data()

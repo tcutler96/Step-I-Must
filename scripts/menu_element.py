@@ -19,19 +19,19 @@ class MenuElement:
                 self.sprite_position = (position[0] - self.sprite.get_width() // 2, position[1] - self.sprite.get_height() // 2)
             else:
                 self.main.text_handler.add_text(text_group=self.menu_name, text_id=self.name, text=self.name.upper(), position=position, alignment=('c', 'c'), shadow_offset='mouse',
-                                                size=self.data['title_size'], font=self.data['title_font'], style=['underline'], display_layer='menu', menu_state=menu_name)
+                                                size=self.data['title_size'], font=self.data['title_font'], style=['underline'], display_layer='ui', menu_state=menu_name)
         elif self.element_type == 'button':
             interactable = self.button_type != 'option'
             self.main.text_handler.add_text(text_group=self.menu_name, text_id=self.name, text=self.name + (':' if self.button_type == 'option' else ''),
                                             position=(position[0] - (self.option_width // 2 if self.button_type == 'option' else 0), position[1]),
                                             alignment=('l', 'c') if self.button_type == 'option' else ('c', 'c'), size=self.data['button_size'], shadow_offset='mouse',
-                                            font=self.data['button_font'], display_layer='menu', menu_state=menu_name, interactable=interactable)
+                                            font=self.data['button_font'], display_layer='ui', menu_state=menu_name, interactable=interactable)
             self.centre = self.main.text_handler.text_elements[self.menu_name][self.name].rect.center
             if self.button_type == 'option':
                 self.option_centres = []
                 for option in self.button_response:
                     self.main.text_handler.add_text(text_group=self.menu_name, text_id=self.name + option, text=option, position=(position[0] + self.option_width // 2, position[1]), alignment=('r', 'c'),
-                                                    shadow_offset='mouse', size=self.data['button_size'], font=self.data['button_font'], display_layer='menu', menu_state=menu_name, interactable=True)
+                                                    shadow_offset='mouse', size=self.data['button_size'], font=self.data['button_font'], display_layer='ui', menu_state=menu_name, interactable=True)
                     self.option_centres.append(self.main.text_handler.text_elements[self.menu_name][self.name + option].rect.center)
         self.offset = [0, 0]
         self.offset_step = 5

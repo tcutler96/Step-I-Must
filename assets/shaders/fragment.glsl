@@ -97,27 +97,29 @@ float gaussian(vec2 i, float sigma) {
 }
 
 vec4 blur(sampler2D display_layer, float effect_data[effect_data_length]) {
-    vec4 colour = vec4(0.0);
-    float sigma = effect_data[effect_current] * 0.25;
-    float accum = 0.0;
-    vec2 offset;
-    float weight;
-    for (int x = -int(effect_data[effect_current]) / 2; x < int(effect_data[effect_current]) / 2; ++x) {
-        for (int y = -int(effect_data[effect_current]) / 2; y < int(effect_data[effect_current]) / 2; ++y) {
-            offset = vec2(x, y);
-            weight = gaussian(offset, sigma);
-            colour += texture(display_layer, uv + pixel_size * offset).rgba * weight;
-            accum += weight;
-        }
-    }
-    colour /= accum;
+//    vec4 colour = vec4(0.0);
+//    int radius = int(effect_data[effect_current]) / 2;
+//    float sigma = effect_data[effect_current] * 0.25;
+//    float accum = 0.0;
+//    vec2 offset;
+//    float weight;
+//    for (int x = -radius; x < radius; ++x) {
+//        for (int y = -radius; y < radius; ++y) {
+//            offset = vec2(x, y);
+//            weight = gaussian(offset, sigma);
+//            colour += texture(display_layer, uv + pixel_size * offset).rgba * weight;
+//            accum += weight;
+//        }
+//    }
+//    colour /= accum;
+    vec4 colour = texture(display_layer, uv);
     return colour;
 }
 
 vec4 pixelate(sampler2D display_layer, float effect_data[effect_data_length]) {
-    float pixel_width = effect_data[effect_current] * pixel_size[0];
-    float pixel_height = effect_data[effect_current_2] * pixel_size[1];
-    vec4 colour = texture(display_layer, vec2(pixel_width * (floor(uv.x / pixel_width) + 0.5), pixel_height * (floor(uv.y / pixel_height) + 0.5)));
+    float pixelate_size = effect_data[effect_current] * pixel_size[1];
+    vec4 colour = texture(display_layer, vec2(pixelate_size * (floor(uv.x / pixelate_size) + 0.5), pixelate_size * (floor(uv.y / pixelate_size) + 0.5)));
+    colour.rgb *= 1.0 - 0.75 * effect_data[effect_scale];
     return colour;
 }
 
@@ -134,9 +136,9 @@ vec4 shockwave(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec2 direction = uv - vec2(effect_data[4], effect_data[5]) / resolution;
     float magnitude = length(direction * aspect_ratio);
 
-    float map_r = get_map(magnitude, effect_data[effect_scale] + 0.02, effect_data);
+    float map_r = get_map(magnitude, effect_data[effect_scale] + 2, effect_data);
     float map_g = get_map(magnitude, effect_data[effect_scale], effect_data);
-    float map_b = get_map(magnitude, effect_data[effect_scale] - 0.02, effect_data);
+    float map_b = get_map(magnitude, effect_data[effect_scale] - 2, effect_data);
 
     vec2 displacement_r = normalize(direction) * effect_data[6] * map_r;
     vec2 displacement_g = normalize(direction) * effect_data[6] * map_g;

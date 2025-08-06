@@ -1,11 +1,11 @@
 from scripts.text_element import TextElement
-from math import sin, cos
+from math import sin, cos, pi
 
 
 class TextHandler:
     def __init__(self, main):
         self.main = main
-        self.text_bounce = 0
+        self.text_bounce = 0  # ui elements: 3, level elements: -3
         self.shadow_sway = 0
         self.sign_lines = {}
         self.text_elements = {}
@@ -24,15 +24,13 @@ class TextHandler:
         self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', display_layer='level_main')
         self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', display_layer='level_main')
         self.add_text(text_group='game', text_id='warp?', text=f"{{*<¡>*}} press 'e' to warp {{*<¡>*}}", position='top', display_layer='level_main', style='itallic')
-        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_up=8.5, alpha_down=8.5, bounce=False, alignment=('c', 'c'), size=14, display_layer='level_map')
+        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, display_layer='level_map')
         self.add_text(text_group='map', text_id='toggle', text="Toggle map: 'tab'", position='bottom_left', alpha_up=8.5, alpha_down=8.5,
                       alignment=('l', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='level_map')
         self.add_text(text_group='map', text_id='switch', text="Switch map: 'space'", position='bottom_right', alpha_up=8.5, alpha_down=8.5,
                       alignment=('r', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='level_map')
         for steps in range(-9, 10):
             self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='level_main')
-        for collectable in self.main.assets.data['game']['collectables']:
-            self.add_text(text_group='collectables', text_id=collectable, text=f'{collectable[:-1]} collected!', position='top', display_layer='level_main')
         self.add_sign_text()
         self.game_state_text_groups = {'game': ['tutorial', 'cutscene', 'game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay', 'developer'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],
@@ -56,6 +54,9 @@ class TextHandler:
         # alligned_hovered_position = (alligned_position[0] - outline_difference, alligned_position[1] - outline_difference)
         if text_group not in self.text_elements:
             self.text_elements[text_group] = {}
+        if display_layer not in self.main.display.display_layers:
+            print(f"'{display_layer}' display layer not found for text {text_group}, {text_id}, {text}...")
+            display_layer = 'ui'
         self.text_elements[text_group][text_id] = TextElement(main=self.main, text=text, surface=surface, position=alligned_position, bounce=bounce, alpha_up=alpha_up, alpha_down=alpha_down, shadow_offset=shadow_offset,
                                                               display_layer=display_layer, menu_state=menu_state, active=active, delay=delay * self.main.fps, duration=duration * self.main.fps,
                                                               interactable=interactable,  hovered_surface=hovered_surface, hovered_position=alligned_position, hovered_shadow_offset=hovered_shadow_offset)
@@ -100,7 +101,7 @@ class TextHandler:
                 self.text_elements[text_group][text_id].deactivate()
 
     def update(self, mouse_position):
-        self.text_bounce = sin(1.5 * self.main.runtime_seconds)
+        self.text_bounce = sin(2 * self.main.runtime_seconds)
         self.shadow_sway = (2 * sin(2 * self.main.runtime_seconds), cos(self.main.runtime_seconds))
         for text_group, text_ids in self.text_elements.items():
             for text_id, text_element in text_ids.items():

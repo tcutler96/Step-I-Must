@@ -31,17 +31,20 @@ class Toolbar:
                 button_position = (self.main.display.width - 24 - (24 * (button_count + 1) if button_type == 'top' else 0), 8 + (24 * (button_count + 1) if button_type == 'right' else 0))
                 buttons[button_name] = {'position': button_position, 'sprite': self.main.assets.images['toolbar'][self.button_choices[button_type][button_name]],
                                         'rect': pg.Rect(button_position[0] - 4, button_position[1] - 4, 24, 24)}
-                self.main.text_handler.add_text(text_group='toolbar', text_id=button_name, text=button_name, position=self.text_position, alignment=('c', 'c'), size=self.text_size, max_width=self.max_width)
+                self.main.text_handler.add_text(text_group='toolbar', text_id=button_name, text=button_name, position=self.text_position, alignment=('c', 'c'),
+                                                size=self.text_size, max_width=self.max_width, display_layer='ui')
         toolbar['buttons'] = buttons
         elements = {}
         for element_type in self.element_choices:
             for name_count, element_name in enumerate(self.element_choices[element_type]):
                 if element_name == 'no object':
                     element_data = {'position': [(32, 8)], 'rects': [pg.Rect(28, 4, 24, 24)], 'states': ['no object'], 'num_choices': 1, 'element_type': 'object'}
-                    self.main.text_handler.add_text(text_group='toolbar', text_id='no object' + 'no object', text='no object', position=self.text_position, alignment=('c', 'c'), size=self.text_size, max_width=self.max_width)
+                    self.main.text_handler.add_text(text_group='toolbar', text_id='no object' + 'no object', text='no object', position=self.text_position, alignment=('c', 'c'),
+                                                    size=self.text_size, max_width=self.max_width, display_layer='ui')
                 elif element_name == 'no tile':
                     element_data = {'position': [(8, 32)], 'rects': [pg.Rect(4, 28, 24, 24)], 'states': ['no tile'], 'num_choices': 1, 'element_type': 'tile'}
-                    self.main.text_handler.add_text(text_group='toolbar', text_id='no tile' + 'no tile', text='no tile', position=self.text_position, alignment=('c', 'c'), size=self.text_size, max_width=self.max_width)
+                    self.main.text_handler.add_text(text_group='toolbar', text_id='no tile' + 'no tile', text='no tile', position=self.text_position, alignment=('c', 'c'),
+                                                    size=self.text_size, max_width=self.max_width, display_layer='ui')
                 else:
                     element_data = {'position': [], 'rects': [], 'states': []}
                     for state_count, element_state in enumerate(self.element_choices[element_type][element_name]):
@@ -51,7 +54,7 @@ class Toolbar:
                         element_data['rects'].append(pg.Rect(sprite_position[0] - 4, sprite_position[1] - 4, 24, 24))
                         element_data['states'].append(element_state)
                         self.main.text_handler.add_text(text_group='toolbar', text_id=element_name + element_state, text=element_name + (' - ' + element_state if element_state != element_name else ''),
-                                                        position=self.text_position, alignment=('c', 'c'), size=self.text_size, max_width=self.max_width)
+                                                        position=self.text_position, alignment=('c', 'c'), size=self.text_size, max_width=self.max_width, display_layer='ui')
                     element_data['num_choices'] = len(element_data['position'])
                     element_data['element_type'] = element_type[:-1]
                     if element_data['num_choices'] > 1:

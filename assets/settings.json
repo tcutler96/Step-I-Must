@@ -17,7 +17,7 @@
   },
   "gameplay": {
     "hold_to_move": 5,
-    "hold_to_undo": 15,
+    "hold_to_undo": 5,
     "movement": 0.25
   },
   "menus": {
@@ -236,9 +236,9 @@
         "button",
         "option",
         [
-          "Slow",
           "Fast",
-          "Disabled"
+          "Disabled",
+          "Slow"
         ]
       ],
       "Movement": [

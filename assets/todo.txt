@@ -63,7 +63,8 @@
 # we could add more display layers back in, as hooleys crash was not caused by too manu uniforms...
 # add way in game to reset game data so that the only menu option is new game, add to develop menu...
 # we need to manually save game data when teleporters are updated, maybe add a way to just save certain bits of data (ie game, teleporters)...
-playing a level from the level editor and then opening the game menu shows button as 'main menu' but it actually takes you back to the level editor, can we change the button text easily?
+# playing a level from the level editor and then opening the game menu shows button as 'main menu' but it actually takes you back to the level editor, can we change the button text easily?
+# only draw game reset text and apply grey effect after cutscene has finished?
 
 
 

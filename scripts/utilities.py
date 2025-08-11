@@ -30,13 +30,20 @@ class Utilities:
     def get_opposite_movement(self, movement):
         return movement[0] * -1, movement[1] * -1
 
-    def get_text_bounce(self, bounce=0):
-        if bounce:
-            return self.main.text_handler.text_bounce * bounce
+    def get_text_bounce(self, bounce=3):
+        return self.main.text_handler.text_bounce * bounce
+
+    def get_collectable_types(self, part='all'):
+        if part == 'part_one':
+            return ['silver keys', 'silver gems']
+        elif part == 'part_two':
+            return ['gold keys', 'gold gems', 'cheeses']
+        elif part == 'all':
+            return ['silver keys', 'silver gems', 'gold keys', 'gold gems', 'cheeses']
 
     def check_collectable(self, collectable_type, count=True):
-        if collectable_type == 'all':
-            collectable_type = list(self.main.assets.data['game']['collectables'])
+        if collectable_type in ['part_one', 'part_two', 'all']:
+            collectable_type = self.get_collectable_types(part=collectable_type)
         elif not isinstance(collectable_type, list):
             collectable_type = [collectable_type]
         collectable_count = 0

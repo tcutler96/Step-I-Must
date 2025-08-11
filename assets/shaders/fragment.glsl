@@ -117,9 +117,17 @@ vec4 blur(sampler2D display_layer, float effect_data[effect_data_length]) {
 }
 
 vec4 pixelate(sampler2D display_layer, float effect_data[effect_data_length]) {
-    float pixelate_size = effect_data[effect_current] * pixel_size[1];
-    vec4 colour = texture(display_layer, vec2(pixelate_size * (floor(uv.x / pixelate_size) + 0.5), pixelate_size * (floor(uv.y / pixelate_size) + 0.5)));
-    colour.rgb *= 1.0 - 0.75 * effect_data[effect_scale];
+    float pixelate_size = int(effect_data[effect_current]) * pixel_size[0];
+    vec2 centre = pixelate_size * (floor(uv / pixelate_size) + 0.5);
+    vec2 half_pixelate_size = pixelate_size * vec2(0.5);
+
+    vec4 colour = 0.4 * texture(display_layer, centre);
+    colour += 0.15 * texture(display_layer, centre + vec2(-half_pixelate_size.x, -half_pixelate_size.y));
+    colour += 0.15 * texture(display_layer, centre + vec2(half_pixelate_size.x, -half_pixelate_size.y));
+    colour += 0.15 * texture(display_layer, centre + vec2(half_pixelate_size.x, half_pixelate_size.y));
+    colour += 0.15 * texture(display_layer, centre + vec2(-half_pixelate_size.x, half_pixelate_size.y));
+
+    colour.rgb *= 1.0 - 0.5 * effect_data[effect_scale];
     return colour;
 }
 

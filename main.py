@@ -13,9 +13,9 @@ from game_states.game import Game
 from game_states.level_editor import LevelEditor
 import pygame as pg
 import cProfile
+import asyncio
 import sys
 import os
-import asyncio
 
 
 class Main:
@@ -57,7 +57,7 @@ class Main:
                 previous_game_state = self.game_state
                 self.game_state = game_state
                 if previous_game_state == 'main_menu' and self.game_state == 'game' and 'New Game' not in self.menu_states['title_screen'].menu:
-                    self.menu_states['title_screen'] = Menu(main=self, menu_name='title_screen', menu_data=self.assets.settings['menus']['title_screen'])
+                    self.update_menu(menu='title_screen')
                 self.game_states[game_state].start_up(previous_game_state=previous_game_state)
 
     def change_menu_state(self, menu_state=None):
@@ -67,16 +67,23 @@ class Main:
                 if self.menu_state in self.menu_states:
                     self.menu_states[self.menu_state].start_up()
 
-    def update_choose_level_menu(self):
-        self.assets.update_choose_level_menu()
-        self.menu_states['choose_level'] = Menu(main=self, menu_name='choose_level', menu_data=self.assets.settings['menus']['choose_level'])
+    def update_menu(self, menu=None):
+        if menu in self.menu_states:
+            self.assets.update_menu(menu=menu)
+            self.menu_states[menu] = Menu(main=self, menu_name=menu, menu_data=self.assets.settings['menus'][menu])
 
-    async def main(self):
+    def main(self):
         while True:
             self.update()
             self.draw()
             self.clock.tick(self.fps)
-            await asyncio.sleep(0)
+
+    # async def main(self):
+    #     while True:
+    #         self.update()
+    #         self.draw()
+    #         self.clock.tick(self.fps)
+    #         await asyncio.sleep(0)
 
     def update_game_of_life(self):
         if self.shaders.background_effect == 'gol':
@@ -149,5 +156,5 @@ if __name__ == '__main__':
     if sys.version_info[0:3] != (3, 13, 5):
         raise Exception('Python version 3.13.5 required')
     # cProfile.run('Main().main()', sort='tottime')
-    # Main().main()
-    asyncio.run(Main().main())
+    # asyncio.run(Main().main())
+    Main().main()

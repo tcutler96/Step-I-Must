@@ -16,10 +16,7 @@ class Assets:
         self.shaders = self.load_shaders()
         self.data = self.load_data()
         self.settings = self.load_settings()
-        # self.settings = {'video': {'background': None, 'button_prompt': True, 'cursor_type': 'sprite', 'hrt_shader': True, 'particles': True, 'resolution': 1, 'screen_shake': True, 'shader': True},
-        #                  'audio': {'master_volume': 1.0, 'music_volume': 1.0, 'sound_volume': 1.0},
-        #                  'gameplay': {'hold_to_move': 5, 'hold_to_undo': 5}}
-        self.update_choose_level_menu()
+        self.update_menu(menu='choose_level')
         self.music_themes = {'splash': None, 'game': 'game', 'level_editor': 'main_menu', 'main_menu': 'main_menu', 'quit': None}
         self.colours = {'whiteish': (230, 230, 230),
                         'blackish': (25, 25, 25),
@@ -206,17 +203,18 @@ class Assets:
                 json.dump(obj=settings, fp=file, indent=2)
 
     def reset_game_data(self, clear=False):
-        self.data['game'] = {'level': '(0, 0)' if not clear else None, 'respawn': [[[12, 2]], [[12, 2]], [False]], 'part_one': False, 'part_two': False, 'part_one_percent': 0, 'part_two_percent': 0, 'overall_percent': 0,
+        self.data['game'] = {'level': '(0, 0)' if not clear else None, 'respawn': [[[12, 2]], [[12, 2]], [False]],
                              'collectables': {'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []}, 'discovered_levels': ['(0, 0)'], 'active_portals': []}
         self.save_data()
 
-    def update_choose_level_menu(self):
-        self.settings['menus']['choose_level'] = {'Choose Level': 'title', 'empty': None, 'filled': None, 'saved': None}
-        for level in list(self.levels.keys()):
-            self.settings['menus']['choose_level'][level] = ['button', 'level', level]
-        if not self.settings['menus']['choose_level']['saved']:
-            del self.settings['menus']['choose_level']['saved']
-        self.settings['menus']['choose_level']['Back'] = ['button', 'game_state', 'main_menu']
+    def update_menu(self, menu=None):
+        if menu == 'choose_level':
+            self.settings['menus']['choose_level'] = {'Choose Level': 'title', 'empty': None, 'filled': None, 'saved': None}
+            for level in list(self.levels.keys()):
+                self.settings['menus']['choose_level'][level] = ['button', 'level', level]
+            if not self.settings['menus']['choose_level']['saved']:
+                del self.settings['menus']['choose_level']['saved']
+            self.settings['menus']['choose_level']['Back'] = ['button', 'game_state', 'main_menu']
 
     def reset_sprite(self, name):
         for state, frame_data in self.main.assets.images['sprites_data'][name]['frame_data'].items():

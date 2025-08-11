@@ -46,8 +46,8 @@
       ],
       "Quit Game": [
         "button",
-        "game_state",
-        "quit"
+        "menu_state",
+        "quit_game"
       ]
     },
     "options": {
@@ -321,8 +321,21 @@
       ],
       "Quit Game": [
         "button",
+        "menu_state",
+        "quit_game"
+      ]
+    },
+    "quit_game": {
+      "Quit Game?": "title",
+      "Yes": [
+        "button",
         "game_state",
         "quit"
+      ],
+      "No": [
+        "button",
+        "menu_state",
+        "title_screen"
       ]
     },
     "new_game": {

@@ -37,7 +37,6 @@ class Menu:
             elif element_name == 'Back':
                 position = (self.menu_centre[0], self.menu_centre[1] + self.data['button_size'] * rows)
             else:
-                # we need to 'add' the new game button to the title screen menu, just reload the entire menu from scracth?
                 if self.menu_name == 'title_screen' and element_name == 'New Game' and not self.main.assets.data['game']['level']:
                     continue
                 position = (self.menu_centre[0] + self.column_positions[columns][column], self.menu_centre[1] + self.data['button_size'] * row)
@@ -104,21 +103,22 @@ class Menu:
                     else:
                         self.main.change_game_state(game_state=selected_element[1])
                 elif selected_element[0] == 'menu_state':
+                    save_settings = False
                     if selected_element[1] == 'options':
-                        if self.main.game_state == 'main_menu':
-                            self.main.menu_states['options'].menu['Back'].button_type = 'menu_state'
-                            self.main.menu_states['options'].menu['Back'].button_response = 'title_screen'
-                        elif self.main.game_state == 'game':
-                            self.main.menu_states['options'].menu['Back'].button_type = 'menu_state'
-                            self.main.menu_states['options'].menu['Back'].button_response = 'game_paused'
+                        self.main.menu_states['options'].menu['Back'].button_response = 'title_screen' if self.main.game_state == 'main_menu' else 'game_paused'
+                        save_settings = True
+                    elif selected_element[1] == 'quit_game':
+                        self.main.menu_states['quit_game'].menu['No'].button_response = 'title_screen' if self.main.game_state == 'main_menu' else 'game_paused'
+                        save_settings = True
+                    if save_settings:
                         self.main.assets.save_settings()
                     if selected_element[1] == 'developer' and not self.main.debug:
-                        pass
+                        self.main.text_handler.activate_text(text_group='main', text_id='debug_required', duration=2)
                     else:
                         self.main.change_menu_state(menu_state=selected_element[1])
                 elif selected_element[0] == 'button':
                     if self.main.menu_state == 'developer' and not self.main.debug:
-                        pass
+                        self.main.text_handler.activate_text(text_group='main', text_id='debug_required', duration=2)
                     else:
                         self.main.text_handler.deactivate_text_group(text_group='main')
                         self.main.text_handler.activate_text(text_group='main', text_id=selected_element[1], duration=2)
@@ -128,6 +128,8 @@ class Menu:
                             self.main.utilities.backup_file(file_name='settings')
                         elif selected_element[1] == 'clear_game_data':
                             self.main.assets.reset_game_data(clear=True)
+                            self.main.update_menu(menu='title_screen')
+                            self.main.change_game_state(game_state='main_menu')
                         elif selected_element[1] == 'restore_data':
                             self.main.utilities.restore_file(file_name='data')
                         elif selected_element[1] == 'restore_settings':

@@ -1,15 +1,16 @@
 from scripts.text_element import TextElement
-from math import sin, cos, pi
+from math import sin, cos
 
 
 class TextHandler:
     def __init__(self, main):
         self.main = main
-        self.text_bounce = 0  # ui elements: 3, level elements: -3
+        self.text_bounce = 0  # menu/ level elements: 3, level ui: -3
         self.shadow_sway = 0
         self.sign_lines = {}
         self.text_elements = {}
         self.add_text(text_group='main', text_id='debug', text='debug mode', position='bottom', colour='purple', size=16)
+        self.add_text(text_group='main', text_id='debug_required', text='debug mode required', position='top')
         self.add_text(text_group='main', text_id='backup_data', text='data backed up', position='top')
         self.add_text(text_group='main', text_id='backup_settings', text='settings backed up', position='top')
         self.add_text(text_group='main', text_id='clear_game_data', text='game data cleared', position='top')
@@ -19,30 +20,26 @@ class TextHandler:
         self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_up=8.5, alpha_down=8.5, size=24, shadow_offset='mouse')
         self.add_text(text_group='splash', text_id='hoolio', text='with hoolio audio', position='centre', alpha_up=8.5, alpha_down=8.5, size=28, shadow_offset='mouse')
         self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_up=8.5, alpha_down=8.5, colour='purple', size=28)
-        self.add_text(text_group='level_editor', text_id='reset', text='level reset', position='bottom_right', alignment=('r', 'c'))
-        self.add_text(text_group='level_editor', text_id='saved', text='level saved', position='bottom_right', alignment=('r', 'c'))
-        self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', display_layer='level_ui')
-        self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', display_layer='level_main')
-        self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', display_layer='level_main')
-        self.add_text(text_group='game', text_id='warp?', text=f"{{*<¡>*}} press 'e' to warp {{*<¡>*}}", position='top', display_layer='level_main', style='itallic')
-        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, display_layer='level_map')
-        self.add_text(text_group='map', text_id='toggle', text="Toggle map: 'tab'", position='bottom_left', alpha_up=8.5, alpha_down=8.5,
-                      alignment=('l', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='level_map')
-        self.add_text(text_group='map', text_id='switch', text="Switch map: 'space'", position='bottom_right', alpha_up=8.5, alpha_down=8.5,
-                      alignment=('r', 'c'), outline_size=1, size=14, interactable=True, hovered_outline_size=2, display_layer='level_map')
-        self.add_text(text_group='map', text_id='move', text='Move: wasd', position=(56, 100), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
-        self.add_text(text_group='map', text_id='move_2', text='Move: arrows', position=(56, 116), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
-        self.add_text(text_group='map', text_id='menu', text='Menu: escape', position=(56, 132), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
-        self.add_text(text_group='map', text_id='toggle_map', text='Toggle map: tab', position=(56, 148), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
-        self.add_text(text_group='map', text_id='undo', text='Undo: z', position=(56, 164), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
-        self.add_text(text_group='map', text_id='redo', text='Redo: y', position=(56, 180), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=112, display_layer='level_map')
-        self.add_text(text_group='map', text_id='switch_map', text='Switch map: space', position=(56, 196), alpha_up=8.5, alpha_down=8.5, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.add_text(text_group='level_editor', text_id='reset', text='level reset', position='bottom_right', bounce=-3, alignment=('r', 'c'))
+        self.add_text(text_group='level_editor', text_id='saved', text='level saved', position='bottom_right', bounce=-3, alignment=('r', 'c'))
+        self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', bounce=-3, display_layer='level_ui')
+        self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', bounce=-3, display_layer='level_main')
+        self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', bounce=-3, display_layer='level_main')
+        self.add_text(text_group='game', text_id='warp?', text=f"{{*<¡>*}} press 'e' to warp {{*<¡>*}}", position='top', bounce=-3, display_layer='level_main', style='itallic')
+        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, style='underline', display_layer='level_map')
         for steps in range(-9, 10):
-            self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', alignment=('l', 'c'), display_layer='level_main')
+            self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', bounce=-3, alignment=('l', 'c'), display_layer='level_main')
         self.add_sign_text()
-        self.game_state_text_groups = {'game': ['tutorial', 'cutscene', 'game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay', 'developer'],
+        self.add_text(text_group='map', text_id='controls', text='Controls', position=(56, 40), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, style='underline', display_layer='level_map')
+        self.add_text(text_group='map', text_id='move', text='Move: wasd | arrows', position=(56, 56), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.add_text(text_group='map', text_id='menu', text='Menu: escape | p', position=(56, 72), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.add_text(text_group='map', text_id='map', text='Map: tab | m', position=(56, 88), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.add_text(text_group='map', text_id='undo', text='Undo: z | 4', position=(56, 104), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.add_text(text_group='map', text_id='redo', text='Redo: c | 6', position=(56, 120), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.add_text(text_group='map', text_id='toggle_map', text='Toggle map: space', position=(56, 136), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.game_state_text_groups = {'game': ['tutorial', 'cutscene', 'game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'audio', 'gameplay', 'developer', 'quit_game'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],
-                                       'main_menu': ['title_screen', 'options', 'video', 'audio', 'gameplay', 'developer', 'new_game', 'are_you_sure', 'choose_level'],
+                                       'main_menu': ['title_screen', 'options', 'video', 'audio', 'gameplay', 'developer', 'quit_game', 'new_game', 'are_you_sure', 'choose_level'],
                                        'splash': ['splash']}
 
     def add_text(self, text_group, text_id, text, position, bounce=3, alpha_up=25.5, alpha_down=25.5, alignment=('c', 'c'), colour='light_green', bg_colour=None, shadow_colour='dark_purple', shadow_offset='sway',
@@ -81,7 +78,7 @@ class TextHandler:
             cell_position = self.main.utilities.position_str_to_tuple(position=sign_position.split(' - ')[-1])
             text_position = (112 + (cell_position[0] + 0.5) * 16, 32 + (cell_position[1] + ((len(lines) + 0.5) if cell_position[1] < 8 else -0.5)) * 16)
             for offset, text in enumerate(reversed(lines)):
-                self.add_text(text_group='signs', text_id=f'{sign_position}_{offset}', text=text, position=(text_position[0], text_position[1] - 16 * offset), size=12, bounce=-3, display_layer='level_main')
+                self.add_text(text_group='signs', text_id=f'{sign_position}_{offset}', text=text, position=(text_position[0], text_position[1] - 16 * offset), size=12, bounce=3, display_layer='level_main')
                 self.sign_lines[sign_position] = offset + 1
 
     def remove_text(self, text_group, text_id):

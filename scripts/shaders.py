@@ -84,6 +84,7 @@ class Shaders:
                         self.shaders[display_layer]['active'] = 0
                     elif not self.shaders[display_layer]['active']:
                         if effect == 'gol':
+                            print(1)
                             self.clear_gol()
                         apply_effect_data = self.default_effect_data.copy() | self.effect_data[effect]['data'] | (effect_data if effect_data else {})
                         apply_effect_data['applied'] = self.effect_data[effect]['index']
@@ -105,7 +106,7 @@ class Shaders:
 
     def update_effect_current(self, effect_data):
         if all(data in effect_data for data in ['current', 'min', 'max']):
-            effect_data['current'] = int(effect_data['min'] + effect_data['scale'] * (effect_data['max'] - effect_data['min']))
+            effect_data['current'] = effect_data['min'] + effect_data['scale'] * (effect_data['max'] - effect_data['min'])
         if all(data in effect_data for data in ['current_2', 'min_2', 'max_2']):
             effect_data['current_2'] = int(effect_data['min_2'] + effect_data['scale'] * (effect_data['max_2'] - effect_data['min_2']))
 
@@ -154,7 +155,7 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('x', 'held'):
-            self.apply_effect(display_layer=['ui', 'level_background', 'level_main', 'level_player'], effect='blur', effect_data={'length': 1})
+            self.apply_effect(display_layer=['ui'], effect='pixelate', effect_data={'length': 1})
             # self.apply_effect(display_layer=['level_player'], effect='test')
         if self.background_effect:  # display flashes upside down when switching to gol...
             self.apply_effect(display_layer=['background'], effect=self.background_effect, effect_data={'length': 0.1})

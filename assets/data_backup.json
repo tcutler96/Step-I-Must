@@ -1,37 +1,38 @@
 {
   "game": {
-    "level": null,
+    "level": "(-2, 2)",
     "respawn": [
       [
         [
-          12,
-          2
+          15,
+          12
         ]
       ],
       [
         [
-          12,
-          2
+          15,
+          12
         ]
       ],
       [
         false
       ]
     ],
-    "part_one": false,
-    "part_two": false,
-    "part_one_percent": 0,
-    "part_two_percent": 0,
-    "overall_percent": 0,
     "collectables": {
-      "silver keys": [],
+      "silver keys": [
+        "(-1, 2) - (3, 12)"
+      ],
       "silver gems": [],
       "gold keys": [],
       "gold gems": [],
       "cheeses": []
     },
     "discovered_levels": [
-      "(0, 0)"
+      "(0, 0)",
+      "(0, 1)",
+      "(0, 2)",
+      "(-1, 2)",
+      "(-2, 2)"
     ],
     "active_portals": []
   },
@@ -638,7 +639,7 @@
           1,
           10
         ],
-        "destination": "(-1, -6) - (10, 2)"
+        "destination": null
       },
       "(-1, -6) - (10, 2)": {
         "position": [
@@ -701,7 +702,7 @@
           3,
           11
         ],
-        "destination": "(-1, -2) - (5, 7)"
+        "destination": null
       },
       "(0, -11) - (3, 1)": {
         "position": [

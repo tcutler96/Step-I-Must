@@ -15,7 +15,7 @@ class MapCell:
         self.collectables = collectables
         self.hovered = False
         self.was_hovered = False
-        self.main.text_handler.add_text(text_group='map', text_id=self.level_name, text=self.level_name, position='top_right', alignment=('r', 'c'), display_layer='level_map')
+        self.main.text_handler.add_text(text_group='map', text_id=self.level_name, text=self.level_name, position='top_right', bounce=-3, alignment=('r', 'c'), display_layer='level_map')
 
     def update_rect(self, offset):
         self.rect = pg.Rect((self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]), (self.cell_size, self.cell_size))
@@ -57,9 +57,9 @@ class MapCell:
                 if collectables:
                     if self.main.debug:
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
-                    elif collectable_type in ['silver keys', 'silver gems'] and self.main.assets.data['game']['part_one']:
+                    elif collectable_type in ['silver keys', 'silver gems'] and self.main.utilities.check_collectable(collectable_type='part_one', count=False):
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
-                    elif collectable_type in ['gold keys', 'gold gems'] and self.main.assets.data['game']['part_two']:
+                    elif collectable_type in ['gold keys', 'gold gems'] and self.main.utilities.check_collectable(collectable_type='part_two', count=False):
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
                     elif collectable_type == 'cheeses' and self.main.utilities.check_collectable(collectable_type='cheese', count=False):
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)

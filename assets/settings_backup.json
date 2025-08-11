@@ -44,10 +44,10 @@
         "menu_state",
         "options"
       ],
-      "Quit": [
+      "Quit Game": [
         "button",
-        "game_state",
-        "quit"
+        "menu_state",
+        "quit_game"
       ]
     },
     "options": {
@@ -304,20 +304,38 @@
         "menu_state",
         null
       ],
-      "Options": [
-        "button",
-        "menu_state",
-        "options"
-      ],
       "Restart Level": [
         "button",
         "level",
         null
       ],
-      "Quit": [
+      "Options": [
+        "button",
+        "menu_state",
+        "options"
+      ],
+      "Main Menu": [
         "button",
         "game_state",
         "menu_menu"
+      ],
+      "Quit Game": [
+        "button",
+        "menu_state",
+        "quit_game"
+      ]
+    },
+    "quit_game": {
+      "Quit Game?": "title",
+      "Yes": [
+        "button",
+        "game_state",
+        "quit"
+      ],
+      "No": [
+        "button",
+        "menu_state",
+        "title_screen"
       ]
     },
     "new_game": {

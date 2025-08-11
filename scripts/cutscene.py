@@ -30,26 +30,19 @@ class Cutscene:
         self.button = self.main.assets.images['other']['button_5']
         self.button_position = (self.main.display.half_width - self.button.get_width() // 2, self.main.display.height - self.bars_max_offset - self.button.get_height() * 1.5)
         self.button_alpha = 0
-        # map text needs to always be shown, that is, press tab to toggle...
-        # automatically open map when we collect first collectable, enable collectable title and percentage text and collectable icons fade in on map, to show all the rest that the player needs to find...
-        # add all controls to left side of map so that it feels more filled out/ complete, show controls one by one as the player progresses through the initial tutorial levels...
-        # switch map text only appears when we first go to second world...
-        # initially, only show 'overall' percentage in first world (when first collectabl collected) but then when we go to second world 'overall' becomes 'world 1' and we see 'world 2' and 'overall' underneathe...
         self.collectable_pause = 2
         self.collectable_timer = 0
         self.collectable_type = None
         self.collectable_position = None
         self.collectable_sprite = None
         self.collectable_sprite_position = None
-
-        # game pause menu, add quit to game menu and quit entire game...
-
+        self.end_response = None
+        self.end_trigger = False
+        
         # intro and movement (0, 0), menu (0, 1), map (0, 2), undo/ redo (-1, 2), collectables (-1, 2)?*, locks/ paths (-2, 2), teleporter (-2, 2)?*, ice (-2, 3),
         # conveyors (-2, 1), blue flags (-4, 2), spikes (-5, 3), player spawner (-6, 2), reviving dead players (-4, 0), statues (-6, 0), splitters (-5, -2)
         # add cutscenes for: collectables, teleporters, moving flags/ respawning at original position, final stretch of first game,
         # intro to second game ('i though we were done, but it seems we are only just beginning', 'i can always return to the first place...')
-        # add a more unique text id for text elements so that we can repeat text in lines...
-        # add sprites for each new game mechanic (ie ice, conveyor, spike, player spawner, blue flag, splitter)
         self.cutscene_data = {'collectables': {'silver keys': [["A silver key, a hopeful chime.", "Yet all it give is more lost time.", "For I am slime, and step I must."],
                                                                ["Each opened lock, a question grows.", "How deep this endless puzzle goes.", "For I am slime, and step I must."]],
                                                'silver gems': [["A silver gem, once left behind.", "Now claimed by me, no longer blind.", "For I am slime, and step I must."],
@@ -112,6 +105,8 @@ class Cutscene:
                 self.text = self.cutscene_data[f'{cutscene_type}s'][cutscene_data['level_name' if cutscene_type == 'level' else 'collectable_type']]
                 self.main.text_handler.add_text(text_group='cutscene', text_id='space', text='space', size=10, alpha_up=self.alpha_step, alpha_down=self.alpha_step, bounce=-3, shadow_colour=None,
                                                 position=(self.main.display.half_width, self.main.display.height - self.bars_max_offset - self.button.get_height()), display_layer='ui')
+                if 'end_response' in cutscene_data:
+                    self.end_response = cutscene_data['end_response']
 
     def update_bars_positions(self):
         self.bars[0].y = -self.bars_max_offset + self.bars_offset
@@ -119,7 +114,6 @@ class Cutscene:
 
     def update_bars(self):
         if self.show_bars:
-            # only draw game reset text and apply grey effect after cutscene has finished?
             self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui'], effect='pixelate', effect_data={'length': 1})
             if not self.bars_offset:
                 self.main.audio.play_sound(name='cutscene_start')
@@ -147,6 +141,8 @@ class Cutscene:
                 self.cutscene_type = None
                 self.button_alpha = 0
                 self.main.text_handler.remove_text_group(text_group='cutscene')
+                if self.end_response:
+                    self.end_trigger = True
 
     def update_text(self):
         if self.show_text:
@@ -212,6 +208,9 @@ class Cutscene:
     def stop_cutscene(self):
         self.active = False
         self.show_bars = False
+        self.bars_offset = 0
+        self.update_bars_positions()
+        self.sprite = None
         self.collectable_timer = 0
         self.collectable_sprite = None
         self.show_text = False

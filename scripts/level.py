@@ -163,7 +163,7 @@ class Level:
         if name not in self.default_levels:
             tilemap_data = self.create_tilemap()
             self.main.assets.levels[name] = tilemap_data
-            self.main.update_choose_level_menu()
+            self.main.update_menu(menu='choose_level')
             with open(os.path.join('assets/levels', f'{name}.json'), 'w') as file_data:
                 json.dump(obj=tilemap_data, fp=file_data, indent=2)
             self.main.text_handler.deactivate_text_group(text_group='level_editor')
@@ -259,11 +259,11 @@ class Level:
         if self.undo_redo_timer:
             self.undo_redo_timer -= 1
         else:
-            if self.main.events.check_key(key='z', action='held'):
+            if self.main.events.check_key(key=['z', '[4]'], action='held'):
                 undo_redo = self.undo()
-            elif self.main.events.check_key(key='y', action='held'):
+            elif self.main.events.check_key(key=['c', '[6]'], action='held'):
                 undo_redo = self.redo()
-        if self.main.events.check_key(key=['z', 'y'], action='unpressed'):
+        if self.main.events.check_key(key=['z', 'c', '[4]', '[6]'], action='unpressed'):
             self.undo_redo_timer = 0
         return undo_redo
 

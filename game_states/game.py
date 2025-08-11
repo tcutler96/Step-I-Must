@@ -8,10 +8,6 @@ from copy import deepcopy
 class Game:
     def __init__(self, main):
         self.main = main
-        # self.main.assets.data['game']['part_one'] = True
-        # self.main.assets.data['game']['part_two'] = True
-        # self.main.assets.data['game']['part_one'] = False
-        # self.main.assets.data['game']['part_two'] = False
         self.cutscene = Cutscene(main=self.main)
         self.level = Level(main=self.main)
         self.tutorials = Tutorial(main=self.main)
@@ -80,7 +76,8 @@ class Game:
             self.map.update_collectables(collectable_type=collectable_type, level_name=self.level.name, position=cell.object_data['object']['original_position'])
             self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': collectable_type,
                                                                                      'collectable_position': (self.level.level_offset[0] + self.level.sprite_size * (cell.position[0] + 0.5),
-                                                                                                              self.level.level_offset[1] + self.level.sprite_size * (cell.position[1] + 0.5))})
+                                                                                                              self.level.level_offset[1] + self.level.sprite_size * (cell.position[1] + 0.5)),
+                                                                                     'end_response': 'map' if len(self.main.assets.data['game']['collectables'][collectable_type]) == 1 else None})
             self.main.assets.save_data()
         levels = self.level.cached_levels
         levels.append({'name': self.level.name, 'level': self.level.level})
@@ -726,28 +723,14 @@ class Game:
         if self.cutscene.update():
             self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
             return True
-        # response = self.cutscene.update()
-        # if response == 'open_map':
-        #     self.main.audio.play_sound(name='map_open')
-        #     self.map.show_map = True
-        #     self.map.show_text = False
-        #     self.map.show_collectables = False
-        # elif response == 'close_map':
-        #     self.main.audio.play_sound(name='map_open')
-        #     self.map.show_map = False
-        #     self.map.show_text = True
-        # elif response == 'map_target_one':
-        #     self.map.set_target(target=1)
-        # elif response == 'map_target_two':
-        #     self.map.set_target(target=2)
-        # elif response == 'show_collectables_one':
-        #     self.main.audio.play_sound(name='collectable')
-        #     self.map.show_collectables = True
-        #     self.main.assets.data['game']['part_one'] = True
-        # elif response == 'show_collectables_two':
-        #     self.main.audio.play_sound(name='collectable')
-        #     self.map.show_collectables = True
-        #     self.main.assets.data['game']['part_two'] = True
+        if self.cutscene.end_trigger:
+            self.cutscene.end_trigger = False
+            if self.cutscene.end_response == 'map':
+                self.main.audio.play_sound(name='map_open')
+                self.map.set_target(target=self.map.get_target(level=self.level.name))
+                self.map.show_map = True
+        # what do we need to return here?
+        
         # return self.cutscene.active_cutscene or self.cutscene.active
 
     def interpolate_blit_position(self, blit_position):
@@ -822,42 +805,10 @@ class Game:
     def update(self, mouse_position):  # refactor this, draw everything all the time now that we have display layers in game and can see them all while menu is open etc...
         # separate into general updates, player updates (which only happen when we have control of the player), etc...
         self.tutorials.update()  # where should this go?
-        if self.main.events.check_key(key='g'):
-            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'silver keys', 'collectable_position': self.main.display.centre})
-        if self.main.events.check_key(key='h'):
-            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'silver gems', 'collectable_position': self.main.display.centre})
-        if self.main.events.check_key(key='j'):
-            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'gold keys', 'collectable_position': self.main.display.centre})
-        if self.main.events.check_key(key='k'):
-            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'gold gems', 'collectable_position': self.main.display.centre})
-        if self.main.events.check_key(key='l'):
-            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'cheeses', 'collectable_position': self.main.display.centre})
         if self.main.events.check_key(key='1'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(0, 0)'})
+            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-5, -2)', 'end_response': 'map'})
         if self.main.events.check_key(key='2'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(0, 1)'})
-        if self.main.events.check_key(key='3'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(0, 2)'})
-        if self.main.events.check_key(key='4'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-1, 2)'})
-        if self.main.events.check_key(key='5'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-2, 2)'})
-        if self.main.events.check_key(key='6'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-2, 3)'})
-        if self.main.events.check_key(key='7'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-2, 1)'})
-        if self.main.events.check_key(key='8'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-4, 2)'})
-        if self.main.events.check_key(key='9'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-5, 3)'})
-        if self.main.events.check_key(key='0'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-6, 2)'})
-        if self.main.events.check_key(key='-'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-4, 0)'})
-        if self.main.events.check_key(key='='):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-6, 0)'})
-        if self.main.events.check_key(key='backspace'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-5, -2)'})
+            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'cheeses', 'collectable_position': self.main.display.centre, 'end_response': 'map'})
 
         if self.main.menu_state:  # we need to update all game aspects (tutorial, map etc) even when the menu is open
             self.main.display.set_cursor(cursor='arrow')

@@ -15,8 +15,9 @@ class Shaders:
         self.textures = self.create_textures()
         self.render_buffer = self.context.renderbuffer(size=self.main.display.size)
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
-        self.apply_shaders = self.main.assets.settings['video']['shaders']
-        self.background_effect = self.main.assets.settings['video']['background']
+        self.apply_shaders = self.main.assets.settings['shaders']['all']
+        self.background_effect = self.main.assets.settings['shaders']['background']
+        self.crt = self.main.assets.settings['shaders']['crt']
         self.effect_data_length = 10
         self.default_effect_data = {'applied': 0, 'active': 0, 'scale': 0, 'length': 1, 'step': 0}
         self.effect_data = {'grey': {}, 'invert': {}, 'blur': {'current': 2, 'min': 2, 'max': 5},
@@ -28,12 +29,13 @@ class Shaders:
         self.missing_display_layers = []
         self.missing_effects = []
         # print("Max fragment uniform components:", self.context.info['GL_MAX_FRAGMENT_UNIFORM_COMPONENTS'])
+
         # crt option in setting should be applied to all layers/ right at the end of the shader steps, after last display layer has been drawn, test if we can apply an effect to every layer...
         # add distortion effect to grey effect that is used when low/ out of steps...
         # add shader options (fancy, simple, disabled), scale effects by some value?
-        # have pixelate effect dull the colours a bit so that the map/ menu stands out more, if we are no longer using blur...
         # when we get colour in fragment shader, add check to see if current pixel is turned on in that display layer, would that improve performance?
         # add darken/ lighten shaders effects...
+        # galaxy shader looks weird on smallest resolution, the stats flicker...
 
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)
@@ -62,9 +64,12 @@ class Shaders:
 
     def load_shaders(self):
         shaders = {display_layer: self.default_effect_data for display_layer in self.main.display.display_layers}
+        # print(shaders)
         for index, (effect, data) in enumerate(self.effect_data.items()):
             self.effect_data[effect] = {'index': index + 1, 'data': data}
             self.set_uniforms(uniforms={f'{effect}_index': index + 1})
+        # self.effect_data['final'] = {'index': index + 1, 'data': {}}
+        # self.set_uniforms(uniforms={'final_index': index + 1})
         return shaders
 
     def clear_gol(self):
@@ -84,7 +89,6 @@ class Shaders:
                         self.shaders[display_layer]['active'] = 0
                     elif not self.shaders[display_layer]['active']:
                         if effect == 'gol':
-                            print(1)
                             self.clear_gol()
                         apply_effect_data = self.default_effect_data.copy() | self.effect_data[effect]['data'] | (effect_data if effect_data else {})
                         apply_effect_data['applied'] = self.effect_data[effect]['index']
@@ -154,9 +158,10 @@ class Shaders:
         return effect_data_uniforms
 
     def update(self, mouse_position):
+        # we would need to bring all elements on the edge of the screen in slightly if we have the crt effect turned on...
         if self.main.events.check_key('x', 'held'):
-            self.apply_effect(display_layer=['ui'], effect='pixelate', effect_data={'length': 1})
-            # self.apply_effect(display_layer=['level_player'], effect='test')
+            # self.apply_effect(display_layer=['ui'], effect='invert', effect_data={'length': 1})
+            self.apply_effect(display_layer=['transition'], effect='test')
         if self.background_effect:  # display flashes upside down when switching to gol...
             self.apply_effect(display_layer=['background'], effect=self.background_effect, effect_data={'length': 0.1})
         self.update_effect_data()
@@ -169,7 +174,7 @@ class Shaders:
     def draw(self, displays):
         for display_layer, display_surface in displays.items():
             self.textures[display_layer].write(data=display_surface.get_view('1'))
-        if self.main.assets.settings['video']['background'] == 'gol':
+        if self.background_effect == 'gol':
             self.frame_buffer.use()
             self.frame_buffer.clear()
             self.render_object.render()

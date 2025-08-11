@@ -5,6 +5,7 @@ class Map:
     def __init__(self, main):
         self.main = main
         self.show_map = False
+        self.map_colour = self.main.assets.settings['video']['map_colour']
         self.cell_size = self.main.sprite_size
         part_one_offset = (304.0, 128.0)
         part_two_offset = (240.0, 400.0)
@@ -256,7 +257,7 @@ class Map:
     def draw(self, displays):
         if self.alpha:
             for map_cell in self.map.values():
-                map_cell.draw(displays=displays, icons=self.icons['icons'], offset=self.offset_dict['current'], alpha=self.alpha)
+                map_cell.draw(displays=displays, map_colour=self.map_colour, alpha=self.alpha, icons=self.icons['icons'], offset=self.offset_dict['current'])
             self.draw_collectables(displays=displays)
         if self.show_map:
             self.draw_controls()

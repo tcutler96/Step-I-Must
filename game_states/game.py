@@ -98,7 +98,7 @@ class Game:
                 difference = lock_data['collectable_amount'] - len(self.main.assets.data['game']['collectables'][collectable_type])
                 if difference > 0:
                     self.main.text_handler.add_text(text_group='locks', text_id=lock, text=f'collect {difference} more {collectable_type[:-1] if difference == 1 else collectable_type}',
-                                                    position='top', display_layer='level_main')
+                                                    position='top', bounce=-3, display_layer='level_main')
         cell.elements['object'] = None
         cell.object_data['object'] = None
         # we sometimes get stuck in moving animation when we collect something...
@@ -241,7 +241,7 @@ class Game:
         elif isinstance(steps, int):
             self.level.steps = steps
         if self.level.steps not in self.main.text_handler.text_elements['steps']:
-            self.main.text_handler.add_text(text_group='steps', text_id=self.level.steps, text=str(self.level.steps), position='top_left', alignment=('l', 'c'), display_layer='level_main')
+            self.main.text_handler.add_text(text_group='steps', text_id=self.level.steps, text=str(self.level.steps), position='top_left', bounce=-3, alignment=('l', 'c'), display_layer='level_main')
 
     def resolve_standing(self, new_level=False):
         if self.check_standing or new_level or self.main.debug:
@@ -792,7 +792,7 @@ class Game:
                 difference = lock_data['collectable_amount'] - len(self.main.assets.data['game']['collectables'][lock_data['collectable_type']])
                 if difference > 0:
                     self.main.text_handler.add_text(text_group='locks', text_id=lock, text=f'collect {difference} more {lock_data['collectable_type'][:-1] 
-                    if difference == 1 else lock_data['collectable_type']}', position='top', display_layer='level_main')
+                    if difference == 1 else lock_data['collectable_type']}', position='top', bounce=-3, display_layer='level_main')
 
     def start_up(self, previous_game_state=None):
         self.main.audio.play_music(music_theme='chill idea')

@@ -65,9 +65,9 @@ class MenuElement:
                             return self.button_type, self.button_response, self.name
                     elif self.name in ['Back', 'Resume', 'No']:
                         if self.main.events.check_key(key=['mouse_3', 'escape'], remove=True):
-                            return self.button_type, self.button_response
+                            return self.button_type, self.button_response, self.name
                         elif self.main.events.check_key(key='p', remove=True) and self.menu_name == 'game_paused':
-                            return self.button_type, self.button_response
+                            return self.button_type, self.button_response, self.name
 
     def draw(self, displays, offset):
         if self.sprite:

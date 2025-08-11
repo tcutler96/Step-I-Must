@@ -42,7 +42,6 @@ uniform float galaxy_index;
 uniform float gol_index;
 uniform float test_index;
 
-const float pi = atan(1.0) * 4.0;
 const vec4 on_colour = vec4(0.96, 0.95, 0.76, 1.0);
 const vec4 off_colour = vec4(0.19, 0.16, 0.24, 1.0);
 
@@ -92,26 +91,7 @@ vec4 invert(sampler2D display_layer, float effect_data[effect_data_length]) {
     return colour;
 }
 
-float gaussian(vec2 i, float sigma) {
-    return 1.0 / (2.0 * pi * pow(sigma, 2)) * exp(-((pow(i.x, 2) + pow(i.y, 2)) / (2.0 * pow(sigma, 2))));
-}
-
 vec4 blur(sampler2D display_layer, float effect_data[effect_data_length]) {
-//    vec4 colour = vec4(0.0);
-//    int radius = int(effect_data[effect_current]) / 2;
-//    float sigma = effect_data[effect_current] * 0.25;
-//    float accum = 0.0;
-//    vec2 offset;
-//    float weight;
-//    for (int x = -radius; x < radius; ++x) {
-//        for (int y = -radius; y < radius; ++y) {
-//            offset = vec2(x, y);
-//            weight = gaussian(offset, sigma);
-//            colour += texture(display_layer, uv + pixel_size * offset).rgba * weight;
-//            accum += weight;
-//        }
-//    }
-//    colour /= accum;
     vec4 colour = texture(display_layer, uv);
     return colour;
 }
@@ -234,6 +214,29 @@ const mat4 THRESHOLD_MATRIX = mat4(
 		vec4(4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0),
 		vec4(16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0));
 
+vec2 curvature = vec2(7.5);
+float opacity = 0.5;
+float gamma = 2.2;
+vec2 vignette_width = vec2(15.0);
+
+vec2 curve_remap(vec2 uv) {
+    uv = vec2(2.0) * uv - vec2(1.0);
+    vec2 offset = abs(uv.yx) / curvature;
+    uv = uv + uv * offset * offset;
+    uv = uv * 0.5 + 0.5;
+    return uv;
+}
+
+vec4 scanline_intensity(float uv, float scale) {
+    float intensity = sin(uv * scale * 3.1415926 * 2.0);
+    intensity = ((0.5 * intensity) + 0.5) * 0.9 + 0.1;
+    return vec4(vec3(pow(intensity, opacity)), 1.0);
+}
+
+vec4 gamma_correction(vec4 colour) {
+    return vec4(pow(colour.rgb, vec3(1.0 / gamma)), 1.0);
+}
+
 vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
 //    vec4 colour = texture(display_layer, vec2(fract(uv.x * 4), fract(uv.y * 3)));  // tile effect
 
@@ -256,13 +259,25 @@ vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
 //	colour *= (1.0 - amount * 0.5);
 
 //     apply chromatic abertation to the player when we are low on steps, needs to effect the pixels off the player...
-    float cut_off = 0.75;
-    float v = abs(sin(0.1 + time));
-//    float v = texture(noise, uv * time).r;
-    vec2 offset = v < cut_off ? vec2(0.0) : vec2(pow((v - cut_off) * 1 / (1.0 - cut_off), 2) * 0.005);
-	vec4 colour = vec4(texture(display_layer, uv - offset * 2).r, texture(display_layer, uv).g, texture(display_layer, uv + offset * 2).b, texture(display_layer, uv).a);
+//    float cut_off = 0.75;
+//    float v = abs(sin(0.1 + time));
+////    float v = texture(noise, uv * time).r;
+//    vec2 offset = v < cut_off ? vec2(0.0) : vec2(pow((v - cut_off) * 1 / (1.0 - cut_off), 2) * 0.005);
+//	vec4 colour = vec4(texture(display_layer, uv - offset * 2).r, texture(display_layer, uv).g, texture(display_layer, uv + offset * 2).b, texture(display_layer, uv).a);
 
 //    vec4 colour = texture(display_layer, xy);
+
+    vec4 colour = texture(display_layer, uv);
+//    vec2 new_uv = curve_remap(uv);  // crt effect
+//    if (new_uv.x > 1.0 || new_uv.x < 0.0 || new_uv.y > 1.0 || new_uv.y < 0.0) {
+//        colour = vec4(0.09, 0.05, 0.07, 1.0);}
+////        } else {
+    vec2 vignette_uv = vec2(2.0) * uv - vec2(1.0);
+    vec2 vignette = (vignette_width + 5 * sin(time)) / resolution.xy;
+    vignette = smoothstep(vec2(0.0), vignette, 1.0 - abs(vignette_uv));
+    colour.g *= (sin(uv.y * resolution.y * 2.0) + 1.0) * 0.15 + 1.0;
+    colour.rb *= (cos(uv.y * resolution.y * 2.0) + 1.0) * 0.135 + 1.0;
+    colour *= vignette.x * vignette.y;
 
     return colour;
 }
@@ -310,7 +325,22 @@ void main() {
         out_colour = get_colour(ui_display, ui_effect, out_colour);
         out_colour = get_colour(transition_display, transition_effect, out_colour);
 
-//        out_colour = get_colour(final_display, final_effect, out_colour);
-//        out_colour.rgb = vec3(out_colour.r * 0.2126 + out_colour.g * 0.7152 + out_colour.b * 0.0722);
+        // we cant just apply crt to transition layer if we want it to effect everything, as the transition layer is empty most of the time...
+        // we cant effect the screen pixels with the curve effect as we have already processed the individual display layers...
+        vec2 new_uv = curve_remap(uv);  // crt effect
+        if (new_uv.x > 1.0 || new_uv.x < 0.0 || new_uv.y > 1.0 || new_uv.y < 0.0) {
+            out_colour = vec4(0.09, 0.05, 0.07, 1.0);
+        } else {
+            // add shader option for crt type/ disabled...
+            out_colour.g *= (sin(new_uv.y * resolution.y * 2.0) + 1.0) * 0.1 + 1.0;
+            out_colour.rb *= (cos(new_uv.y * resolution.y * 2.0) + 1.0) * 0.1 + 1.0;
+//            out_colour *= scanline_intensity(new_uv.y, resolution.y * 5);
+//            out_colour = gamma_correction(out_colour);
+            // add shader option for vignette
+            vec2 vignette_uv = vec2(2.0) * new_uv - vec2(1.0);
+            vec2 vignette = (vignette_width + 5.0 * sin(time)) / resolution.xy;
+            vignette = smoothstep(vec2(0.0), vignette, 1.0 - abs(vignette_uv));
+            out_colour *= vignette.x * vignette.y;
+        }
     }
 }

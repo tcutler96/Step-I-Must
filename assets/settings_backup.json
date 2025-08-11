@@ -1,14 +1,15 @@
 {
   "video": {
-    "background": "galaxy",
-    "button_prompt": false,
     "cursor_type": "sprite",
-    "hrt_shader": false,
     "map_colour": "green",
     "particles": false,
     "resolution": 3,
-    "screen_shake": true,
-    "shaders": true
+    "screen_shake": true
+  },
+  "shaders": {
+    "all": true,
+    "background": "gol",
+    "crt": false
   },
   "audio": {
     "master_volume": 0.2,
@@ -16,10 +17,10 @@
     "sound_volume": 0.5
   },
   "gameplay": {
+    "cutscene_speed": 1,
     "hold_to_move": 5,
     "hold_to_undo": 5,
-    "movement_speed": 0.25,
-    "cutscene_speed": 1
+    "movement_speed": 0.25
   },
   "menus": {
     "title_screen": {
@@ -80,37 +81,12 @@
     },
     "video": {
       "Video": "title",
-      "Background": [
-        "button",
-        "option",
-        [
-          "Galaxy",
-          "Game of Life",
-          "Disabled"
-        ]
-      ],
-      "Button Prompt": [
-        "button",
-        "option",
-        [
-          "Disabled",
-          "Enabled"
-        ]
-      ],
       "Cursor Type": [
         "button",
         "option",
         [
           "Sprite",
           "System"
-        ]
-      ],
-      "HRT Shader": [
-        "button",
-        "option",
-        [
-          "Disabled",
-          "Enabled"
         ]
       ],
       "Map Colour": [
@@ -151,16 +127,46 @@
       ],
       "Shaders": [
         "button",
+        "menu_state",
+        "shaders"
+      ],
+      "Back": [
+        "button",
+        "menu_state",
+        "options"
+      ]
+    },
+    "shaders": {
+      "Shaders": "title",
+      "All": [
+        "button",
         "option",
         [
           "Enabled",
           "Disabled"
         ]
       ],
+      "Background": [
+        "button",
+        "option",
+        [
+          "Game of Life",
+          "Disabled",
+          "Galaxy"
+        ]
+      ],
+      "CRT": [
+        "button",
+        "option",
+        [
+          "Disabled",
+          "Enabled"
+        ]
+      ],
       "Back": [
         "button",
         "menu_state",
-        "options"
+        "video"
       ]
     },
     "audio": {

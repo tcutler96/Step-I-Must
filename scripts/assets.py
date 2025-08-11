@@ -33,13 +33,13 @@ class Assets:
                         'light_green': (142, 184, 158),
                         'bright_green': (127, 255, 127)}
         self.settings_changed = False
-        self.option_to_setting = {'video': {'background': {'game_of_life': 'gol'}, 'button_prompt': {}, 'hrt_shader': {}, 'particles': {},
-                                            'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4}, 'screen_shake': {}, 'shaders': {}},
-                                 'audio': {'master_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1},
-                                           'music_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1},
-                                           'sound_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1}},
-                                 'gameplay': {'cutscene_speed': {'slow': 0, 'fast': 1}, 'hold_to_move': {'disabled': -1, 'slow': 15, 'fast': 5},
-                                              'hold_to_undo': {'disabled': -1, 'slow': 15, 'fast': 5}, 'movement_speed': {'slow': 0.125, 'fast': 0.25}}}
+        self.option_to_setting = {'video': {'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4}},
+                                  'shaders': {'background': {'game_of_life': 'gol'}, 'crt': {'type_i': 1, 'type_ii': 2}},
+                                  'audio': {'master_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1},
+                                            'music_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1},
+                                            'sound_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1}},
+                                  'gameplay': {'cutscene_speed': {'slow': 0, 'fast': 1}, 'hold_to_move': {'disabled': -1, 'slow': 15, 'fast': 5},
+                                               'hold_to_undo': {'disabled': -1, 'slow': 15, 'fast': 5}, 'movement_speed': {'slow': 0.125, 'fast': 0.25}}}
 
     def post_load(self):
         self.images = self.load_images()
@@ -157,24 +157,24 @@ class Assets:
             option = False
         self.settings[group][name] = option
         if group == 'video':
-            if name == 'background':
-                self.main.shaders.background_effect = option
-            elif name == 'button_prompt':
-                # self.main.game_states['game'].show_button_prompt = option
-                pass
-            elif name == 'cursor_type':
+            if name == 'cursor_type':
                 self.main.display.cursor.cursor_type = option
-            elif name == 'hrt_shader':
-                # self.main.shaders.hrt_shader = option
-                pass
+            elif name == 'map_colour':
+                self.main.game_states['game'].map.map_colour = option
             elif name == 'particles':  # reference main/ particle handler...
                 pass
             elif name == 'resolution':
                 return self.main.display.change_resolution(scale_factor=option)
             elif name == 'screen_shake':  # reference game class
                 pass
-            elif name == 'shaders':
+        elif group == 'shaders':
+            self.main.audio.change_volume(audio_type=name)
+            if name == 'all':
                 self.main.shaders.apply_shaders = option
+            elif name == 'background':
+                self.main.shaders.background_effect = option
+            elif name == 'crt':
+                self.main.shaders.crt = option
         elif group == 'audio':
             self.main.audio.change_volume(audio_type=name)
         elif group == 'gameplay':

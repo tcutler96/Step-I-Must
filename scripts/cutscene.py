@@ -42,7 +42,7 @@ class Cutscene:
         # intro and movement (0, 0), menu (0, 1), map (0, 2), undo/ redo (-1, 2), collectables (-1, 2)?*, locks/ paths (-2, 2), teleporter (-2, 2)?*, ice (-2, 3),
         # conveyors (-2, 1), blue flags (-4, 2), spikes (-5, 3), player spawner (-6, 2), reviving dead players (-4, 0), statues (-6, 0), splitters (-5, -2)
         # add cutscenes for: collectables, teleporters, moving flags/ respawning at original position, final stretch of first game,
-        # intro to second game ('i though we were done, but it seems we are only just beginning', 'i can always return to the first place...')
+        # intro to second game ('i though we were done, but it seems we are only just beginning', 'i can always return to the first place by toggling the map...')
         self.cutscene_data = {'collectables': {'silver keys': [["A silver key, a hopeful chime.", "Yet all it give is more lost time.", "For I am slime, and step I must."],
                                                                ["Each opened lock, a question grows.", "How deep this endless puzzle goes.", "For I am slime, and step I must."]],
                                                'silver gems': [["A silver gem, once left behind.", "Now claimed by me, no longer blind.", "For I am slime, and step I must."],

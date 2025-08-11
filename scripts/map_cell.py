@@ -40,11 +40,11 @@ class MapCell:
             sprite.set_alpha(alpha)
         displays['level_map'].blit(source=sprite, dest=(self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]))
 
-    def draw(self, displays, icons, offset, alpha):
+    def draw(self, displays, map_colour, alpha, icons, offset):
         if self.rect.colliderect(self.main.display.rect):
             if self.discovered or self.main.debug:
-                if self.main.assets.settings['video']['map_colour']:
-                    pg.draw.rect(surface=displays['level_map'], color=self.main.utilities.get_colour(colour=self.main.assets.settings['video']['map_colour'], alpha=alpha), rect=self.rect)
+                if map_colour:
+                    pg.draw.rect(surface=displays['level_map'], color=self.main.utilities.get_colour(colour=map_colour, alpha=alpha), rect=self.rect)
                 if self.hovered and alpha == 255:
                     self.main.text_handler.activate_text(text_group='map', text_id=self.level_name)
                     pg.draw.rect(surface=displays['level_map'], color=self.main.utilities.get_colour(colour='cream', alpha=alpha), rect=self.rect)

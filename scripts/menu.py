@@ -103,14 +103,11 @@ class Menu:
                     else:
                         self.main.change_game_state(game_state=selected_element[1])
                 elif selected_element[0] == 'menu_state':
-                    save_settings = False
-                    if selected_element[1] == 'options':
+                    if selected_element[2] == 'Options':
                         self.main.menu_states['options'].menu['Back'].button_response = 'title_screen' if self.main.game_state == 'main_menu' else 'game_paused'
-                        save_settings = True
-                    elif selected_element[1] == 'quit_game':
+                    elif selected_element[2] == 'Quit Game':
                         self.main.menu_states['quit_game'].menu['No'].button_response = 'title_screen' if self.main.game_state == 'main_menu' else 'game_paused'
-                        save_settings = True
-                    if save_settings:
+                    elif selected_element[2] == 'Back':
                         self.main.assets.save_settings()
                     if selected_element[1] == 'developer' and not self.main.debug:
                         self.main.text_handler.activate_text(text_group='main', text_id='debug_required', duration=2)

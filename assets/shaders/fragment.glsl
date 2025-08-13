@@ -7,6 +7,8 @@ uniform vec2 pixel_size;
 uniform float time;
 uniform bool mouse_active;
 uniform vec2 mouse_position;
+uniform bool crt;
+uniform bool vignette;
 
 #define effect_applied 0
 #define effect_active 1
@@ -142,61 +144,68 @@ vec4 shockwave(sampler2D display_layer, float effect_data[effect_data_length]) {
 }
 
 float field(vec3 p, float s, int l) {
-	float strength = 7.0 + 0.03 * log(1.e-6 + fract(sin(time) * 4373.11));
-	float accum = s / 4.0;
-	float prev = 0.0;
-	float tw = 0.0;
-	for (int i = 0; i < l; ++i) {
-		float mag = dot(p, p);
-		p = abs(p) / mag + vec3(-0.5, -0.4, -1.5);
-		float w = exp(-float(i) / 7.0);
-		accum += w * exp(-strength * pow(abs(mag - prev), 2.2));
-		tw += w;
-		prev = mag;
-	}
-	return max(0.0, 5.0 * accum / tw - 0.7);
+    float strength = 7.0 + 0.03 * log(1.e-6 + fract(sin(time) * 4373.11));
+    float accum = s / 4.0;
+    float prev = 0.0;
+    float tw = 0.0;
+    for (int i = 0; i < l; ++i) {
+        float mag = dot(p, p);
+        p = abs(p) / mag + vec3(-0.5, -0.4, -1.5);
+        float w = exp(-float(i) / 7.0);
+        accum += w * exp(-strength * pow(abs(mag - prev), 2.2));
+        tw += w;
+        prev = mag;
+    }
+    return max(0.0, 5.0 * accum / tw - 0.7);
 }
 
 vec3 nrand3(vec2 seed) {
-	vec3 a = fract(cos(seed.x * 8.3e-3 + seed.y) * vec3(1.3e5, 4.7e5, 2.9e5));
-	vec3 b = fract(sin(seed.x * 0.3e-3 + seed.y) * vec3(8.1e5, 1.0e5, 0.1e5));
-	vec3 c = mix(a, b, 0.5);
-	return c;
+    vec3 a = fract(cos(seed.x * 8.3e-3 + seed.y) * vec3(1.3e5, 4.7e5, 2.9e5));
+    vec3 b = fract(sin(seed.x * 0.3e-3 + seed.y) * vec3(8.1e5, 1.0e5, 0.1e5));
+    return mix(a, b, 0.5);
 }
 
 vec4 galaxy(sampler2D display_layer) {
-	float freqs[4];
-	freqs[0] = 0.5 + 0.5 * sin(time / 5);
-	freqs[1] = 0.1 + 0.1 * sin(time / 5);
-	freqs[2] = 0.5 + 0.5 * sin(time / 5);
-	freqs[3] = 0.1 + 0.1 * sin(time / 5);
+    float freqs[4];
+    freqs[0] = 0.6 + 0.4 * sin(time / 4.0);
+    freqs[1] = 0.15 + 0.1 * sin(time / 5.0);
+    freqs[2] = 0.55 + 0.45 * sin(time / 6.0);
+    freqs[3] = 0.12 + 0.08 * sin(time / 5.5);
 
-    vec2 uv = 2.0 * uv - 1.0;
-	vec2 uvs = uv * aspect_ratio;
-	vec3 p = vec3(uvs / 4.0, 0) + vec3(1.0, -1.3, 0.0);
-	p += 0.2 * vec3(sin(time / 16.0), sin(time / 12.0),  sin(time / 128.0));
+    vec2 uv_scaled = 2.0 * uv - 1.0;
+    vec2 uvs = uv_scaled * aspect_ratio;
 
-    // Galaxy
-	float t = field(p, freqs[2], 20);
-	float v = (1.0 - exp((abs(uv.x) - 1.0) * 6.0)) * (1.0 - exp((abs(uv.y) - 1.0) * 6.0));
-    // Second Layer
-	vec3 p2 = vec3(uvs / (4.0 + sin(time * 0.11) * 0.2 + 0.2 + sin(time * 0.15) * 0.3 + 0.4), 1.5) + vec3(2.0, -1.3, -1.0);
-	p2 += 0.25 * vec3(sin(time / 16.0), sin(time / 12.0),  sin(time / 128.0));
-	float t2 = field(p2, freqs[3], 15);
-	vec4 c2 = mix(0.4, 1.0, v) * vec4(1.3 * t2 * t2 * t2 ,1.8  * t2 * t2, t2 * freqs[0], t2);
+    vec3 p = vec3(uvs / 4.0, 0) + vec3(1.0, -1.3, 0.0);
+    p += 0.2 * vec3(sin(time / 16.0), sin(time / 12.0), sin(time / 128.0));
+
+    float t = field(p, freqs[2], 20);
+    // Second layer
+    vec3 p2 = vec3(uvs / (4.0 + sin(time * 0.11) * 0.2 + 0.2 + sin(time * 0.15) * 0.3 + 0.4), 1.5) + vec3(2.0, -1.3, -1.0);
+    p2 += 0.25 * vec3(sin(time / 16.0), sin(time / 12.0), sin(time / 128.0));
+    float t2 = field(p2, freqs[3], 15);
+    vec4 c2 = vec4(1.5 * t2 * t2 * t2, 1.9 * t2 * t2, 1.3 * t2 * freqs[0], 1.0);
 
     // Stars
-	vec2 seed = p.xy * 4.0;
-	seed = floor(seed * resolution.x);
-	vec3 rnd = nrand3(seed);
-	vec4 starcolor = vec4(pow(rnd.y, 40.0));
-	// Second Layer
-	vec2 seed2 = p2.xy * 2.0;
-	seed2 = floor(seed2 * resolution.x);
-	vec3 rnd2 = nrand3(seed2);
-	starcolor += vec4(pow(rnd2.y, 40.0));
+    vec2 seed1 = floor(p.xy * 2.0 * resolution.x);
+    vec3 rnd1 = nrand3(seed1);
+    vec4 starcolor = vec4(pow(rnd1.y, 35.0));
+    if (rnd1.x > 0.975) starcolor.rgb *= vec3(1.3, 1.0, 0.8);
+    if (rnd1.x < 0.025) starcolor.rgb *= vec3(0.7, 0.9, 1.4);
 
-	vec4 colour = mix(freqs[3]- 0.3, 1.0, v) * vec4(1.5 * freqs[2] * t * t * t, 1.2 * freqs[1] * t * t, freqs[3] * t, 1.0) + c2 + starcolor;
+    vec2 seed2 = floor(p2.xy * resolution.x);
+    vec3 rnd2 = nrand3(seed2);
+    starcolor += vec4(pow(rnd2.y, 35.0));
+
+    vec4 colour = vec4(
+        1.8 * freqs[2] * t * t * t + c2.r + starcolor.r,
+        1.4 * freqs[1] * t * t + c2.g + starcolor.g,
+        1.2 * freqs[3] * t + c2.b + starcolor.b,
+        1.0
+    );
+
+    // Slight gamma correction
+    colour.rgb = pow(colour.rgb, vec3(0.88));
+
     return colour;
 }
 
@@ -207,39 +216,13 @@ vec4 gol(sampler2D display_layer) {
 
 uniform float influence = 1.0;
 uniform float radius = 0.1;
-
 const mat4 THRESHOLD_MATRIX = mat4(
 		vec4(1.0 / 17.0,  9.0 / 17.0,  3.0 / 17.0, 11.0 / 17.0),
 		vec4(13.0 / 17.0,  5.0 / 17.0, 15.0 / 17.0,  7.0 / 17.0),
 		vec4(4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0),
 		vec4(16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0));
 
-vec2 curvature = vec2(7.5);
-float opacity = 0.5;
-float gamma = 2.2;
-vec2 vignette_width = vec2(15.0);
-
-vec2 curve_remap(vec2 uv) {
-    uv = vec2(2.0) * uv - vec2(1.0);
-    vec2 offset = abs(uv.yx) / curvature;
-    uv = uv + uv * offset * offset;
-    uv = uv * 0.5 + 0.5;
-    return uv;
-}
-
-vec4 scanline_intensity(float uv, float scale) {
-    float intensity = sin(uv * scale * 3.1415926 * 2.0);
-    intensity = ((0.5 * intensity) + 0.5) * 0.9 + 0.1;
-    return vec4(vec3(pow(intensity, opacity)), 1.0);
-}
-
-vec4 gamma_correction(vec4 colour) {
-    return vec4(pow(colour.rgb, vec3(1.0 / gamma)), 1.0);
-}
-
 vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
-//    vec4 colour = texture(display_layer, vec2(fract(uv.x * 4), fract(uv.y * 3)));  // tile effect
-
 //    vec4 colour = texture(display_layer, uv);  // dithering, cool for lighting system...
 //    vec2 uv = uv / pixel_size;
 //	float distance = (clamp(1.0 - distance(uv, (mouse_position)) * pixel_size.x / radius, 0.0, 1.0)) * influence * (1.5 + 0.25 * abs(sin(time)));
@@ -259,60 +242,94 @@ vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
 //	colour *= (1.0 - amount * 0.5);
 
 //     apply chromatic abertation to the player when we are low on steps, needs to effect the pixels off the player...
-//    float cut_off = 0.75;
-//    float v = abs(sin(0.1 + time));
-////    float v = texture(noise, uv * time).r;
-//    vec2 offset = v < cut_off ? vec2(0.0) : vec2(pow((v - cut_off) * 1 / (1.0 - cut_off), 2) * 0.005);
-//	vec4 colour = vec4(texture(display_layer, uv - offset * 2).r, texture(display_layer, uv).g, texture(display_layer, uv + offset * 2).b, texture(display_layer, uv).a);
+    float cut_off = 0.75;
+    float v = abs(sin(0.1 + time));
+    vec2 offset = v < cut_off ? vec2(0.0) : vec2(pow((v - cut_off) * 1 / (1.0 - cut_off), 2) * 0.005);
+	vec4 colour = vec4(texture(display_layer, uv - offset * 2).r, texture(display_layer, uv).g, texture(display_layer, uv + offset * 2).b, texture(display_layer, uv).a);
 
-//    vec4 colour = texture(display_layer, xy);
-
-    vec4 colour = texture(display_layer, uv);
-//    vec2 new_uv = curve_remap(uv);  // crt effect
-//    if (new_uv.x > 1.0 || new_uv.x < 0.0 || new_uv.y > 1.0 || new_uv.y < 0.0) {
-//        colour = vec4(0.09, 0.05, 0.07, 1.0);}
-////        } else {
-    vec2 vignette_uv = vec2(2.0) * uv - vec2(1.0);
-    vec2 vignette = (vignette_width + 5 * sin(time)) / resolution.xy;
-    vignette = smoothstep(vec2(0.0), vignette, 1.0 - abs(vignette_uv));
-    colour.g *= (sin(uv.y * resolution.y * 2.0) + 1.0) * 0.15 + 1.0;
-    colour.rb *= (cos(uv.y * resolution.y * 2.0) + 1.0) * 0.135 + 1.0;
-    colour *= vignette.x * vignette.y;
+    // Chromatic aberration animation
+    // Procedural offset for RGB channels
+//    vec4 colour = texture(display_layer, uv);
+//    float spread = 0.02; // max offset distance
+//    float speed = 0.5;   // how fast the aberration moves
+//
+//    // compute a dynamic direction based on UV and time
+//    float angle = fract(sin(dot(uv.xy, vec2(12.9898, 78.233))) * 43758.5453 + time * speed) * 6.28318;
+//    vec2 offset = vec2(cos(angle), sin(angle)) * spread;
+//
+//    // procedural background colour for empty areas
+//    vec3 bg = vec3(0.0);
+//
+//    // sample RGB channels with offsets in different directions
+//    vec3 ca;
+//    ca.r = texture(display_layer, uv - offset).r;
+//    ca.g = texture(display_layer, uv).g;
+//    ca.b = texture(display_layer, uv + offset).b;
+//
+//    // blend with bg where alpha is zero
+//    ca = mix(bg, ca, step(0.0, colour.a));
+//
+//    colour.rgb = ca;
 
     return colour;
 }
 
 vec4 get_colour(sampler2D display_layer, float effect_data[effect_data_length], vec4 out_colour) {
     vec4 colour;
-    if (effect_data[effect_active]==grey_index) {
-        colour = grey(display_layer, effect_data);
-    } else if (effect_data[effect_active]==invert_index) {
-        colour = invert(display_layer, effect_data);
-    } else if (effect_data[effect_active]==blur_index) {
-        colour = blur(display_layer, effect_data);
-    } else if (effect_data[effect_active]==pixelate_index) {
-        colour = pixelate(display_layer, effect_data);
-    } else if (effect_data[effect_active]==shockwave_index) {
-        colour = shockwave(display_layer, effect_data);
-    } else if (effect_data[effect_active]==galaxy_index) {
-        colour = galaxy(display_layer);
-    } else if (effect_data[effect_active]==gol_index) {
-        colour = gol(display_layer);
-    } else if (effect_data[effect_active]==test_index) {
-        colour = test(display_layer, effect_data);
-    } else {
-        colour = texture(display_layer, uv);
-    }
+    if (effect_data[effect_active] == grey_index) colour = grey(display_layer, effect_data);
+    else if (effect_data[effect_active] == invert_index) colour = invert(display_layer, effect_data);
+    else if (effect_data[effect_active] == blur_index) colour = blur(display_layer, effect_data);
+    else if (effect_data[effect_active] == pixelate_index) colour = pixelate(display_layer, effect_data);
+    else if (effect_data[effect_active] == shockwave_index) colour = shockwave(display_layer, effect_data);
+    else if (effect_data[effect_active] == galaxy_index) colour = galaxy(display_layer);
+    else if (effect_data[effect_active] == gol_index) colour = gol(display_layer);
+    else if (effect_data[effect_active] == test_index) colour = test(display_layer, effect_data);
+    else colour = texture(display_layer, uv);
     out_colour = mix(out_colour, colour, colour.a);
     return out_colour;
 }
 
+vec4 apply_crt(vec4 colour) {
+    colour.g *= (sin(uv.y * resolution.y * 2.0) + 1.0) * 0.1 + 1.0;
+    colour.rb *= (cos(uv.y * resolution.y * 2.0) + 1.0) * 0.1 + 1.0;
+    return colour;
+}
+
+vec3 vignette_colour = vec3(0.086, 0.051, 0.075);
+float vignette_strength = 0.25;
+float vignette_border = 0.1;
+
+vec4 apply_vignette(vec4 colour) {
+    // Slow breathing animation
+    float animated_border = vignette_border + 0.01 * sin(time * 0.5);
+    float animated_strength = vignette_strength + 0.05 * sin(time * 0.75);
+
+    // Distance from each edge
+    float dist_x = min(uv.x, 1.0 - uv.x);
+    float dist_y = min(uv.y, 1.0 - uv.y);
+
+    // Tighter fade for stronger corner shadow
+    float fade_x = pow(smoothstep(0.0, animated_border * 0.75, dist_x), 3.0);
+    float fade_y = pow(smoothstep(0.0, animated_border * 0.75, dist_y), 3.0);
+
+    // Multiply to get corner-based fade
+    float vignette_mask = fade_x * fade_y;
+
+    // Mix tint colour into edges
+    vec3 tinted = mix(vignette_colour, colour.rgb, vignette_mask);
+
+    // Blend based on animated strength
+    colour.rgb = mix(tinted, colour.rgb, 1.0 - animated_strength);
+
+    return colour;
+}
+
 void main() {
-    if (background_effect[effect_applied]==gol_index && bool(background_effect[7])) {
+    if (background_effect[effect_applied] == gol_index && bool(background_effect[7])) {
         out_colour = game_of_life();
     } else {
         out_colour = vec4(0.0);
-        if (background_effect[effect_applied]==gol_index) {
+        if (background_effect[effect_applied] == gol_index) {
             out_colour = get_colour(buffer_display, background_effect, out_colour);
         } else {
             out_colour = get_colour(background_display, background_effect, out_colour);
@@ -325,22 +342,7 @@ void main() {
         out_colour = get_colour(ui_display, ui_effect, out_colour);
         out_colour = get_colour(transition_display, transition_effect, out_colour);
 
-        // we cant just apply crt to transition layer if we want it to effect everything, as the transition layer is empty most of the time...
-        // we cant effect the screen pixels with the curve effect as we have already processed the individual display layers...
-        vec2 new_uv = curve_remap(uv);  // crt effect
-        if (new_uv.x > 1.0 || new_uv.x < 0.0 || new_uv.y > 1.0 || new_uv.y < 0.0) {
-            out_colour = vec4(0.09, 0.05, 0.07, 1.0);
-        } else {
-            // add shader option for crt type/ disabled...
-            out_colour.g *= (sin(new_uv.y * resolution.y * 2.0) + 1.0) * 0.1 + 1.0;
-            out_colour.rb *= (cos(new_uv.y * resolution.y * 2.0) + 1.0) * 0.1 + 1.0;
-//            out_colour *= scanline_intensity(new_uv.y, resolution.y * 5);
-//            out_colour = gamma_correction(out_colour);
-            // add shader option for vignette
-            vec2 vignette_uv = vec2(2.0) * new_uv - vec2(1.0);
-            vec2 vignette = (vignette_width + 5.0 * sin(time)) / resolution.xy;
-            vignette = smoothstep(vec2(0.0), vignette, 1.0 - abs(vignette_uv));
-            out_colour *= vignette.x * vignette.y;
-        }
+        if (crt) out_colour = apply_crt(out_colour);
+        if (vignette) out_colour = apply_vignette(out_colour);
     }
 }

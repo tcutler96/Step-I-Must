@@ -16,8 +16,9 @@ class Shaders:
         self.render_buffer = self.context.renderbuffer(size=self.main.display.size)
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
         self.apply_shaders = self.main.assets.settings['shaders']['all']
-        self.background_effect = self.main.assets.settings['shaders']['background']
+        self.background = self.main.assets.settings['shaders']['background']
         self.crt = self.main.assets.settings['shaders']['crt']
+        self.vignette = self.main.assets.settings['shaders']['vignette']
         self.effect_data_length = 10
         self.default_effect_data = {'applied': 0, 'active': 0, 'scale': 0, 'length': 1, 'step': 0}
         self.effect_data = {'grey': {}, 'invert': {}, 'blur': {'current': 2, 'min': 2, 'max': 5},
@@ -36,6 +37,9 @@ class Shaders:
         # when we get colour in fragment shader, add check to see if current pixel is turned on in that display layer, would that improve performance?
         # add darken/ lighten shaders effects...
         # galaxy shader looks weird on smallest resolution, the stats flicker...
+        # should you be able to right click a back button?
+        # only add vignette to the background layer?
+        # undo/redo does not update map location...
 
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)
@@ -160,12 +164,12 @@ class Shaders:
     def update(self, mouse_position):
         # we would need to bring all elements on the edge of the screen in slightly if we have the crt effect turned on...
         if self.main.events.check_key('x', 'held'):
-            # self.apply_effect(display_layer=['ui'], effect='invert', effect_data={'length': 1})
-            self.apply_effect(display_layer=['transition'], effect='test')
-        if self.background_effect:  # display flashes upside down when switching to gol...
-            self.apply_effect(display_layer=['background'], effect=self.background_effect, effect_data={'length': 0.1})
+            self.apply_effect(display_layer=['ui', 'level_player'], effect='test')
+        if self.background:  # display flashes upside down when switching to gol...
+            self.apply_effect(display_layer=['background'], effect=self.background, effect_data={'length': 0.1})
         self.update_effect_data()
-        self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_position': mouse_position} | self.get_effect_data_uniforms())
+        self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_position': mouse_position,
+                                    'crt': self.crt and self.apply_shaders, 'vignette': self.vignette and self.apply_shaders} | self.get_effect_data_uniforms())
 
     def reset_effects(self):
         for display_layer, effect_data in self.shaders.items():
@@ -174,7 +178,7 @@ class Shaders:
     def draw(self, displays):
         for display_layer, display_surface in displays.items():
             self.textures[display_layer].write(data=display_surface.get_view('1'))
-        if self.background_effect == 'gol':
+        if self.background == 'gol':
             self.frame_buffer.use()
             self.frame_buffer.clear()
             self.render_object.render()

@@ -34,7 +34,7 @@ class Assets:
                         'bright_green': (127, 255, 127)}
         self.settings_changed = False
         self.option_to_setting = {'video': {'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4}},
-                                  'shaders': {'background': {'game_of_life': 'gol'}, 'crt': {'type_i': 1, 'type_ii': 2}},
+                                  'shaders': {'background': {'game_of_life': 'gol'}},
                                   'audio': {'master_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1},
                                             'music_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1},
                                             'sound_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1}},
@@ -172,9 +172,11 @@ class Assets:
             if name == 'all':
                 self.main.shaders.apply_shaders = option
             elif name == 'background':
-                self.main.shaders.background_effect = option
+                self.main.shaders.background = option
             elif name == 'crt':
                 self.main.shaders.crt = option
+            elif name == 'vignette':
+                self.main.shaders.vignette = option
         elif group == 'audio':
             self.main.audio.change_volume(audio_type=name)
         elif group == 'gameplay':

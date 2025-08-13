@@ -86,7 +86,7 @@ class Main:
     #         await asyncio.sleep(0)
 
     def update_game_of_life(self):
-        if self.shaders.background_effect == 'gol':
+        if self.shaders.background == 'gol':
             self.draw_gol = self.display.cursor.cursor and self.events.check_key(key='mouse_3', action='held') and not self.transition.active
             self.clear_gol = self.events.check_key(key='escape') and self.game_state != 'game'
             if self.conway:
@@ -121,7 +121,7 @@ class Main:
         self.shaders.update(mouse_position=mouse_position)
 
     def draw_game_of_life(self):
-        if self.shaders.background_effect == 'gol':
+        if self.shaders.background == 'gol':
             if self.clear_gol:
                 self.shaders.clear_gol()
             if self.draw_gol:

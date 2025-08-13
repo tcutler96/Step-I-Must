@@ -2,19 +2,19 @@
   "video": {
     "cursor_type": "sprite",
     "map_colour": "green",
-    "particles": false,
+    "particles": true,
     "resolution": 3,
     "screen_shake": true
   },
   "shaders": {
     "all": true,
-    "background": "gol",
-    "crt": 1,
-    "vignette": true
+    "background": false,
+    "crt": false,
+    "vignette": false
   },
   "audio": {
-    "master_volume": 0.2,
-    "music_volume": 0.1,
+    "master_volume": 0.1,
+    "music_volume": 0,
     "sound_volume": 0.5
   },
   "gameplay": {
@@ -104,8 +104,8 @@
         "button",
         "option",
         [
-          "Disabled",
-          "Enabled"
+          "Enabled",
+          "Disabled"
         ]
       ],
       "Resolution": [
@@ -151,26 +151,25 @@
         "button",
         "option",
         [
-          "Game of Life",
           "Disabled",
-          "Galaxy"
+          "Galaxy",
+          "Game of Life"
         ]
       ],
       "CRT": [
         "button",
         "option",
         [
-          "Type I",
-          "Type II",
-          "Disabled"
+          "Disabled",
+          "Enabled"
         ]
       ],
       "Vignette": [
         "button",
         "option",
         [
-          "Enabled",
-          "Disabled"
+          "Disabled",
+          "Enabled"
         ]
       ],
       "Back": [
@@ -185,23 +184,6 @@
         "button",
         "option",
         [
-          "20%",
-          "30%",
-          "40%",
-          "50%",
-          "60%",
-          "70%",
-          "80%",
-          "90%",
-          "100%",
-          "Disabled",
-          "10%"
-        ]
-      ],
-      "Music Volume": [
-        "button",
-        "option",
-        [
           "10%",
           "20%",
           "30%",
@@ -213,6 +195,23 @@
           "90%",
           "100%",
           "Disabled"
+        ]
+      ],
+      "Music Volume": [
+        "button",
+        "option",
+        [
+          "Disabled",
+          "10%",
+          "20%",
+          "30%",
+          "40%",
+          "50%",
+          "60%",
+          "70%",
+          "80%",
+          "90%",
+          "100%"
         ]
       ],
       "Sound Volume": [

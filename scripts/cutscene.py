@@ -4,6 +4,7 @@ from math import sin, cos
 class Cutscene:
     def __init__(self, main):
         self.main = main
+        self.display_layer = 'level_map'
         self.cutscene_speed = self.main.assets.settings['gameplay']['cutscene_speed']
         self.active = False
         self.cutscene_type = None
@@ -27,7 +28,7 @@ class Cutscene:
         self.line_pause = (1 - self.cutscene_speed) * 1 + self.cutscene_speed * 0.25
         self.line_timer = 0
         self.show_button = False
-        self.button = self.main.assets.images['other']['button_5']
+        self.button = self.main.assets.images['other']['button_5'].copy()
         self.button_position = (self.main.display.half_width - self.button.get_width() // 2, self.main.display.height - self.bars_max_offset - self.button.get_height() * 1.5)
         self.button_alpha = 0
         self.collectable_pause = 2
@@ -39,12 +40,7 @@ class Cutscene:
         self.end_response = None
         self.end_trigger = False
 
-        # teleporting to second world, space key is slightly transparent
-
-        # intro and movement (0, 0), menu (0, 1), map (0, 2), undo/ redo (-1, 2), collectables (-1, 2)?*, locks/ paths (-2, 2), teleporter (-2, 2)?*, ice (-2, 3),
-        # conveyors (-2, 1), blue flags (-4, 2), spikes (-5, 3), player spawner (-6, 2), reviving dead players (-4, 0), statues (-6, 0), splitters (-5, -2)
-        # add cutscenes for: collectables, teleporters, moving flags but respawning at original position, final stretch of first game,
-        # intro to second game ('i though we were done, but it seems we are only just beginning', 'i can always return to the first place by toggling the map...')
+        # add cutscenes for: intro to second game ('i though we were done, but it seems we are only just beginning', 'i can always return to the first place by toggling the map...')
         self.cutscene_data = {'collectables': {'silver keys': [["A silver key, a hopeful chime.", "Yet all it give is more lost time.", "For I am slime, and step I must."],
                                                                ["Each opened lock, a question grows.", "How deep this endless puzzle goes.", "For I am slime, and step I must."]],
                                                'silver gems': [["A silver gem, once left behind.", "Now claimed by me, no longer blind.", "For I am slime, and step I must."],
@@ -65,10 +61,14 @@ class Cutscene:
                                                     ["If things feel wrong or far too tough.", "I can always pause, sure enough.", "For I am slime, and step I must."]],
                                          '(0, 2)': [["I twist through rooms that loop and bend.", "I'm not quite sure where they all end.", "For I am slime, and step I must."],
                                                     ["I peer at the map to look around.", "To see what paths have yet been found.", "For I am slime, and step I must."]],
-                                         '(-1, 2)': [["I took a step I did not mean.", "And now my goal cannot be seen.", "For I am slime, and step I must."],
+                                         '(-1, 2)': [["A tempting key, not far from here.", "Perhaps it holds a path unclear.", "For I am slime, and step I must."],
+                                                     ["A shining gem, off to the side.", "Is it needed, or just pride?", "For I am slime, and step I must."],
+                                                     ["I took a step I did not mean.", "And now my goal cannot be seen.", "For I am slime, and step I must."],
                                                      ["But my steps are not set in stone.", "Undo or redo, the way is shown.", "For I am slime, and step I must."]],
                                          '(-2, 2)': [["A locked way ahead, shut not wide.", "The paths diverge, I must decide.", "For I am slime, and step I must."],
-                                                     ["Each one will teach, each one will test.", "Whatever comes, I'll give my best.", "For I am slime, and step I must."]],
+                                                     ["Each one will teach, each one will test.", "Whatever comes, I'll give my best.", "For I am slime, and step I must."],
+                                                     ["No matter where my journey bends.", "This place remains, it never ends.", "For I am slime, and step I must."],
+                                                     ["Though strange the road and far I roam.", "Some force will always pull me home.", "For I am slime, and step I must."]],
                                          '(-2, 3)': [["I step, then slide, I cannot brake.", "I bounce off walls like some mistake.", "For I am slime, and step I must."],
                                                      ["I look ahead, no chance to turn.", "Just frozen paths that I must learn.", "For I am slime, and step I must."]],
                                          '(-2, 1)': [["The ground now moves without my say.", "It shoves me one more step each way.", "For I am slime, and step I must."],
@@ -84,7 +84,15 @@ class Cutscene:
                                          '(-6, 0)': [["The statue's gaze is cold and wide.", "Looked at straight, there's no place to hide.", "For I am slime, and step I must."],
                                                      ["But turn away and slip on past.", "Their stony grip won't hold me fast.", "For I am slime, and step I must."]],
                                          '(-5, -2)': [["A single step, then comes the tear.", "Another me, now stands there.", "For I am slime, and step I must."],
-                                                      ["Though of two bodies, our minds the same.", "Working together with one shared aim.", "For I am slime, and step I must."]]}}
+                                                      ["Though of two bodies, our minds the same.", "Working together with one shared aim.", "For I am slime, and step I must."]],
+                                         '(-4, -2)': [["The air feels still, the walls grown wide.", "As though they've nothing left to hide.", "For I am slime, and step I must."]],
+                                         '(-3, -2)': [["A path well worn by none before.", "Now pulls me on to something more.", "For I am slime, and step I must."]],
+                                         '(-2, -2)': [["The way ahead allows no turns.", "A truth awaits I fear to learn.", "For I am slime, and step I must."]],
+                                         '(-1, -2)': [["Is this the end, or just a door?", "Beyond which waits what came before.", "For I am slime, and step I must."]],
+                                         '(-1, -5)': [[".", ".", "For I am slime, and step I must."],
+                                                      [".", ".", "For I am slime, and step I must."],
+                                                      [".", ".", "For I am slime, and step I must."],
+                                                      [".", ".", "For I am slime, and step I must."]]}}
 
     def start_cutscene(self, cutscene_type=None, cutscene_data=None):
         if not self.active:
@@ -106,7 +114,7 @@ class Cutscene:
                 self.text_id = cutscene_data['level_name' if cutscene_type == 'level' else 'collectable_type']
                 self.text = self.cutscene_data[f'{cutscene_type}s'][cutscene_data['level_name' if cutscene_type == 'level' else 'collectable_type']]
                 self.main.text_handler.add_text(text_group='cutscene', text_id='space', text='space', size=10, alpha_up=self.alpha_step, alpha_down=self.alpha_step, bounce=-3, shadow_colour=None,
-                                                position=(self.main.display.half_width, self.main.display.height - self.bars_max_offset - self.button.get_height()), display_layer='ui')
+                                                position=(self.main.display.half_width, self.main.display.height - self.bars_max_offset - self.button.get_height()), display_layer=self.display_layer)
                 if 'end_response' in cutscene_data:
                     self.end_response = cutscene_data['end_response']
 
@@ -168,8 +176,8 @@ class Cutscene:
                     text_id = f'{self.text_id}_{self.page_index}_{self.line_index}_{int(self.character_index)}'
                     text = self.text[self.page_index][self.line_index][:int(self.character_index)]
                     self.main.text_handler.add_text(text_group='cutscene', text_id=text_id, text=text, position=(self.text_position[0], self.text_position[1] + 16 * self.line_index),
-                                                    display_layer='ui', size=14, max_width=self.main.display.width - 32, alpha_up=255, alpha_down=self.alpha_step, style='itallic')
-                    if self.character_index == len(self.text[self.page_index][self.line_index]):  # end of line
+                                                    display_layer=self.display_layer, size=14, max_width=self.main.display.width - 32, alpha_up=255, alpha_down=self.alpha_step, style='itallic')
+                    if self.character_index == len(self.text[self.page_index][self.line_index]):
                         if self.line_timer:
                             self.line_timer = 0
                         else:
@@ -245,16 +253,16 @@ class Cutscene:
     def draw(self, displays):
         if self.active and not self.collectable_timer:
             for bar in self.bars:
-                pg.draw.rect(surface=displays['ui'], color=self.main.assets.colours['dark_purple'], rect=bar)
+                pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['dark_purple'], rect=bar)
             if self.sprite:
-                displays['ui'].blit(source=self.sprite, dest=(self.sprite_position[0], self.sprite_position[1] + self.main.utilities.get_text_bounce(bounce=-3)))
+                displays[self.display_layer].blit(source=self.sprite, dest=(self.sprite_position[0], self.sprite_position[1] + self.main.utilities.get_text_bounce(bounce=-3)))
             if self.collectable_sprite:
-                displays['ui'].blit(source=self.collectable_sprite, dest=(self.collectable_sprite_position[0], self.collectable_sprite_position[1] + self.main.utilities.get_text_bounce(bounce=-3)))
+                displays[self.display_layer].blit(source=self.collectable_sprite, dest=(self.collectable_sprite_position[0], self.collectable_sprite_position[1] + self.main.utilities.get_text_bounce(bounce=-3)))
             if self.show_text:
                 for line_index in range(self.line_index + 1):
                     text_id = f'{self.text_id}_{self.page_index}_{line_index}_{int(self.character_index) if line_index == self.line_index else len(self.text[self.page_index][line_index])}'
                     self.main.text_handler.activate_text(text_group='cutscene', text_id=text_id)
             if self.button_alpha:
-                displays['ui'].blit(source=self.button, dest=(self.button_position[0], self.button_position[1] + self.main.utilities.get_text_bounce(bounce=-3)))
+                displays[self.display_layer].blit(source=self.button, dest=(self.button_position[0], self.button_position[1] + self.main.utilities.get_text_bounce(bounce=-3)))
             if self.show_button and not self.line_timer:
                 self.main.text_handler.activate_text(text_group='cutscene', text_id='space')

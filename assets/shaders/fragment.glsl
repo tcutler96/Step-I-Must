@@ -7,14 +7,9 @@ uniform vec2 pixel_size;
 uniform float time;
 uniform bool mouse_active;
 uniform vec2 mouse_position;
+uniform bool chromatic_aberration;
 uniform bool crt;
 uniform bool vignette;
-
-#define effect_applied 0
-#define effect_active 1
-#define effect_scale 2
-#define effect_current 4
-#define effect_current_2 7
 
 const int effect_data_length = 10;
 uniform sampler2D background_display;
@@ -39,20 +34,27 @@ uniform float grey_index;
 uniform float invert_index;
 uniform float blur_index;
 uniform float pixelate_index;
+uniform float chromatic_index;
 uniform float shockwave_index;
 uniform float galaxy_index;
 uniform float gol_index;
 uniform float test_index;
 
-const vec4 on_colour = vec4(0.96, 0.95, 0.76, 1.0);
-const vec4 off_colour = vec4(0.19, 0.16, 0.24, 1.0);
+#define effect_applied 0
+#define effect_active 1
+#define effect_scale 2
+#define effect_current 4
+#define effect_current_2 7
+
+const vec4 gol_on_colour = vec4(0.96, 0.95, 0.76, 1.0);
+const vec4 gol_off_colour = vec4(0.19, 0.16, 0.24, 1.0);
 
 in vec2 uv;
 vec2 uv_flipped = vec2(uv.x, 1.0 - uv.y);
 out vec4 out_colour;
 
 bool check_colour(vec4 colour) {
-    vec4 difference = colour - on_colour;
+    vec4 difference = colour - gol_on_colour;
     float absolute = abs(difference.r) + abs(difference.g) + abs(difference.b);
     return absolute < 0.015;
 }
@@ -77,7 +79,7 @@ vec4 game_of_life() {
                 current = 1;
             }
         }
-        vec4 colour = vec4(mix(off_colour.rgb, on_colour.rgb, current), 1.0);
+        vec4 colour = vec4(mix(gol_off_colour.rgb, gol_on_colour.rgb, current), 1.0);
     return colour;
 }
 
@@ -110,6 +112,17 @@ vec4 pixelate(sampler2D display_layer, float effect_data[effect_data_length]) {
     colour += 0.15 * texture(display_layer, centre + vec2(-half_pixelate_size.x, half_pixelate_size.y));
 
     colour.rgb *= 1.0 - 0.5 * effect_data[effect_scale];
+    return colour;
+}
+
+vec4 chromatic(sampler2D display_layer, float effect_data[effect_data_length]) {
+    vec4 colour;
+    float shift = effect_data[effect_scale] * pixel_size.x;
+    shift += 0.25 * shift * sin(time * 0.5);
+
+    colour.r  = texture(display_layer, uv + vec2(shift)).r;
+    colour.ga = texture(display_layer, uv).ga;
+    colour.b  = texture(display_layer, uv + vec2(-shift)).b;
     return colour;
 }
 
@@ -196,12 +209,7 @@ vec4 galaxy(sampler2D display_layer) {
     vec3 rnd2 = nrand3(seed2);
     starcolor += vec4(pow(rnd2.y, 35.0));
 
-    vec4 colour = vec4(
-        1.8 * freqs[2] * t * t * t + c2.r + starcolor.r,
-        1.4 * freqs[1] * t * t + c2.g + starcolor.g,
-        1.2 * freqs[3] * t + c2.b + starcolor.b,
-        1.0
-    );
+    vec4 colour = vec4(1.8 * freqs[2] * t * t * t + c2.r + starcolor.r, 1.4 * freqs[1] * t * t + c2.g + starcolor.g, 1.2 * freqs[3] * t + c2.b + starcolor.b, 1.0);
 
     // Slight gamma correction
     colour.rgb = pow(colour.rgb, vec3(0.88));
@@ -222,55 +230,104 @@ const mat4 THRESHOLD_MATRIX = mat4(
 		vec4(4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0),
 		vec4(16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0));
 
+#define MAX_RADIUS 2
+#define DOUBLE_HASH 0
+#define HASHSCALE1 .1031
+#define HASHSCALE3 vec3(.1031, .1030, .0973)
+
+float hash12(vec2 p) {
+	vec3 p3 = fract(vec3(p.xyx) * HASHSCALE1);
+    p3 += dot(p3, p3.yzx + 19.19);
+    return fract((p3.x + p3.y) * p3.z);
+}
+
+vec2 hash22(vec2 p) {
+	vec3 p3 = fract(vec3(p.xyx) * HASHSCALE3);
+    p3 += dot(p3, p3.yzx+19.19);
+    return fract((p3.xx+p3.yz)*p3.zy);
+}
+
 vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
 //    vec4 colour = texture(display_layer, uv);  // dithering, cool for lighting system...
 //    vec2 uv = uv / pixel_size;
 //	float distance = (clamp(1.0 - distance(uv, (mouse_position)) * pixel_size.x / radius, 0.0, 1.0)) * influence * (1.5 + 0.25 * abs(sin(time)));
-//	colour.a *= step(0.0, THRESHOLD_MATRIX[int(uv.x) % 4][int(uv.y) % 4] - distance);
+//    float threshold = THRESHOLD_MATRIX[int(uv.x) % 4][int(uv.y) % 4];
+//    colour.a *= step(distance, threshold);
 
-//    float amount = 0.0;
-//	amount = (1.0 + sin(time * 6.0)) * 0.5;
-//	amount *= 1.0 + sin(time * 16.0) * 0.5;
-//	amount *= 1.0 + sin(time * 19.0) * 0.5;
-//	amount *= 1.0 + sin(time * 27.0) * 0.5;
-//	amount = pow(amount, 3.0);
-//	amount *= 0.05;
-//    vec4 colour;
-//    colour.r = texture(display_layer, vec2(uv.x + amount, uv.y)).r;
-//    colour.ga = texture(display_layer, uv).ga;
-//    colour.b = texture(display_layer, vec2(uv.x - amount,uv.y)).b;
-//	colour *= (1.0 - amount * 0.5);
+//    // Wobble strength and speed
+//    float strength = 0.01; // Higher = more distortion
+//    float speed = 2.0;     // Higher = faster
+//    // Apply horizontal and vertical sine-based distortion
+//    vec2 new_uv = vec2(uv.x + sin(uv.y * 1.0 + time * speed) * strength, uv.y + cos(uv.x * 1.0 + time * speed) * strength);
+//    // Sample the texture at the modified UVs
+//    vec4 colour = texture(display_layer, new_uv);
 
-//     apply chromatic abertation to the player when we are low on steps, needs to effect the pixels off the player...
-    float cut_off = 0.75;
-    float v = abs(sin(0.1 + time));
-    vec2 offset = v < cut_off ? vec2(0.0) : vec2(pow((v - cut_off) * 1 / (1.0 - cut_off), 2) * 0.005);
-	vec4 colour = vec4(texture(display_layer, uv - offset * 2).r, texture(display_layer, uv).g, texture(display_layer, uv + offset * 2).b, texture(display_layer, uv).a);
-
-    // Chromatic aberration animation
-    // Procedural offset for RGB channels
+//	vec2 uv = uv;  // wobble
+//    uv += cos(time * vec2(6.0, 7.0) + uv * 10.0) * 0.005;
 //    vec4 colour = texture(display_layer, uv);
-//    float spread = 0.02; // max offset distance
-//    float speed = 0.5;   // how fast the aberration moves
-//
-//    // compute a dynamic direction based on UV and time
-//    float angle = fract(sin(dot(uv.xy, vec2(12.9898, 78.233))) * 43758.5453 + time * speed) * 6.28318;
-//    vec2 offset = vec2(cos(angle), sin(angle)) * spread;
-//
-//    // procedural background colour for empty areas
-//    vec3 bg = vec3(0.0);
-//
-//    // sample RGB channels with offsets in different directions
-//    vec3 ca;
-//    ca.r = texture(display_layer, uv - offset).r;
-//    ca.g = texture(display_layer, uv).g;
-//    ca.b = texture(display_layer, uv + offset).b;
-//
-//    // blend with bg where alpha is zero
-//    ca = mix(bg, ca, step(0.0, colour.a));
-//
-//    colour.rgb = ca;
 
+    float res = 25.0;
+	vec2 uv = uv * res;
+    vec2 p0 = floor(uv);
+
+    vec2 circles = vec2(0.);
+    for (int j = -MAX_RADIUS; j <= MAX_RADIUS; ++j)
+    {
+        for (int i = -MAX_RADIUS; i <= MAX_RADIUS; ++i)
+        {
+			vec2 pi = p0 + vec2(i, j);
+            #if DOUBLE_HASH
+            vec2 hsh = hash22(pi);
+            #else
+            vec2 hsh = pi;
+            #endif
+            vec2 p = pi + hash22(hsh);
+
+            float t = fract(0.05 * time + hash12(hsh));
+            vec2 v = p - uv;
+            float d = length(v) - (float(MAX_RADIUS) + 1.0) * 5.0 * t;
+
+            float h = 1e-3;
+            float d1 = d - h;
+            float d2 = d + h;
+            float p1 = sin(31.*d1) * smoothstep(-0.6, -0.3, d1) * smoothstep(0.0, -0.3, d1);
+            float p2 = sin(31.*d2) * smoothstep(-0.6, -0.3, d2) * smoothstep(0.0, -0.3, d2);
+            circles += 0.5 * normalize(v) * ((p2 - p1) / (2.0 * h) * pow(1 - t, 25));
+        }
+    }
+    circles /= float((MAX_RADIUS*2+1)*(MAX_RADIUS*2+1));
+
+    float intensity = mix(0.01, 0.15, smoothstep(0.1, 0.6, abs(fract(0.5 * time + 0.5) * 2.0 - 1.0)));
+    vec3 n = vec3(circles, sqrt(1.0 - dot(circles, circles)));
+    vec4 colour = texture(display_layer, uv / res - intensity * n.xy);
+    colour.rgb += 5.0 * pow(clamp(dot(n, normalize(vec3(1.0, 0.7, 0.5))), 0.0, 1.0), 6.0);
+
+    return colour;
+}
+
+vec4 apply_crt(vec4 colour) {
+    colour.g *= (sin(uv.y * resolution.y * 2.0) + 1.0) * 0.1 + 1.0;
+    colour.rb *= (cos(uv.y * resolution.y * 2.0) + 1.0) * 0.1 + 1.0;
+    return colour;
+}
+
+vec4 apply_vignette(vec4 colour) {
+    float animation = 0.5 + 0.5 * sin(time * 0.75);
+    float animated_border = 0.1 + 0.1 * animation;
+    float animated_strength = 0.3 + 0.3 * (1.0 - animation);
+
+    float dist_x = min(uv.x, 1.0 - uv.x);
+    float dist_y = min(uv.y, 1.0 - uv.y);
+
+    float fade_x = pow(smoothstep(0.0, animated_border * 0.75, dist_x), 3.0);
+    float fade_y = pow(smoothstep(0.0, animated_border * 0.75, dist_y), 3.0);
+    float rect_mask = fade_x * fade_y;
+    float corner_dist = length(vec2(dist_x, dist_y));
+    float round_mask = smoothstep(animated_border * 0.2, animated_border * 0.75, corner_dist);
+    float vignette_mask = mix(rect_mask, round_mask, 0.5);
+
+    vec3 tinted = mix(vec3(0.086, 0.051, 0.075), colour.rgb, vignette_mask);
+    colour.rgb = mix(tinted, colour.rgb, 1.0 - animated_strength);
     return colour;
 }
 
@@ -280,6 +337,7 @@ vec4 get_colour(sampler2D display_layer, float effect_data[effect_data_length], 
     else if (effect_data[effect_active] == invert_index) colour = invert(display_layer, effect_data);
     else if (effect_data[effect_active] == blur_index) colour = blur(display_layer, effect_data);
     else if (effect_data[effect_active] == pixelate_index) colour = pixelate(display_layer, effect_data);
+    else if (effect_data[effect_active] == chromatic_index) colour = chromatic(display_layer, effect_data);
     else if (effect_data[effect_active] == shockwave_index) colour = shockwave(display_layer, effect_data);
     else if (effect_data[effect_active] == galaxy_index) colour = galaxy(display_layer);
     else if (effect_data[effect_active] == gol_index) colour = gol(display_layer);
@@ -289,51 +347,12 @@ vec4 get_colour(sampler2D display_layer, float effect_data[effect_data_length], 
     return out_colour;
 }
 
-vec4 apply_crt(vec4 colour) {
-    colour.g *= (sin(uv.y * resolution.y * 2.0) + 1.0) * 0.1 + 1.0;
-    colour.rb *= (cos(uv.y * resolution.y * 2.0) + 1.0) * 0.1 + 1.0;
-    return colour;
-}
-
-vec3 vignette_colour = vec3(0.086, 0.051, 0.075);
-float vignette_strength = 0.25;
-float vignette_border = 0.1;
-
-vec4 apply_vignette(vec4 colour) {
-    // Slow breathing animation
-    float animated_border = vignette_border + 0.01 * sin(time * 0.5);
-    float animated_strength = vignette_strength + 0.05 * sin(time * 0.75);
-
-    // Distance from each edge
-    float dist_x = min(uv.x, 1.0 - uv.x);
-    float dist_y = min(uv.y, 1.0 - uv.y);
-
-    // Tighter fade for stronger corner shadow
-    float fade_x = pow(smoothstep(0.0, animated_border * 0.75, dist_x), 3.0);
-    float fade_y = pow(smoothstep(0.0, animated_border * 0.75, dist_y), 3.0);
-
-    // Multiply to get corner-based fade
-    float vignette_mask = fade_x * fade_y;
-
-    // Mix tint colour into edges
-    vec3 tinted = mix(vignette_colour, colour.rgb, vignette_mask);
-
-    // Blend based on animated strength
-    colour.rgb = mix(tinted, colour.rgb, 1.0 - animated_strength);
-
-    return colour;
-}
-
 void main() {
-    if (background_effect[effect_applied] == gol_index && bool(background_effect[7])) {
-        out_colour = game_of_life();
-    } else {
+    if (background_effect[effect_applied] == gol_index && bool(background_effect[7])) out_colour = game_of_life();
+    else {
         out_colour = vec4(0.0);
-        if (background_effect[effect_applied] == gol_index) {
-            out_colour = get_colour(buffer_display, background_effect, out_colour);
-        } else {
-            out_colour = get_colour(background_display, background_effect, out_colour);
-        }
+        if (background_effect[effect_applied] == gol_index) out_colour = get_colour(buffer_display, background_effect, out_colour);
+        else out_colour = get_colour(background_display, background_effect, out_colour);
         out_colour = get_colour(level_background_display, level_background_effect, out_colour);
         out_colour = get_colour(level_main_display, level_main_effect, out_colour);
         out_colour = get_colour(level_player_display, level_player_effect, out_colour);

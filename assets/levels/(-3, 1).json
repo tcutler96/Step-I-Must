@@ -7,6 +7,12 @@
     "gold gems": [],
     "cheeses": []
   },
+  "locks": [
+    [
+      14,
+      7
+    ]
+  ],
   "tilemap": {
     "0:0": {
       "object": null,

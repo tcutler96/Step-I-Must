@@ -173,6 +173,8 @@ class Assets:
                 self.main.shaders.apply_shaders = option
             elif name == 'background':
                 self.main.shaders.background = option
+            elif name == 'chromatic_aberration':
+                self.main.shaders.chromatic_aberration = option
             elif name == 'crt':
                 self.main.shaders.crt = option
             elif name == 'vignette':

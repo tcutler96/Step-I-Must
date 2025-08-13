@@ -61,7 +61,7 @@ class MenuElement:
                             self.offset = self.offset_start.copy()
                             self.cycle_option(selected=selected)
                             return self.button_type, self.button_response, selected
-                        elif selected == 'left':
+                        elif selected == 'left' or selected == 'right' and self.name in ['Back', 'Resume', 'No']:
                             return self.button_type, self.button_response, self.name
                     elif self.name in ['Back', 'Resume', 'No']:
                         if self.main.events.check_key(key=['mouse_3', 'escape'], remove=True):

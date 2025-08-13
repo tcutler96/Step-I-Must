@@ -8,9 +8,10 @@
   },
   "shaders": {
     "all": true,
-    "background": false,
-    "crt": false,
-    "vignette": false
+    "background": "galaxy",
+    "crt": true,
+    "vignette": true,
+    "chromatic_aberration": true
   },
   "audio": {
     "master_volume": 0.1,
@@ -151,25 +152,33 @@
         "button",
         "option",
         [
-          "Disabled",
           "Galaxy",
-          "Game of Life"
+          "Game of Life",
+          "Disabled"
+        ]
+      ],
+      "Chromatic Aberration": [
+        "button",
+        "option",
+        [
+          "Enabled",
+          "Disabled"
         ]
       ],
       "CRT": [
         "button",
         "option",
         [
-          "Disabled",
-          "Enabled"
+          "Enabled",
+          "Disabled"
         ]
       ],
       "Vignette": [
         "button",
         "option",
         [
-          "Disabled",
-          "Enabled"
+          "Enabled",
+          "Disabled"
         ]
       ],
       "Back": [

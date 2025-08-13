@@ -806,7 +806,7 @@ class Game:
         # separate into general updates, player updates (which only happen when we have control of the player), etc...
         self.tutorials.update()  # where should this go?
         if self.main.events.check_key(key='1'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-5, -2)', 'end_response': 'map'})
+            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-1, -5)', 'force': True})
         if self.main.events.check_key(key='2'):
             self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'cheeses', 'collectable_position': self.main.display.centre, 'end_response': 'map'})
 

@@ -37,6 +37,7 @@ uniform float pixelate_index;
 uniform float chromatic_index;
 uniform float shockwave_index;
 uniform float galaxy_index;
+uniform float ripple_index;
 uniform float gol_index;
 uniform float test_index;
 
@@ -222,6 +223,77 @@ vec4 gol(sampler2D display_layer) {
     return colour;
 }
 
+const float ripple_life   = 2.5;
+const float splash_life  = 0.5;
+const float big_ripple_life    = 4.0;
+
+float hash(float n) { return fract(sin(n) * 43758.5453); }
+vec2 hash2(float n) { return vec2(hash(n * 1.13), hash(n * 7.77)); }
+
+vec4 ripple(sampler2D display_layer) {
+    // subtle whole-screen wobble
+    vec2 distortedUV = uv;
+    distortedUV += vec2(
+        sin((uv.y + time * 0.2) * 20.0) * 0.002,
+        cos((uv.x + time * 0.15) * 20.0) * 0.002
+    );
+
+    float brightnessMod = 0.0;
+    vec2 totalRefraction = vec2(0.0);
+
+    // main raindrops
+    for (int i = 0; i < 10; i++) {
+        float startPhase = hash(float(i) * 12.345) * ripple_life;
+        float cycleTime = time + startPhase;
+        float t = mod(cycleTime, ripple_life);
+        float cycleIndex = floor(cycleTime / ripple_life);
+        vec2 centre = hash2(float(i) + cycleIndex * 123.456);
+        float speed = 0.15 + hash(float(i) + cycleIndex) * 0.10;
+        float waveWidth = 0.006 + hash(float(i) + cycleIndex*2.0) * 0.005;
+        float dist = length(uv - centre);
+        float radius = t * speed;
+        float edgeDist = abs(dist - radius);
+        float ring = exp(-pow(edgeDist / waveWidth, 2.0)) * (1.0 - t / ripple_life);
+        vec2 dir = normalize(uv - centre);
+        totalRefraction += dir * ring * (0.015 + 0.008 * brightnessMod);
+        brightnessMod += ring * 0.15;
+    }
+
+    // tiny splashes
+    for (int i = 0; i < 20; i++) {
+        float startTime = hash(float(i) * 91.3) * splash_life * 3.0;
+        float t = mod(time + startTime, splash_life);
+        float cycleIndex = floor((time + startTime) / splash_life);
+        vec2 centre = hash2(float(i) + cycleIndex * 987.654);
+        float dist = length(uv - centre);
+        float splash = exp(-pow(dist / 0.01, 2.0)) * (1.0 - t / splash_life);
+        vec2 dir = normalize(uv - centre);
+        totalRefraction += dir * splash * 0.02;
+        brightnessMod += splash * 0.05;
+    }
+
+    // occasional big drops
+    for (int i = 0; i < 5; i++) {
+        float startTime = hash(float(i) * 321.0) * big_ripple_life * 2.0;
+        float t = mod(time + startTime, big_ripple_life);
+        float cycleIndex = floor((time + startTime) / big_ripple_life);
+        vec2 centre = hash2(float(i) + cycleIndex * 555.555);
+        float dist = length(uv - centre);
+        float radius = t * 0.12;
+        float edgeDist = abs(dist - radius);
+        float ring = exp(-pow(edgeDist / 0.015, 2.0)) * (1.0 - t / big_ripple_life);
+        vec2 dir = normalize(uv - centre);
+        totalRefraction += dir * ring * 0.03;
+        brightnessMod += ring * 0.1;
+    }
+
+    distortedUV += totalRefraction;
+    vec3 baseCol = texture(display_layer, distortedUV).rgb;
+    baseCol += brightnessMod;
+    vec4 colour = vec4(baseCol, 1.0);
+    return colour;
+}
+
 uniform float influence = 1.0;
 uniform float radius = 0.1;
 const mat4 THRESHOLD_MATRIX = mat4(
@@ -248,60 +320,11 @@ vec2 hash22(vec2 p) {
 }
 
 vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
-//    vec4 colour = texture(display_layer, uv);  // dithering, cool for lighting system...
-//    vec2 uv = uv / pixel_size;
-//	float distance = (clamp(1.0 - distance(uv, (mouse_position)) * pixel_size.x / radius, 0.0, 1.0)) * influence * (1.5 + 0.25 * abs(sin(time)));
-//    float threshold = THRESHOLD_MATRIX[int(uv.x) % 4][int(uv.y) % 4];
-//    colour.a *= step(distance, threshold);
-
-//    // Wobble strength and speed
-//    float strength = 0.01; // Higher = more distortion
-//    float speed = 2.0;     // Higher = faster
-//    // Apply horizontal and vertical sine-based distortion
-//    vec2 new_uv = vec2(uv.x + sin(uv.y * 1.0 + time * speed) * strength, uv.y + cos(uv.x * 1.0 + time * speed) * strength);
-//    // Sample the texture at the modified UVs
-//    vec4 colour = texture(display_layer, new_uv);
-
-//	vec2 uv = uv;  // wobble
-//    uv += cos(time * vec2(6.0, 7.0) + uv * 10.0) * 0.005;
-//    vec4 colour = texture(display_layer, uv);
-
-    float res = 25.0;
-	vec2 uv = uv * res;
-    vec2 p0 = floor(uv);
-
-    vec2 circles = vec2(0.);
-    for (int j = -MAX_RADIUS; j <= MAX_RADIUS; ++j)
-    {
-        for (int i = -MAX_RADIUS; i <= MAX_RADIUS; ++i)
-        {
-			vec2 pi = p0 + vec2(i, j);
-            #if DOUBLE_HASH
-            vec2 hsh = hash22(pi);
-            #else
-            vec2 hsh = pi;
-            #endif
-            vec2 p = pi + hash22(hsh);
-
-            float t = fract(0.05 * time + hash12(hsh));
-            vec2 v = p - uv;
-            float d = length(v) - (float(MAX_RADIUS) + 1.0) * 5.0 * t;
-
-            float h = 1e-3;
-            float d1 = d - h;
-            float d2 = d + h;
-            float p1 = sin(31.*d1) * smoothstep(-0.6, -0.3, d1) * smoothstep(0.0, -0.3, d1);
-            float p2 = sin(31.*d2) * smoothstep(-0.6, -0.3, d2) * smoothstep(0.0, -0.3, d2);
-            circles += 0.5 * normalize(v) * ((p2 - p1) / (2.0 * h) * pow(1 - t, 25));
-        }
-    }
-    circles /= float((MAX_RADIUS*2+1)*(MAX_RADIUS*2+1));
-
-    float intensity = mix(0.01, 0.15, smoothstep(0.1, 0.6, abs(fract(0.5 * time + 0.5) * 2.0 - 1.0)));
-    vec3 n = vec3(circles, sqrt(1.0 - dot(circles, circles)));
-    vec4 colour = texture(display_layer, uv / res - intensity * n.xy);
-    colour.rgb += 5.0 * pow(clamp(dot(n, normalize(vec3(1.0, 0.7, 0.5))), 0.0, 1.0), 6.0);
-
+    vec4 colour = texture(display_layer, uv);  // dithering, cool for lighting system...
+    vec2 uv = uv / pixel_size;
+	float distance = (clamp(1.0 - distance(uv, (mouse_position)) * pixel_size.x / radius, 0.0, 1.0)) * influence * (1.5 + 0.25 * abs(sin(time)));
+    float threshold = THRESHOLD_MATRIX[int(uv.x) % 4][int(uv.y) % 4];
+    colour.a *= step(distance, threshold);
     return colour;
 }
 
@@ -340,6 +363,7 @@ vec4 get_colour(sampler2D display_layer, float effect_data[effect_data_length], 
     else if (effect_data[effect_active] == chromatic_index) colour = chromatic(display_layer, effect_data);
     else if (effect_data[effect_active] == shockwave_index) colour = shockwave(display_layer, effect_data);
     else if (effect_data[effect_active] == galaxy_index) colour = galaxy(display_layer);
+    else if (effect_data[effect_active] == ripple_index) colour = ripple(display_layer);
     else if (effect_data[effect_active] == gol_index) colour = gol(display_layer);
     else if (effect_data[effect_active] == test_index) colour = test(display_layer, effect_data);
     else colour = texture(display_layer, uv);

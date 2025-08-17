@@ -352,7 +352,7 @@
     "2:2": {
       "tile": {
         "name": "wall",
-        "state": "centre-br"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -362,7 +362,7 @@
     "3:2": {
       "tile": {
         "name": "wall",
-        "state": "bottom"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -372,7 +372,7 @@
     "4:2": {
       "tile": {
         "name": "wall",
-        "state": "centre-bl"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -502,7 +502,7 @@
     "1:3": {
       "tile": {
         "name": "wall",
-        "state": "centre-br"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -512,7 +512,7 @@
     "2:3": {
       "tile": {
         "name": "wall",
-        "state": "bottom right"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -522,14 +522,17 @@
     "3:3": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "wall",
+        "state": "centre-br"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "4:3": {
       "tile": {
         "name": "wall",
-        "state": "bottom left"
+        "state": "bottom"
       },
       "object": null,
       "player": null,
@@ -549,7 +552,10 @@
     "6:3": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -656,7 +662,7 @@
     "1:4": {
       "tile": {
         "name": "wall",
-        "state": "right"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -664,12 +670,12 @@
       "horizontal_barrier": null
     },
     "2:4": {
-      "object": {
-        "name": "temporary flag",
-        "state": "9"
-      },
+      "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "wall",
+        "state": "centre"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -677,8 +683,8 @@
       "object": null,
       "player": null,
       "tile": {
-        "name": "spike",
-        "state": "spike"
+        "name": "wall",
+        "state": "right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -807,7 +813,7 @@
     "1:5": {
       "tile": {
         "name": "wall",
-        "state": "right"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -817,14 +823,17 @@
     "2:5": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "wall",
+        "state": "centre"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "3:5": {
       "tile": {
         "name": "wall",
-        "state": "top end"
+        "state": "right"
       },
       "object": null,
       "player": null,
@@ -952,7 +961,7 @@
     "1:6": {
       "tile": {
         "name": "wall",
-        "state": "right"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -962,14 +971,17 @@
     "2:6": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "wall",
+        "state": "centre"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "3:6": {
       "tile": {
         "name": "wall",
-        "state": "top bottom"
+        "state": "right"
       },
       "object": null,
       "player": null,
@@ -1097,7 +1109,7 @@
     "1:7": {
       "tile": {
         "name": "wall",
-        "state": "right"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -1107,14 +1119,17 @@
     "2:7": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "wall",
+        "state": "centre"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "3:7": {
       "tile": {
         "name": "wall",
-        "state": "left-tr"
+        "state": "centre-tr"
       },
       "object": null,
       "player": null,
@@ -1251,7 +1266,7 @@
     "1:8": {
       "tile": {
         "name": "wall",
-        "state": "centre-tr"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -1261,7 +1276,7 @@
     "2:8": {
       "tile": {
         "name": "wall",
-        "state": "top"
+        "state": "centre"
       },
       "object": null,
       "player": null,
@@ -1271,7 +1286,7 @@
     "3:8": {
       "tile": {
         "name": "wall",
-        "state": "centre-tl"
+        "state": "centre"
       },
       "object": null,
       "player": null,

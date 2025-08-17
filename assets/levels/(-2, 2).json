@@ -1569,9 +1569,9 @@
       "horizontal_barrier": null
     },
     "13:11": {
-      "tile": null,
       "object": null,
       "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },

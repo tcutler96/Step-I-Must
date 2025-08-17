@@ -7,6 +7,7 @@
     "gold gems": [],
     "cheeses": []
   },
+  "locks": [],
   "tilemap": {
     "0:0": {
       "object": null,
@@ -1109,7 +1110,10 @@
     "10:8": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1236,7 +1240,10 @@
     "10:9": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1363,7 +1370,10 @@
     "10:10": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1493,7 +1503,10 @@
     "10:11": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1622,7 +1635,10 @@
     "9:12": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },

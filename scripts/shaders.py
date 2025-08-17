@@ -25,7 +25,7 @@ class Shaders:
         self.effect_data = {'grey': {}, 'invert': {}, 'blur': {'current': 2, 'min': 2, 'max': 5},
                             'pixelate': {'current': 1, 'min': 1, 'max': 4}, 'chromatic': {},
                             'shockwave': {'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05},
-                            'galaxy': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False},
+                            'galaxy': {}, 'ripple': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False},
                             'test': {}}
         self.shaders = self.load_shaders()
         self.missing_display_layers = []
@@ -34,6 +34,7 @@ class Shaders:
 
         # add distortion effect to grey effect that is used when low/ out of steps...
         # undo/redo does not update map location, it doesnt update alot of in game things (ie data)...
+        # add way to specify what we want to save in data and settings file...
 
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)

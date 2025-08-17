@@ -33,6 +33,7 @@ class Game:
         self.no_steps = False
         self.teleporter_data = None
         self.sign_data = None
+        self.empty_sign = None
         self.lock_data = None
 
     def reset_animations(self, force_reset=False):
@@ -255,11 +256,22 @@ class Game:
             self.teleporter_data['standing'] = []
             sign_data = self.sign_data
             self.sign_data = []
+            self.empty_sign = None
             self.lock_data = None
             for cell in self.level.get_cells():
                 if cell.check_element(name='player'):
                     self.player_cells[cell.position] = cell
                     level_and_position = self.main.utilities.level_and_position(level=self.level.name, position=cell.position)
+
+                    if cell.check_element(name='sign'):  # signs
+                        self.main.audio.play_sound(name='scroll_open')
+                        sign_position = self.level.name + ' - ' + str(cell.position)
+                        if sign_position in self.main.assets.data['signs']:
+                            self.sign_data.append(sign_position)
+                        else:
+                            print(f'sign data for level and position {sign_position} not found...')
+                            self.empty_sign = sign_position
+
                     if self.main.debug:
                         self.no_steps = False
                         if cell.check_element(name='teleporter'):
@@ -285,13 +297,14 @@ class Game:
                         if not cell.check_element(name='player', state='dead'):  # players
                             self.no_steps = False
 
-                        if cell.check_element(name='sign'):  # signs
-                            self.main.audio.play_sound(name='scroll_open')
-                            sign_position = self.level.name + ' - ' + str(cell.position)
-                            if sign_position in self.main.assets.data['signs']:
-                                self.sign_data.append(sign_position)
-                            else:
-                                print(f'sign data for level and position {sign_position} not found...')
+                        # if cell.check_element(name='sign'):  # signs
+                        #     self.main.audio.play_sound(name='scroll_open')
+                        #     sign_position = self.level.name + ' - ' + str(cell.position)
+                        #     if sign_position in self.main.assets.data['signs']:
+                        #         self.sign_data.append(sign_position)
+                        #     else:
+                        #         print(f'sign data for level and position {sign_position} not found...')
+                        #         self.empty_sign = sign_position
 
                         for direction in cell.adjacent_directions:  # locks
                             new_cell = self.level.get_new_cell(position=cell.position, movement=direction)
@@ -703,6 +716,13 @@ class Game:
                             else:
                                 print(f'warp not set')
 
+    def update_signs(self):
+        if self.main.events.check_key(key='e') and self.main.debug and self.empty_sign and self.empty_sign not in self.main.assets.data['signs']:
+            print(f'sign data for level and position {self.empty_sign} added...')
+            self.main.assets.data['signs'][self.empty_sign] = ""
+            self.main.assets.save_data()
+            self.main.text_handler.sign_lines[self.empty_sign] = 1
+
     def update_map(self, mouse_position):
         if self.level.name != 'custom':
             selected_level = self.map.update(mouse_position=mouse_position if self.map.show_map else None, active_cutscene=self.cutscene.active)
@@ -784,6 +804,7 @@ class Game:
         self.no_steps = False
         self.teleporter_data = {'standing': None, 'setting': None}
         self.sign_data = None
+        self.empty_sign = None
         self.lock_data = None
         self.map.reset_map()
         self.level.reset_cache()
@@ -833,6 +854,7 @@ class Game:
                         # self.main.audio.play_sound(name='game_over')
                         self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player'], effect='grey')
                     self.update_teleporters()
+                    self.update_signs()
                     if not self.map.show_map:
                         if self.level.update():
                             self.update_undo_redo()

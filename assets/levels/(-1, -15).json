@@ -1510,7 +1510,10 @@
     "7:10": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },

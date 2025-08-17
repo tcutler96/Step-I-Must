@@ -1,17 +1,17 @@
 {
   "game": {
-    "level": "(-1, -5)",
+    "level": "(-5, -9)",
     "respawn": [
       [
         [
-          3,
-          11
+          7,
+          7
         ]
       ],
       [
         [
-          3,
-          11
+          7,
+          7
         ]
       ],
       [
@@ -21,22 +21,30 @@
     "collectables": {
       "silver keys": [],
       "silver gems": [],
-      "gold keys": [],
+      "gold keys": [
+        "(-1, -6) - (8, 4)"
+      ],
       "gold gems": [],
       "cheeses": []
     },
     "discovered_levels": [
       "(0, 0)",
-      "(-4, -1)",
-      "(-4, -2)",
-      "(-3, -2)",
-      "(-2, -2)",
-      "(-1, -2)",
-      "(-1, -5)"
+      "(-1, -6)",
+      "(-1, -7)",
+      "(-1, -5)",
+      "(-2, 2)",
+      "(-1, 2)",
+      "(0, -5)",
+      "(1, -6)",
+      "(-5, -9)",
+      "(-6, -10)",
+      "(-7, -10)",
+      "(-7, -11)",
+      "(-1, -15)"
     ],
     "active_portals": [
-      "(-1, -2) - (5, 7)",
-      "(-1, -5) - (3, 11)"
+      "(-1, -6) - (10, 2)",
+      "(-1, -5) - (1, 10)"
     ]
   },
   "locks": {
@@ -295,13 +303,31 @@
   "cutscenes": {},
   "signs": {
     "(-1, 2) - (14, 9)": "Gems are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.",
-    "(-2, 2) - (13, 12)": "You can always undo and redo moves, and sometimes the solution involves resetting. Don't be afraid to experiment!",
+    "(-2, 2) - (13, 12)": "You can always undo and redo moves, restart a level from the pause menu, and sometimes the solution involves resetting. Don't be afraid to experiment!",
     "(-2, 2) - (10, 8)": "If you're ever stuck in a level, you can always use the map to teleport back to a level that contains a teleporter, like this one!",
     "(-7, 3) - (8, 11)": "The following puzzles are extremely difficult.",
     "(-7, 3) - (8, 12)": "They use a wide variety of techniques and objects, including some you might not know about yet.",
     "(-7, 3) - (8, 13)": "If you don't want to solve these, use the map to teleport to a different level.",
     "(-7, 3) - (8, 14)": "Otherwise, you may proceed.",
-    "(-7, 3) - (8, 15)": "Good luck!"
+    "(-7, 3) - (8, 15)": "Good luck!",
+    "(-1, -5) - (1, 9)": "For example, you can step back on to the portal and use it to skip to the end of this area. Or you can use undo!",
+    "(-1, -6) - (9, 2)": "This is a portal! Once activated, you can use them to skip back and forth through sections of levels.",
+    "(-1, -7) - (9, 12)": "Welcome to the second world! This world is a lot bigger than the first, so here's some advice for you...",
+    "(-1, -7) - (10, 11)": "These levels can be tackled in any order, and the first ones you find won't necessarily be the easiest! If you're stuck, consider switching to a different level.",
+    "(-1, -7) - (10, 10)": "Remember, gems are optional and can be very, very, VERY hard to collect. If you can't get a gem (or figure out a secret) consider coming back later.",
+    "(-1, -7) - (10, 9)": "Also, don't forget you can undo and redo moves, teleport via the map or activated portals, and restart levels from the pause menu.",
+    "(-1, -7) - (10, 8)": "Lastly, have fun exploring and good luck!",
+    "(0, -5) - (8, 7)": "The following puzzles are fairly difficult, especially at the end. Proceed if you want a challenge!",
+    "(1, -6) - (8, 10)": "these signs are serve as a hint to portal cryptid warps...",
+    "(1, -6) - (7, 10)": "",
+    "(1, -6) - (6, 10)": "",
+    "(1, -6) - (5, 10)": "",
+    "(1, -6) - (4, 10)": "",
+    "(1, -6) - (3, 10)": "",
+    "(1, -6) - (3, 9)": "",
+    "(1, -6) - (3, 8)": "",
+    "(-5, -9) - (6, 3)": "Welcome to the chain.",
+    "(-1, -15) - (7, 10)": "Welcome to the meta (teleport via the map to get back to the main area)."
   },
   "teleporters": {
     "recievers": {
@@ -650,7 +676,7 @@
           1,
           10
         ],
-        "destination": null
+        "destination": "(-1, -6) - (10, 2)"
       },
       "(-1, -6) - (10, 2)": {
         "position": [
@@ -713,7 +739,7 @@
           3,
           11
         ],
-        "destination": "(-1, -2) - (5, 7)"
+        "destination": null
       },
       "(0, -11) - (3, 1)": {
         "position": [
@@ -1035,7 +1061,7 @@
           1,
           10
         ],
-        "destination": "(0, -7) - (1, 10)"
+        "destination": null
       },
       "(-5, -6) - (7, 3)": {
         "position": [
@@ -1161,7 +1187,7 @@
           7,
           2
         ],
-        "destination": "(-4, -9) - (1, 1)"
+        "destination": null
       },
       "(-4, -9) - (1, 1)": {
         "position": [
@@ -1182,7 +1208,7 @@
           3,
           6
         ],
-        "destination": "(-1, -7) - (13, 10)"
+        "destination": null
       },
       "(1, -6) - (7, 7)": {
         "position": [
@@ -1280,14 +1306,14 @@
           2,
           3
         ],
-        "destination": "(-1, -15) - (2, 5)"
+        "destination": null
       },
       "(-1, -15) - (2, 5)": {
         "position": [
           2,
           5
         ],
-        "destination": "(-1, -15) - (2, 3)"
+        "destination": null
       },
       "(-6, 2) - (12, 8)": {
         "position": [
@@ -1449,21 +1475,16 @@
           2
         ],
         "destination": "(0, 0) - (12, 2)"
+      },
+      "(0, -5) - (14, 10)": {
+        "position": [
+          14,
+          10
+        ],
+        "destination": null
       }
     },
     "activations": {
-      "(-1, -6) - (9, 6)": {
-        "position": [
-          9,
-          6
-        ],
-        "portals": [
-          "(-1, -6) - (10, 2)",
-          "(-1, -5) - (1, 10)"
-        ],
-        "two_players": false,
-        "activated": true
-      },
       "(0, -6) - (7, 10)": {
         "position": [
           7,
@@ -1918,18 +1939,6 @@
         "two_players": false,
         "activated": false
       },
-      "(-1, -6) - (8, 4)": {
-        "position": [
-          8,
-          4
-        ],
-        "portals": [
-          "(-1, -6) - (10, 2)",
-          "(-1, -5) - (1, 10)"
-        ],
-        "two_players": false,
-        "activated": true
-      },
       "(1, -9) - (10, 14)": {
         "position": [
           10,
@@ -2153,6 +2162,18 @@
         "portals": [
           "(-1, -2) - (5, 7)",
           "(-1, -5) - (3, 11)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(-1, -6) - (8, 2)": {
+        "position": [
+          8,
+          2
+        ],
+        "portals": [
+          "(-1, -6) - (10, 2)",
+          "(-1, -5) - (1, 10)"
         ],
         "two_players": false,
         "activated": false

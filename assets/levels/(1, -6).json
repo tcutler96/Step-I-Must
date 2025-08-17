@@ -1301,7 +1301,10 @@
     "3:8": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1455,7 +1458,10 @@
     "3:9": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1600,42 +1606,60 @@
     "3:10": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "4:10": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "5:10": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "6:10": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "7:10": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "8:10": {
       "object": null,
       "player": null,
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "vertical_barrier": null,
       "horizontal_barrier": null
     },

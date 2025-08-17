@@ -153,6 +153,7 @@
         "option",
         [
           "Galaxy",
+          "Ripple",
           "Game of Life",
           "Disabled"
         ]
@@ -248,7 +249,7 @@
     },
     "gameplay": {
       "Gameplay": "title",
-      "Cutscene speed": [
+      "Cutscene Speed": [
         "button",
         "option",
         [

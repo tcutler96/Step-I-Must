@@ -46,8 +46,8 @@ class Transition:
                 self.step = -1
                 self.scale = 1
             self.response = response
-            if self.response and self.response[0] == 'game_state' and self.main.assets.music_themes[self.main.game_state] != self.main.assets.music_themes[self.response[1]]:
-                self.main.audio.stop_music(fade=length)
+            if self.response and self.response[0] == 'game_state':
+                self.main.audio.stop_music(game_state=self.response[1], fade=length)
             self.queue = queue
 
     def update(self):

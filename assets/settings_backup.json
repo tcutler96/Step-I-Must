@@ -2,18 +2,20 @@
   "video": {
     "cursor_type": "sprite",
     "map_colour": "green",
-    "particles": false,
-    "resolution": 3,
+    "particles": true,
+    "resolution": 2,
     "screen_shake": true
   },
   "shaders": {
     "all": true,
-    "background": "gol",
-    "crt": false
+    "background": "galaxy",
+    "crt": true,
+    "vignette": true,
+    "chromatic_aberration": true
   },
   "audio": {
-    "master_volume": 0.2,
-    "music_volume": 0.1,
+    "master_volume": 0.1,
+    "music_volume": 0.5,
     "sound_volume": 0.5
   },
   "gameplay": {
@@ -103,18 +105,18 @@
         "button",
         "option",
         [
-          "Disabled",
-          "Enabled"
+          "Enabled",
+          "Disabled"
         ]
       ],
       "Resolution": [
         "button",
         "option",
         [
+          "(896, 640)",
           "(1344, 960)",
           "(1792, 1280)",
-          "(448, 320)",
-          "(896, 640)"
+          "(448, 320)"
         ]
       ],
       "Screen Shake": [
@@ -150,17 +152,34 @@
         "button",
         "option",
         [
+          "Galaxy",
+          "Ripple",
           "Game of Life",
-          "Disabled",
-          "Galaxy"
+          "Disabled"
+        ]
+      ],
+      "Chromatic Aberration": [
+        "button",
+        "option",
+        [
+          "Enabled",
+          "Disabled"
         ]
       ],
       "CRT": [
         "button",
         "option",
         [
-          "Disabled",
-          "Enabled"
+          "Enabled",
+          "Disabled"
+        ]
+      ],
+      "Vignette": [
+        "button",
+        "option",
+        [
+          "Enabled",
+          "Disabled"
         ]
       ],
       "Back": [
@@ -175,23 +194,6 @@
         "button",
         "option",
         [
-          "20%",
-          "30%",
-          "40%",
-          "50%",
-          "60%",
-          "70%",
-          "80%",
-          "90%",
-          "100%",
-          "Disabled",
-          "10%"
-        ]
-      ],
-      "Music Volume": [
-        "button",
-        "option",
-        [
           "10%",
           "20%",
           "30%",
@@ -203,6 +205,23 @@
           "90%",
           "100%",
           "Disabled"
+        ]
+      ],
+      "Music Volume": [
+        "button",
+        "option",
+        [
+          "50%",
+          "60%",
+          "70%",
+          "80%",
+          "90%",
+          "100%",
+          "Disabled",
+          "10%",
+          "20%",
+          "30%",
+          "40%"
         ]
       ],
       "Sound Volume": [
@@ -230,7 +249,7 @@
     },
     "gameplay": {
       "Gameplay": "title",
-      "Cutscene speed": [
+      "Cutscene Speed": [
         "button",
         "option",
         [

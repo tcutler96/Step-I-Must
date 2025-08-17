@@ -32,7 +32,6 @@ class MapCell:
                     self.main.audio.play_sound(name='menu_highlight', overlap=True)
                 self.main.display.set_cursor(cursor='hand')
                 if self.main.events.check_key(key='mouse_1'):
-                    self.main.audio.play_sound(name='teleport', overlap=True)
                     return self.rect.center
 
     def draw_cell(self, displays, sprite, offset, alpha=None):

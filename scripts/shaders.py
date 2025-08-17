@@ -32,10 +32,6 @@ class Shaders:
         self.missing_effects = []
         # print("Max fragment uniform components:", self.context.info['GL_MAX_FRAGMENT_UNIFORM_COMPONENTS'])
 
-        # add distortion effect to grey effect that is used when low/ out of steps...
-        # undo/redo does not update map location, it doesnt update alot of in game things (ie data)...
-        # add way to specify what we want to save in data and settings file...
-
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)
 
@@ -63,12 +59,9 @@ class Shaders:
 
     def load_shaders(self):
         shaders = {display_layer: self.default_effect_data for display_layer in self.main.display.display_layers}
-        # print(shaders)
         for index, (effect, data) in enumerate(self.effect_data.items()):
             self.effect_data[effect] = {'index': index + 1, 'data': data}
             self.set_uniforms(uniforms={f'{effect}_index': index + 1})
-        # self.effect_data['final'] = {'index': index + 1, 'data': {}}
-        # self.set_uniforms(uniforms={'final_index': index + 1})
         return shaders
 
     def clear_gol(self):
@@ -158,7 +151,7 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('x', 'held'):
-            self.apply_effect(display_layer=['background'], effect='test')
+            self.apply_effect(display_layer=['ui'], effect='test')
         if self.chromatic_aberration:
             self.apply_effect(display_layer=['ui'], effect='chromatic', effect_data={'length': 0})
         if self.background:

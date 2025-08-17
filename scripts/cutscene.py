@@ -89,19 +89,12 @@ class Cutscene:
                                          '(-2, -2)': [["The way ahead allows no turns.", "A truth awaits I fear to learn."]],
                                          '(-1, -2)': [["Is this the end, or just a door?", "Beyond which waits what came before."]],
                                          '(-1, -5)': [["The portal shivers, and whispers low.", "I've stepped through veils I do not know."],
-                                                      ["I see it now, the fog has cleared.", "This is no end, as I had feared."],  # lead into this is just the beginning line...
-                                                      ["All up to now, naught but a test.", "Now I am ready, no time to rest."],
-                                                      ["Each step I've taken has led to this.", "."],
-                                                      ["But if there are things still left undone.", "To that first place, I can always run."],
+                                                      ["I see it now, the fog has cleared.", "This is no end, as I had feared."],
+                                                      ["Each step I've taken has led to this.", "The start of an endless abyss."],
+                                                      ["All up to now, naught but a test.", "I hope I'm ready, no time to rest."],
+                                                      ["If there are things still left undone.", "To that first world, I can always run."],
                                                       ["My trusty map, faithful and true.", "Now shows to me, both old and new."]]}}
         self.update_cutscene_text()
-        # add cutscenes for: intro to second game ('i though we were done, but it seems we are only just beginning', 'i can always return to the first place by toggling the map...')
-        # all up to now, naught but a test, to prepare me for all the rest...
-        # this place looks different but feels the same...
-        # each step has led to this
-
-        # all my steps have led to this... a place to rest, or some great abyss, miss
-        # make ripple effect proper circles, use aspect ratio to fix...
 
     def update_cutscene_text(self):
         for cutscene_data in self.cutscene_data.values():

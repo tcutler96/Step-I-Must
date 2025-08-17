@@ -223,74 +223,50 @@ vec4 gol(sampler2D display_layer) {
     return colour;
 }
 
-const float ripple_life   = 2.5;
-const float splash_life  = 0.5;
-const float big_ripple_life    = 4.0;
-
 float hash(float n) { return fract(sin(n) * 43758.5453); }
 vec2 hash2(float n) { return vec2(hash(n * 1.13), hash(n * 7.77)); }
 
+
+void processDroplets(int max_count, float life, float size, float size_var, float speed, float speed_var,
+                     float strength, int type, inout vec2 ripple_uv, inout float brightness) {
+    for (int i = 0; i < max_count; i++) {
+        float start_phase = hash(float(i) * 12.345) * life;
+        float cycle_time = time + start_phase;
+        float t = mod(cycle_time, life);
+        float cycle_index = floor(cycle_time / life);
+
+        vec2 centre = hash2(float(i) + cycle_index * 123.456);
+        vec2 diff = vec2((uv.x - centre.x) * aspect_ratio[0], (uv.y - centre.y) * aspect_ratio[1]);
+        float dist = length(diff);
+        vec2 dir = normalize(diff);
+
+        if (type == 0) {
+            float w = size + hash(float(i) + cycle_index*2.0) * size_var;
+            float spd = speed + hash(float(i) + cycle_index) * speed_var;
+            float radius = t * spd;
+            float edgeDist = abs(dist - radius);
+            float ring = exp(-pow(edgeDist / w, 2.0)) * (1.0 - t / life);
+            ripple_uv += dir * ring * (strength + 0.008 * brightness);
+            brightness += ring * 0.15;
+
+        } else {
+            float splash = exp(-pow(dist / size, 2.0)) * (1.0 - t / life);
+            ripple_uv += dir * splash * strength;
+            brightness += splash * 0.05;
+        }
+    }
+}
+
 vec4 ripple(sampler2D display_layer) {
-    // subtle whole-screen wobble
-    vec2 distortedUV = uv;
-    distortedUV += vec2(
-        sin((uv.y + time * 0.2) * 20.0) * 0.002,
-        cos((uv.x + time * 0.15) * 20.0) * 0.002
-    );
+    vec2 ripple_uv = uv;
+    float brightness = 0.0;
 
-    float brightnessMod = 0.0;
-    vec2 totalRefraction = vec2(0.0);
+    processDroplets(10, 5.0, 0.006, 0.005, 0.25, 0.15, 0.015, 0, ripple_uv, brightness);
+    processDroplets(20, 2.5, 0.01, 0.0, 0.0, 0.0, 0.02, 1, ripple_uv, brightness);
+    processDroplets(5, 10.0, 0.015, 0.0, 0.12, 0.0, 0.03, 0, ripple_uv, brightness);
 
-    // main raindrops
-    for (int i = 0; i < 10; i++) {
-        float startPhase = hash(float(i) * 12.345) * ripple_life;
-        float cycleTime = time + startPhase;
-        float t = mod(cycleTime, ripple_life);
-        float cycleIndex = floor(cycleTime / ripple_life);
-        vec2 centre = hash2(float(i) + cycleIndex * 123.456);
-        float speed = 0.15 + hash(float(i) + cycleIndex) * 0.10;
-        float waveWidth = 0.006 + hash(float(i) + cycleIndex*2.0) * 0.005;
-        float dist = length(uv - centre);
-        float radius = t * speed;
-        float edgeDist = abs(dist - radius);
-        float ring = exp(-pow(edgeDist / waveWidth, 2.0)) * (1.0 - t / ripple_life);
-        vec2 dir = normalize(uv - centre);
-        totalRefraction += dir * ring * (0.015 + 0.008 * brightnessMod);
-        brightnessMod += ring * 0.15;
-    }
-
-    // tiny splashes
-    for (int i = 0; i < 20; i++) {
-        float startTime = hash(float(i) * 91.3) * splash_life * 3.0;
-        float t = mod(time + startTime, splash_life);
-        float cycleIndex = floor((time + startTime) / splash_life);
-        vec2 centre = hash2(float(i) + cycleIndex * 987.654);
-        float dist = length(uv - centre);
-        float splash = exp(-pow(dist / 0.01, 2.0)) * (1.0 - t / splash_life);
-        vec2 dir = normalize(uv - centre);
-        totalRefraction += dir * splash * 0.02;
-        brightnessMod += splash * 0.05;
-    }
-
-    // occasional big drops
-    for (int i = 0; i < 5; i++) {
-        float startTime = hash(float(i) * 321.0) * big_ripple_life * 2.0;
-        float t = mod(time + startTime, big_ripple_life);
-        float cycleIndex = floor((time + startTime) / big_ripple_life);
-        vec2 centre = hash2(float(i) + cycleIndex * 555.555);
-        float dist = length(uv - centre);
-        float radius = t * 0.12;
-        float edgeDist = abs(dist - radius);
-        float ring = exp(-pow(edgeDist / 0.015, 2.0)) * (1.0 - t / big_ripple_life);
-        vec2 dir = normalize(uv - centre);
-        totalRefraction += dir * ring * 0.03;
-        brightnessMod += ring * 0.1;
-    }
-
-    distortedUV += totalRefraction;
-    vec3 baseCol = texture(display_layer, distortedUV).rgb;
-    baseCol += brightnessMod;
-    vec4 colour = vec4(baseCol, 1.0);
+    vec4 colour = texture(display_layer, ripple_uv);
+    colour.rgb += brightness;
     return colour;
 }
 
@@ -301,23 +277,6 @@ const mat4 THRESHOLD_MATRIX = mat4(
 		vec4(13.0 / 17.0,  5.0 / 17.0, 15.0 / 17.0,  7.0 / 17.0),
 		vec4(4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0),
 		vec4(16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0));
-
-#define MAX_RADIUS 2
-#define DOUBLE_HASH 0
-#define HASHSCALE1 .1031
-#define HASHSCALE3 vec3(.1031, .1030, .0973)
-
-float hash12(vec2 p) {
-	vec3 p3 = fract(vec3(p.xyx) * HASHSCALE1);
-    p3 += dot(p3, p3.yzx + 19.19);
-    return fract((p3.x + p3.y) * p3.z);
-}
-
-vec2 hash22(vec2 p) {
-	vec3 p3 = fract(vec3(p.xyx) * HASHSCALE3);
-    p3 += dot(p3, p3.yzx+19.19);
-    return fract((p3.xx+p3.yz)*p3.zy);
-}
 
 vec4 test(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec4 colour = texture(display_layer, uv);  // dithering, cool for lighting system...

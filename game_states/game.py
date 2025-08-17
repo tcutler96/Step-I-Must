@@ -135,8 +135,10 @@ class Game:
             self.main.audio.play_sound(name='bump')
             bump_amount = self.bump_amount
         if not cell.object_data[object_type]['bumped']:
+            movement_speed = self.movement_speed // 0.125
             cell.object_data[object_type]['bumped'] = True
-            cell.object_data[object_type]['blit_position'].append((cell.position[0] + movement[0] * bump_amount, cell.position[1] + movement[1] * bump_amount))
+            cell.object_data[object_type]['blit_position'].append((cell.position[0] + movement[0] * bump_amount * movement_speed,
+                                                                   cell.position[1] + movement[1] * bump_amount * movement_speed))
             cell.object_data[object_type]['blit_position'].append(cell.position)
             self.interpolating = True
 
@@ -153,23 +155,6 @@ class Game:
         return respawn
 
     def transition_level(self, teleport=None):
-        # looped animations arent being stopped when we transision to another level
-        # need to do a full game run through to test all the levels work as intended...
-        # still need proper sprites for splitter, barriers, flags
-        # add short teleporting animation to player that is triggered whenever we teleport via tile or when we first enter game one/ two...
-        # add percentage tracker in map
-        # (-3, -12), object conflict on ice...
-        # (-3, -13), sliding into a wall trigger bump a bunch of times...
-        # (-3, -14), rocks dont behave properly when they meet in the middle...
-        # (-5, -6), sliding into a barrier crashes game...
-        # (-2, -7), conveying a chain of flags into edge of level doesnt move the flags but it does push the player when it shoudnt...
-        # need to add a tile that resets level and collected star in the level (remove specific gem from game collectable data...), (4, -6)(4, 13), (5, -6)(10, 1), manually add data to game data...
-        # when we step on a gem reseter tile, look up in data which gem to reset, then remove that gem from collected collectables, map collection, ass back to cached levels...
-        # cryptids: big finale room, teleports to (13, 3)/ (7, -18) here which leads to (13, 4)/ (7, -17) with portal that leads to (11, 10)/
-        # when last player is turned to stone, fail text does not pop up...
-        # add arrow keys to movement input...
-        # delay conveyor (and maybe splitter) triggered animations by a couple frames?
-        # add smoke/ magic animation to splitter...
         self.resolve_state = None
         self.no_movement = False
         self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
@@ -297,15 +282,6 @@ class Game:
                         if not cell.check_element(name='player', state='dead'):  # players
                             self.no_steps = False
 
-                        # if cell.check_element(name='sign'):  # signs
-                        #     self.main.audio.play_sound(name='scroll_open')
-                        #     sign_position = self.level.name + ' - ' + str(cell.position)
-                        #     if sign_position in self.main.assets.data['signs']:
-                        #         self.sign_data.append(sign_position)
-                        #     else:
-                        #         print(f'sign data for level and position {sign_position} not found...')
-                        #         self.empty_sign = sign_position
-
                         for direction in cell.adjacent_directions:  # locks
                             new_cell = self.level.get_new_cell(position=cell.position, movement=direction)
                             if new_cell and new_cell.check_element(name='lock'):
@@ -402,6 +378,7 @@ class Game:
                     if self.move_object(cell=cell, object_type='player', movement=movement):
                         player_moved = True
             if self.players_exited:
+                self.main.audio.play_sound(name='player_move', overlap=True)
                 self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
                 self.no_movement = False
                 self.transition_level()
@@ -575,7 +552,7 @@ class Game:
 
     def resolve_spikes(self):
         for cell in self.level.get_cells():
-            if cell.check_element(name='spike') and cell.check_element(name='player'):
+            if cell.check_element(name='spike') and cell.check_element(name='player', state=['idle', 'moving']):
                 if not cell.check_element(name=['permanent flag', 'temporary flag']) or cell.check_element(name=['permanent flag', 'temporary flag'], state='0'):
                     self.main.audio.play_sound(name='spike')
                     cell.elements['player']['state'] = 'dead'
@@ -731,6 +708,7 @@ class Game:
                     self.main.audio.play_sound(name='map_close')
                     self.map.show_map = False
                 else:
+                    self.main.audio.play_sound(name='teleport', overlap=True)
                     self.teleporter_data['standing'] = None
                     position = (7, 7)
                     if not self.main.debug:

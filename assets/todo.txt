@@ -2,9 +2,6 @@
 
 *** audio ***
 - add remaining sound files
-- add remaining references in code for sound files
-- quit game sound
-- add sound for activating portals and cryptid portals
 
 
 *** sprites ***
@@ -47,7 +44,7 @@
 - sliding on ice into a barrier that had ice behind it causes the game to crash
 
 
-*** levels ***
+*** level craches ***
 - (-3, -12): object conflict on ice
 - (-3, -13): sliding into a wall trigger bump a bunch of times
 - (-3, -14): rocks dont behave properly when they meet in the middle

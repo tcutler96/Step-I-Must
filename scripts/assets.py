@@ -57,7 +57,12 @@ class Assets:
                 folder_path = os.path.join(path, folder)
                 folder_audio = {}
                 for file in self.list_directory(path=folder_path):
-                    folder_audio[file.split('.')[0]] = os.path.join(folder_path, file) if folder == 'music' else pg.mixer.Sound(file=os.path.join(folder_path, file))
+                    if folder == 'music':
+                        music = pg.mixer.Sound(file=os.path.join(folder_path, file))
+                        folder_audio[file.split('.')[0]] = {'path': os.path.join(folder_path, file), 'length': int(music.get_length() * 1000)}
+                        del music
+                    elif folder == 'sound':
+                        folder_audio[file.split('.')[0]] = pg.mixer.Sound(file=os.path.join(folder_path, file))
                 audio[folder] = folder_audio
         return audio
 

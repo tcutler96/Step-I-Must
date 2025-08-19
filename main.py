@@ -43,7 +43,7 @@ class Main:
         self.game_state = 'splash'
         self.game_states = {'splash': Splash(main=self), 'main_menu': MainMenu(main=self), 'game': Game(main=self), 'level_editor': LevelEditor(main=self)}
         self.game_states[self.game_state].start_up()
-        self.audio.start_music(game_state=self.game_state)
+        self.audio.start_music(game_state=self.game_state, fade=5)
         self.debug = False
         self.testing = True
         self.draw_gol = False
@@ -57,7 +57,7 @@ class Main:
             elif game_state in self.game_states:
                 previous_game_state = self.game_state
                 self.game_state = game_state
-                self.audio.start_music(game_state=self.game_state)
+                self.audio.start_music(game_state=self.game_state, fade=5)
                 if previous_game_state == 'main_menu' and self.game_state == 'game' and 'New Game' not in self.menu_states['title_screen'].menu:
                     self.update_menu(menu='title_screen')
                 self.game_states[game_state].start_up(previous_game_state=previous_game_state)

@@ -4,8 +4,6 @@
 - add remaining sound files
 - add remaining references in code for sound files
 - quit game sound
-- set game states music themes in audio class that are automatically loaded when entering a new game state
-- allow game states to have multiple music themes that are automatically looped through
 - add sound for activating portals and cryptid portals
 
 
@@ -39,13 +37,14 @@
 - picking up a collectable prevents animations from finishing, need to continue to resolve level loop
 - looped animations arent being stopped when we transision to another level
 - undo/ redo does not save game data (when we change levels) or update player location on map, it should also get any players out of sleeping state
-- we need to save game data as soon as teleport data is updated (in debug mode)
+- we need to save game data as soon as teleport data is updated (when activating portals or setting teleported data in debug mode)
 - when map is opened during a cutscene, we need to reset the sprite timers (ie have players and teleporters show first)
 - leaving a level while stood on a sign plays the close text sound when we are in the new level, instead of straight away
 - setting certain cells in the level editor spams the sound effect (any player on a flag, any cell on a barrier)
 - remove player respawn sprite when that flag is deleted when a player is turned to stone on top of it
 - playing a level from the level editor and then opening the game menu shows button as 'main menu' but it actually takes you back to the level editor, can we change the button text easily?
 - only draw game reset text and apply grey effect after cutscene has finished?
+- sliding on ice into a barrier that had ice behind it causes the game to crash
 
 
 *** levels ***

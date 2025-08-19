@@ -287,6 +287,7 @@ class Game:
                             if new_cell and new_cell.check_element(name='lock'):
                                 new_level_and_position = self.main.utilities.level_and_position(level=self.level.name, position=new_cell.position)
                                 if new_level_and_position in self.main.text_handler.text_elements['locks']:
+                                    self.main.audio.play_sound(name='lock')
                                     self.lock_data = new_level_and_position
 
                         if level_and_position in self.main.assets.data['teleporters']['activations']:  # activations
@@ -304,6 +305,7 @@ class Game:
                             # activation['activated'] = True
                             for portal in activation['portals']:
                                 if portal not in self.main.assets.data['game']['active_portals']:
+                                    self.main.audio.play_sound(name='portal_activate')
                                     self.main.assets.data['game']['active_portals'].append(portal)
                                     levels = self.level.cached_levels
                                     levels.append({'name': self.level.name, 'level': self.level.level})
@@ -338,6 +340,10 @@ class Game:
         new_cell = self.level.get_new_cell(position=cell.position, movement=movement)
         check_movement = cell.check_movement(object_type=object_type, movement=movement, new_cell=new_cell, push_allowed=push_allowed)
         if check_movement[0] and not self.players_exited:
+            if cell.check_element(name='player', state='dead'):
+                self.main.audio.play_sound(name='dead_player_pushed')
+            if cell.check_element(name='rock'):
+                self.main.audio.play_sound(name='rock_pushed')
             if cell.elements[object_type]['name'] == 'permanent flag' and self.level.current_respawn and cell.position in self.level.current_respawn[1]:
                 self.level.current_respawn[1][self.level.current_respawn[1].index(cell.position)] = new_cell.position
             new_cell.elements[object_type] = deepcopy(cell.elements[object_type])
@@ -675,6 +681,9 @@ class Game:
                             cryptid_warp = False
                             for cryptid in self.main.assets.data['teleporters']['cryptids'].values():
                                 if self.teleporter_data['standing'][0]['level_and_position'] in cryptid['teleporters'] and self.teleporter_data['standing'][1]['level_and_position'] in cryptid['teleporters']:
+                                    self.main.audio.play_sound(name='teleport')
+                                    # unique sound for cryptid portal teleport
+                                    # self.main.audio.play_sound(name='cryptid_teleport')
                                     cryptid_warp = True
                                     new_level, new_position = cryptid['destination'].split(' - ')
                                     self.transition_level(teleport=[new_level, self.main.utilities.position_str_to_tuple(position=new_position), self.main.display.centre])
@@ -687,6 +696,9 @@ class Game:
                         else:
                             teleporter_data = self.main.assets.data['teleporters'][self.teleporter_data['standing']['state'] + 's'][self.teleporter_data['standing']['level_and_position']]
                             if teleporter_data['destination']:
+                                self.main.audio.play_sound(name='teleport')
+                                # unique sound for portal teleport
+                                # self.main.audio.play_sound(name='portal_teleport' if self.teleporter_data['standing']['state'] == 'portal' else 'teleport')
                                 new_level, new_position = teleporter_data['destination'].split(' - ')
                                 self.transition_level(teleport=[new_level, self.main.utilities.position_str_to_tuple(position=new_position),
                                                                 self.level.grid_to_display(position=teleporter_data['position'], centre=True)])

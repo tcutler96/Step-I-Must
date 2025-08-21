@@ -74,7 +74,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "bottom"
+        "state": "bottom right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -83,8 +83,8 @@
       "object": null,
       "player": null,
       "tile": {
-        "name": "wall",
-        "state": "bottom"
+        "name": "conveyor",
+        "state": "down"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -94,7 +94,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "bottom"
+        "state": "bottom left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null

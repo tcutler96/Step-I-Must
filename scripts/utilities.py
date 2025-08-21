@@ -191,22 +191,7 @@ class Utilities:
             else:
                 return surface
 
-    def add_menu(self, name, title=None, buttons=None):
-        # do we really need this?
-        # name: menu name reference by other menus, title: string/ sprite, buttons: [{'name': 'Example', 'type': ['menu_state', 'game_state', 'level', 'option'], 'response': 'example'}]
-        # make sure to manually update option_to_setting dict in assets class and game_state_text_groups in text_handler class
-        menu_data = {}
-        if title:
-            menu_data[title] = 'title'
-        if buttons:
-            for button in buttons:
-                if button['type'] in ['menu_state', 'game_state', 'level', 'option']:
-                    menu_data[button['name']] = ['button', button['type'], button['response']]
-        self.main.assets.settings['menus'][name] = menu_data
-        self.main.assets.settings_changed = True
-        self.main.assets.save_settings()
-
-    def backup_file(self, file_name=None):  # call from develop options menu
+    def backup_file(self, file_name=None):
         if file_name in ['data', 'settings']:
             if file_name == 'data':
                 file_data = self.main.assets.data

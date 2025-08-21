@@ -12,6 +12,7 @@
     ],
     "cheeses": []
   },
+  "locks": [],
   "tilemap": {
     "0:0": {
       "object": null,

@@ -1,88 +1,182 @@
 {
   "game": {
-    "level": "(-5, 3)",
+    "level": "(-1, -14)",
     "respawn": [
       [
         [
           7,
-          7
+          15
+        ],
+        [
+          8,
+          15
         ]
       ],
       [
         [
           7,
-          7
+          15
+        ],
+        [
+          8,
+          15
         ]
       ],
       [
+        true,
         true
       ]
     ],
     "collectables": {
-      "silver keys": [
-        "(-2, 4) - (12, 9)"
-      ],
-      "silver gems": [
-        "(-5, 0) - (9, 15)"
-      ],
+      "silver keys": [],
+      "silver gems": [],
       "gold keys": [
-        "(-1, -6) - (8, 4)"
+        "(0, -6) - (6, 14)"
       ],
-      "gold gems": [
-        "(0, -5) - (2, 1)"
-      ],
+      "gold gems": [],
       "cheeses": [
+        "(-5, -18) - (2, 4)",
+        "(-5, -17) - (5, 1)",
+        "(0, -17) - (8, 13)",
+        "(-5, -15) - (8, 7)",
+        "(-2, -17) - (8, 13)",
+        "(1, -15) - (2, 6)",
         "(-7, -7) - (7, 6)",
-        "(-7, -6) - (13, 11)"
+        "(-7, -10) - (4, 2)",
+        "(2, -13) - (5, 3)"
       ]
     },
     "discovered_levels": [
       "(0, 0)",
-      "(-1, -6)",
-      "(-1, -7)",
-      "(-1, -5)",
-      "(-2, 2)",
-      "(-1, 2)",
-      "(0, -5)",
-      "(1, -6)",
-      "(-5, -9)",
-      "(-6, -10)",
-      "(-7, -10)",
-      "(-7, -11)",
-      "(-1, -15)",
-      "(-1, -2)",
-      "(-5, 1)",
-      "(-5, 0)",
-      "(-1, -8)",
-      "(-5, 3)",
-      "(-4, 1)",
-      "(-4, 0)",
-      "(-2, 4)",
-      "(1, -5)",
-      "(-1, 0)",
-      "(2, -12)",
+      "(1, -13)",
+      "(1, -10)",
       "(2, -11)",
-      "(3, -12)",
-      "(2, -17)",
-      "(-7, -6)",
-      "(-6, -6)",
-      "(-5, -6)",
-      "(-7, -5)",
+      "(2, -12)",
+      "(0, -14)",
+      "(-1, -11)",
+      "(2, -5)",
+      "(-1, -7)",
+      "(-5, -13)",
+      "(-4, -11)",
+      "(0, -7)",
+      "(0, -5)",
+      "(-1, -5)",
+      "(-1, -2)",
+      "(0, -11)",
+      "(-3, -14)",
+      "(0, -12)",
+      "(1, -11)",
+      "(-2, -10)",
+      "(2, -10)",
+      "(-1, -9)",
+      "(1, -9)",
+      "(0, -9)",
       "(-8, -6)",
+      "(-7, -5)",
+      "(-5, -6)",
+      "(-7, -6)",
+      "(-5, -9)",
+      "(-4, -9)",
+      "(1, -6)",
+      "(1, -7)",
+      "(-1, -15)",
+      "(-2, -15)",
+      "(-2, -16)",
+      "(-1, -16)",
+      "(0, -13)",
+      "(1, -5)",
+      "(-1, 1)",
+      "(-7, -11)",
+      "(-7, -10)",
+      "(-2, -8)",
+      "(0, -6)",
+      "(-3, -16)",
+      "(-4, -17)",
+      "(0, -15)",
+      "(1, -17)",
+      "(2, -15)",
+      "(3, -10)",
+      "(3, -11)",
+      "(3, -9)",
+      "(-5, -12)",
+      "(-5, -11)",
+      "(-5, -18)",
+      "(-5, -17)",
+      "(-6, -17)",
+      "(1, -16)",
+      "(-3, -18)",
+      "(2, -13)",
+      "(2, -16)",
+      "(3, -12)",
+      "(0, -10)",
+      "(1, -12)",
+      "(0, -17)",
+      "(0, -16)",
+      "(1, -18)",
+      "(-1, -18)",
+      "(-1, -17)",
+      "(3, -18)",
+      "(3, -17)",
+      "(-2, -17)",
+      "(2, -17)",
+      "(-4, -15)",
+      "(-5, -16)",
+      "(-5, -15)",
+      "(-4, -12)",
+      "(-4, -18)",
+      "(-4, -13)",
+      "(1, -15)",
+      "(3, -16)",
+      "(3, -15)",
+      "(-3, -10)",
+      "(-3, -15)",
+      "(-3, -9)",
+      "(-4, -14)",
+      "(-2, -9)",
+      "(-2, -14)",
+      "(-2, -13)",
+      "(-3, -17)",
+      "(1, -14)",
+      "(0, -8)",
+      "(-5, -7)",
+      "(-5, -8)",
+      "(2, -14)",
       "(-7, -7)",
+      "(-6, -6)",
       "(-4, -7)",
-      "(-4, -6)",
-      "(-4, -8)"
+      "(-1, -13)",
+      "(-1, -12)",
+      "(-1, -14)",
+      "(4, 4)"
     ],
     "active_portals": [
-      "(-1, -6) - (10, 2)",
-      "(-1, -5) - (1, 10)",
-      "(-1, -2) - (5, 7)",
-      "(-1, -5) - (3, 11)",
-      "(0, 0) - (12, 2)",
-      "(-1, 0) - (2, 2)",
-      "(2, -12) - (11, 14)",
-      "(2, -12) - (14, 9)",
+      "(1, -10) - (13, 11)",
+      "(2, -10) - (1, 12)",
+      "(-2, -8) - (1, 1)",
+      "(-2, -8) - (12, 14)",
+      "(-5, -11) - (11, 3)",
+      "(-5, -13) - (3, 12)",
+      "(-7, -11) - (5, 10)",
+      "(-2, -16) - (7, 4)",
+      "(0, -6) - (7, 11)",
+      "(0, -7) - (8, 10)",
+      "(0, -17) - (10, 13)",
+      "(0, -11) - (3, 1)",
+      "(0, -16) - (7, 4)",
+      "(-4, -12) - (7, 1)",
+      "(-4, -12) - (8, 14)",
+      "(-4, -17) - (3, 1)",
+      "(-5, -15) - (6, 7)",
+      "(-5, -15) - (10, 7)",
+      "(2, -15) - (7, 11)",
+      "(-3, -14) - (3, 1)",
+      "(-2, -17) - (8, 11)",
+      "(-1, -9) - (4, 14)",
+      "(-2, -9) - (11, 11)",
+      "(1, -10) - (10, 11)",
+      "(1, -9) - (14, 2)",
+      "(0, -13) - (3, 1)",
+      "(1, -18) - (10, 13)",
       "(-6, -6) - (9, 4)",
       "(-6, -6) - (7, 4)",
       "(-6, -6) - (2, 4)",
@@ -95,11 +189,49 @@
       "(-7, -5) - (10, 10)",
       "(-8, -6) - (6, 9)",
       "(-7, -7) - (5, 6)",
-      "(-5, -6) - (7, 3)",
-      "(-4, -7) - (5, 7)",
-      "(-5, -6) - (3, 14)",
-      "(-7, -6) - (3, 7)"
+      "(3, -17) - (2, 5)",
+      "(0, -14) - (3, 1)",
+      "(2, -13) - (3, 3)",
+      "(2, -13) - (7, 3)",
+      "(2, -16) - (7, 3)"
     ]
+  },
+  "signs": {
+    "(-1, 2) - (14, 9)": "Gems are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.",
+    "(-2, 2) - (13, 12)": "You can always undo and redo moves, restart a level from the pause menu, and sometimes the solution involves resetting. Don't be afraid to experiment!",
+    "(-2, 2) - (10, 8)": "If you're ever stuck in a level, you can always use the map to teleport back to a level that contains a teleporter, like this one!",
+    "(-7, 3) - (8, 11)": "The following puzzles are extremely difficult.",
+    "(-7, 3) - (8, 12)": "They use a wide variety of techniques and objects, including some you might not know about yet.",
+    "(-7, 3) - (8, 13)": "If you don't want to solve these, use the map to teleport to a different level.",
+    "(-7, 3) - (8, 14)": "Otherwise, you may proceed.",
+    "(-7, 3) - (8, 15)": "Good luck!",
+    "(-1, -5) - (1, 9)": "For example, you can step back on to the portal and use it to skip to the end of this area. Or you can use undo!",
+    "(-1, -6) - (9, 2)": "This is a portal! Once activated, you can use them to skip back and forth through sections of levels.",
+    "(-1, -7) - (9, 12)": "Welcome to the second world! This world is a lot bigger than the first, so here's some advice for you...",
+    "(-1, -7) - (10, 11)": "These levels can be tackled in any order, and the first ones you find won't necessarily be the easiest! If you're stuck, consider switching to a different level.",
+    "(-1, -7) - (10, 10)": "Remember, gems are optional and can be very, very, VERY hard to collect. If you can't get a gem (or figure out a secret) consider coming back later.",
+    "(-1, -7) - (10, 9)": "Also, don't forget you can undo and redo moves, teleport via the map or activated portals, and restart levels from the pause menu.",
+    "(-1, -7) - (10, 8)": "Lastly, have fun exploring and good luck!",
+    "(0, -5) - (8, 7)": "The following puzzles are fairly difficult, especially at the end. Proceed if you want a challenge!",
+    "(1, -6) - (8, 10)": "these signs are serve as a hint to portal cryptid warps...",
+    "(1, -6) - (7, 10)": "empty sign...",
+    "(1, -6) - (6, 10)": "empty sign...",
+    "(1, -6) - (5, 10)": "empty sign...",
+    "(1, -6) - (4, 10)": "empty sign...",
+    "(1, -6) - (3, 10)": "empty sign...",
+    "(1, -6) - (3, 9)": "empty sign...",
+    "(1, -6) - (3, 8)": "empty sign...",
+    "(-5, -9) - (6, 3)": "Welcome to the chain.",
+    "(-1, -15) - (7, 10)": "Welcome to the meta (teleport via the map to get back to the main area).",
+    "(-6, -6) - (12, 6)": "The portals can be activated on spaces the contain two barriers in between.",
+    "(-8, -6) - (7, 11)": "Important reminder: you can undo!",
+    "(-1, -16) - (7, 14)": "One more time...",
+    "(-3, -17) - (10, 2)": "empty sign...",
+    "(-3, -17) - (2, 8)": "empty sign...",
+    "(-3, -17) - (4, 8)": "empty sign...",
+    "(-3, -17) - (5, 8)": "empty sign...",
+    "(-3, -17) - (6, 8)": "empty sign...",
+    "(-3, -17) - (7, 8)": "empty sign..."
   },
   "locks": {
     "(-2, 2) - (0, 11)": {
@@ -313,7 +445,7 @@
     "(1, -6)": "single",
     "(1, -8)": "bottom end",
     "(2, -13)": "single",
-    "(2, -14)": "single",
+    "(2, -14)": "bottom end",
     "(3, -6)": "left right",
     "(4, -6)": "left right",
     "(5, -6)": "left right",
@@ -321,13 +453,13 @@
     "(7, -6)": "right end",
     "(-1, -15)": "bottom",
     "(0, -15)": "bottom",
-    "(0, -16)": "top left",
+    "(0, -16)": "left",
     "(1, -16)": "bottom",
-    "(1, -17)": "top left",
+    "(1, -17)": "left",
     "(2, -16)": "top",
-    "(2, -15)": "bottom left",
+    "(2, -15)": "left",
     "(-2, -15)": "bottom left",
-    "(-2, -16)": "top right",
+    "(-2, -16)": "right",
     "(-3, -16)": "top",
     "(-4, -16)": "centre",
     "(-4, -17)": "right",
@@ -336,12 +468,12 @@
     "(-4, -15)": "bottom end",
     "(-5, -16)": "left end",
     "(-6, -17)": "left end",
-    "(7, -17)": "bottom end",
-    "(7, -18)": "top end",
+    "(3, -17)": "bottom end",
+    "(3, -18)": "top end",
     "(-1, 0)": "single",
     "(-1, 1)": "single",
     "(-1, -16)": "top end",
-    "(-2, -17)": "single",
+    "(-2, -17)": "top end",
     "(-3, -15)": "bottom end",
     "(-3, -17)": "bottom end",
     "(-3, -18)": "top end",
@@ -349,41 +481,12 @@
     "(-5, -15)": "single",
     "(-5, -18)": "top end",
     "(1, -15)": "right end",
-    "(0, -17)": "single",
-    "(1, -18)": "single",
+    "(0, -17)": "top end",
+    "(1, -18)": "top end",
     "(3, -15)": "right end",
-    "(3, -16)": "right end"
-  },
-  "cutscenes": {},
-  "signs": {
-    "(-1, 2) - (14, 9)": "Gems are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.",
-    "(-2, 2) - (13, 12)": "You can always undo and redo moves, restart a level from the pause menu, and sometimes the solution involves resetting. Don't be afraid to experiment!",
-    "(-2, 2) - (10, 8)": "If you're ever stuck in a level, you can always use the map to teleport back to a level that contains a teleporter, like this one!",
-    "(-7, 3) - (8, 11)": "The following puzzles are extremely difficult.",
-    "(-7, 3) - (8, 12)": "They use a wide variety of techniques and objects, including some you might not know about yet.",
-    "(-7, 3) - (8, 13)": "If you don't want to solve these, use the map to teleport to a different level.",
-    "(-7, 3) - (8, 14)": "Otherwise, you may proceed.",
-    "(-7, 3) - (8, 15)": "Good luck!",
-    "(-1, -5) - (1, 9)": "For example, you can step back on to the portal and use it to skip to the end of this area. Or you can use undo!",
-    "(-1, -6) - (9, 2)": "This is a portal! Once activated, you can use them to skip back and forth through sections of levels.",
-    "(-1, -7) - (9, 12)": "Welcome to the second world! This world is a lot bigger than the first, so here's some advice for you...",
-    "(-1, -7) - (10, 11)": "These levels can be tackled in any order, and the first ones you find won't necessarily be the easiest! If you're stuck, consider switching to a different level.",
-    "(-1, -7) - (10, 10)": "Remember, gems are optional and can be very, very, VERY hard to collect. If you can't get a gem (or figure out a secret) consider coming back later.",
-    "(-1, -7) - (10, 9)": "Also, don't forget you can undo and redo moves, teleport via the map or activated portals, and restart levels from the pause menu.",
-    "(-1, -7) - (10, 8)": "Lastly, have fun exploring and good luck!",
-    "(0, -5) - (8, 7)": "The following puzzles are fairly difficult, especially at the end. Proceed if you want a challenge!",
-    "(1, -6) - (8, 10)": "these signs are serve as a hint to portal cryptid warps...",
-    "(1, -6) - (7, 10)": "",
-    "(1, -6) - (6, 10)": "",
-    "(1, -6) - (5, 10)": "",
-    "(1, -6) - (4, 10)": "",
-    "(1, -6) - (3, 10)": "",
-    "(1, -6) - (3, 9)": "",
-    "(1, -6) - (3, 8)": "",
-    "(-5, -9) - (6, 3)": "Welcome to the chain.",
-    "(-1, -15) - (7, 10)": "Welcome to the meta (teleport via the map to get back to the main area).",
-    "(-6, -6) - (12, 6)": "The portals can be activated on spaces the contain two barriers in between.",
-    "(-8, -6) - (7, 11)": "Important reminder: you can undo!"
+    "(3, -16)": "right end",
+    "(-1, -17)": "bottom end",
+    "(-1, -18)": "top end"
   },
   "teleporters": {
     "recievers": {
@@ -499,7 +602,7 @@
           10,
           14
         ],
-        "destination": null
+        "destination": "(-5, 2) - (8, 7)"
       },
       "(-10, 2) - (2, 3)": {
         "position": [
@@ -592,27 +695,6 @@
         ],
         "destination": "(-4, -11) - (4, 6)"
       },
-      "(-5, -13) - (3, 12)": {
-        "position": [
-          3,
-          12
-        ],
-        "destination": "(-5, -11) - (11, 3)"
-      },
-      "(-5, -13) - (3, 1)": {
-        "position": [
-          3,
-          1
-        ],
-        "destination": null
-      },
-      "(-5, -13) - (11, 3)": {
-        "position": [
-          11,
-          3
-        ],
-        "destination": null
-      },
       "(-2, -12) - (5, 5)": {
         "position": [
           5,
@@ -639,7 +721,7 @@
           5,
           7
         ],
-        "destination": null
+        "destination": "(2, -11) - (8, 7)"
       },
       "(-5, -5) - (9, 2)": {
         "position": [
@@ -711,19 +793,26 @@
         ],
         "destination": "(2, -7) - (8, 7)"
       },
-      "(-6, 2) - (12, 6)": {
-        "position": [
-          12,
-          6
-        ],
-        "destination": null
-      },
       "(0, -14) - (7, 6)": {
         "position": [
           7,
           6
         ],
-        "destination": null
+        "destination": "(-1, -11) - (9, 5)"
+      },
+      "(2, -5) - (13, 1)": {
+        "position": [
+          13,
+          1
+        ],
+        "destination": "(-1, -7) - (10, 3)"
+      },
+      "(-5, -13) - (11, 3)": {
+        "position": [
+          11,
+          3
+        ],
+        "destination": "(-4, -11) - (4, 6)"
       }
     },
     "portals": {
@@ -767,14 +856,14 @@
           1,
           10
         ],
-        "destination": null
+        "destination": "(0, -5) - (1, 10)"
       },
       "(0, -7) - (8, 10)": {
         "position": [
           8,
           10
         ],
-        "destination": null
+        "destination": "(0, -6) - (7, 11)"
       },
       "(2, -7) - (10, 7)": {
         "position": [
@@ -795,14 +884,14 @@
           3,
           11
         ],
-        "destination": null
+        "destination": "(-1, -2) - (5, 7)"
       },
       "(0, -11) - (3, 1)": {
         "position": [
           3,
           1
         ],
-        "destination": null
+        "destination": "(0, -17) - (10, 13)"
       },
       "(-3, -9) - (7, 8)": {
         "position": [
@@ -851,7 +940,7 @@
           3,
           1
         ],
-        "destination": null
+        "destination": "(-2, -17) - (8, 11)"
       },
       "(-3, -12) - (13, 14)": {
         "position": [
@@ -902,13 +991,6 @@
         ],
         "destination": "(-5, -11) - (14, 7)"
       },
-      "(-5, -13) - (3, 12)": {
-        "position": [
-          3,
-          12
-        ],
-        "destination": null
-      },
       "(-5, -11) - (11, 3)": {
         "position": [
           11,
@@ -949,7 +1031,7 @@
           13,
           2
         ],
-        "destination": null
+        "destination": "(1, -11) - (9, 2)"
       },
       "(1, -11) - (9, 2)": {
         "position": [
@@ -977,7 +1059,7 @@
           13,
           11
         ],
-        "destination": null
+        "destination": "(2, -10) - (1, 12)"
       },
       "(2, -10) - (1, 12)": {
         "position": [
@@ -991,7 +1073,7 @@
           10,
           11
         ],
-        "destination": null
+        "destination": "(1, -9) - (14, 2)"
       },
       "(1, -9) - (14, 2)": {
         "position": [
@@ -1061,7 +1143,7 @@
           1,
           3
         ],
-        "destination": null
+        "destination": "(-1, -9) - (11, 14)"
       },
       "(-1, -9) - (11, 14)": {
         "position": [
@@ -1117,7 +1199,7 @@
           1,
           10
         ],
-        "destination": null
+        "destination": "(0, -7) - (1, 10)"
       },
       "(-5, -6) - (7, 3)": {
         "position": [
@@ -1180,7 +1262,7 @@
           7,
           4
         ],
-        "destination": null
+        "destination": "(-7, -5) - (14, 7)"
       },
       "(-8, -6) - (8, 8)": {
         "position": [
@@ -1222,7 +1304,7 @@
           3,
           7
         ],
-        "destination": null
+        "destination": "(-5, -6) - (3, 14)"
       },
       "(0, -10) - (5, 13)": {
         "position": [
@@ -1243,7 +1325,7 @@
           7,
           2
         ],
-        "destination": null
+        "destination": "(-4, -9) - (1, 1)"
       },
       "(-4, -9) - (1, 1)": {
         "position": [
@@ -1264,14 +1346,14 @@
           3,
           6
         ],
-        "destination": null
+        "destination": "(-1, -7) - (13, 10)"
       },
       "(1, -6) - (7, 7)": {
         "position": [
           7,
           7
         ],
-        "destination": null
+        "destination": "(1, -11) - (4, 14)"
       },
       "(1, -11) - (2, 13)": {
         "position": [
@@ -1362,35 +1444,14 @@
           2,
           3
         ],
-        "destination": null
+        "destination": "(-1, -15) - (2, 5)"
       },
       "(-1, -15) - (2, 5)": {
         "position": [
           2,
           5
         ],
-        "destination": null
-      },
-      "(-6, 2) - (12, 8)": {
-        "position": [
-          12,
-          8
-        ],
-        "destination": "(-6, 2) - (13, 9)"
-      },
-      "(-6, 2) - (14, 8)": {
-        "position": [
-          14,
-          8
-        ],
-        "destination": "(-6, 2) - (14, 6)"
-      },
-      "(-6, 2) - (14, 6)": {
-        "position": [
-          14,
-          6
-        ],
-        "destination": "(-6, 2) - (14, 8)"
+        "destination": "(-1, -15) - (2, 3)"
       },
       "(-3, -9) - (3, 2)": {
         "position": [
@@ -1432,7 +1493,7 @@
           3,
           1
         ],
-        "destination": null
+        "destination": "(1, -18) - (10, 13)"
       },
       "(-2, -14) - (1, 13)": {
         "position": [
@@ -1476,7 +1537,7 @@
         ],
         "destination": "(1, -16) - (3, 1)"
       },
-      "(7, -17) - (2, 5)": {
+      "(3, -17) - (2, 5)": {
         "position": [
           2,
           5
@@ -1488,7 +1549,7 @@
           7,
           4
         ],
-        "destination": "(7, -17) - (2, 5)"
+        "destination": "(3, -17) - (2, 5)"
       },
       "(0, -14) - (3, 1)": {
         "position": [
@@ -1537,7 +1598,182 @@
           14,
           10
         ],
+        "destination": "(1, -5) - (14, 4)"
+      },
+      "(-1, 1) - (2, 2)": {
+        "position": [
+          2,
+          2
+        ],
         "destination": null
+      },
+      "(-2, -16) - (7, 4)": {
+        "position": [
+          7,
+          4
+        ],
+        "destination": "(-7, -11) - (5, 10)"
+      },
+      "(-2, -8) - (12, 14)": {
+        "position": [
+          12,
+          14
+        ],
+        "destination": "(-2, -8) - (1, 1)"
+      },
+      "(-3, -16) - (2, 1)": {
+        "position": [
+          2,
+          1
+        ],
+        "destination": "(-3, -17) - (2, 14)"
+      },
+      "(-4, -17) - (3, 1)": {
+        "position": [
+          3,
+          1
+        ],
+        "destination": "(-5, -15) - (6, 7)"
+      },
+      "(0, -15) - (3, 1)": {
+        "position": [
+          3,
+          1
+        ],
+        "destination": "(-3, -18) - (2, 11)"
+      },
+      "(1, -17) - (7, 4)": {
+        "position": [
+          7,
+          4
+        ],
+        "destination": "(1, -14) - (6, 2)"
+      },
+      "(1, -5) - (14, 4)": {
+        "position": [
+          14,
+          4
+        ],
+        "destination": "(0, -5) - (14, 10)"
+      },
+      "(2, -15) - (7, 11)": {
+        "position": [
+          7,
+          11
+        ],
+        "destination": "(-5, -15) - (10, 7)"
+      },
+      "(3, -10) - (4, 1)": {
+        "position": [
+          4,
+          1
+        ],
+        "destination": "(3, -9) - (4, 13)"
+      },
+      "(3, -9) - (4, 13)": {
+        "position": [
+          4,
+          13
+        ],
+        "destination": "(3, -10) - (4, 1)"
+      },
+      "(-5, -13) - (3, 1)": {
+        "position": [
+          3,
+          1
+        ],
+        "destination": "(2, -14) - (8, 4)"
+      },
+      "(-5, -13) - (3, 12)": {
+        "position": [
+          3,
+          12
+        ],
+        "destination": "(-5, -11) - (11, 3)"
+      },
+      "(-7, -11) - (5, 10)": {
+        "position": [
+          5,
+          10
+        ],
+        "destination": "(-2, -16) - (7, 4)"
+      },
+      "(0, -17) - (10, 13)": {
+        "position": [
+          10,
+          13
+        ],
+        "destination": "(0, -11) - (3, 1)"
+      },
+      "(-5, -15) - (6, 7)": {
+        "position": [
+          6,
+          7
+        ],
+        "destination": "(-4, -17) - (3, 1)"
+      },
+      "(-5, -15) - (10, 7)": {
+        "position": [
+          10,
+          7
+        ],
+        "destination": "(2, -15) - (7, 11)"
+      },
+      "(-2, -17) - (8, 11)": {
+        "position": [
+          8,
+          11
+        ],
+        "destination": "(-3, -14) - (3, 1)"
+      },
+      "(-3, -18) - (2, 11)": {
+        "position": [
+          2,
+          11
+        ],
+        "destination": "(0, -15) - (3, 1)"
+      },
+      "(-3, -17) - (10, 3)": {
+        "position": [
+          10,
+          3
+        ],
+        "destination": "(-3, -17) - (10, 5)"
+      },
+      "(-3, -17) - (10, 5)": {
+        "position": [
+          10,
+          5
+        ],
+        "destination": "(-3, -17) - (10, 3)"
+      },
+      "(-3, -17) - (2, 14)": {
+        "position": [
+          2,
+          14
+        ],
+        "destination": "(-3, -16) - (2, 1)"
+      },
+      "(1, -14) - (6, 2)": {
+        "position": [
+          6,
+          2
+        ],
+        "destination": "(1, -17) - (7, 4)"
+      },
+      "(1, -18) - (10, 13)": {
+        "position": [
+          10,
+          13
+        ],
+        "destination": "(0, -13) - (3, 1)"
+      },
+      "(2, -14) - (8, 4)": {
+        "position": [
+          8,
+          4
+        ],
+        "destination": "(-5, -13) - (3, 1)"
       }
     },
     "activations": {
@@ -1559,7 +1795,8 @@
           2
         ],
         "portals": [
-          "(-2, -8) - (1, 1)"
+          "(-2, -8) - (1, 1)",
+          "(-2, -8) - (12, 14)"
         ],
         "two_players": false,
         "activated": false
@@ -1630,8 +1867,8 @@
           11
         ],
         "portals": [
-          "(-5, -13) - (3, 12)",
-          "(-5, -11) - (11, 3)"
+          "(-5, -11) - (11, 3)",
+          "(-5, -13) - (3, 12)"
         ],
         "two_players": false,
         "activated": false
@@ -1798,8 +2035,8 @@
           5
         ],
         "portals": [
-          "(0, -5) - (1, 10)",
-          "(0, -7) - (1, 10)"
+          "(0, -7) - (1, 10)",
+          "(0, -5) - (1, 10)"
         ],
         "two_players": false,
         "activated": false
@@ -1918,7 +2155,8 @@
           14
         ],
         "portals": [
-          "(1, -11) - (4, 14)"
+          "(1, -11) - (4, 14)",
+          "(1, -6) - (7, 7)"
         ],
         "two_players": false,
         "activated": true
@@ -1983,29 +2221,6 @@
         "two_players": false,
         "activated": true
       },
-      "(-6, 2) - (13, 7)": {
-        "position": [
-          13,
-          7
-        ],
-        "portals": [
-          "(-6, 2) - (14, 8)",
-          "(-6, 2) - (14, 6)"
-        ],
-        "two_players": true,
-        "activated": true
-      },
-      "(-6, 2) - (13, 8)": {
-        "position": [
-          13,
-          8
-        ],
-        "portals": [
-          "(-6, 2) - (12, 8)"
-        ],
-        "two_players": false,
-        "activated": true
-      },
       "(-3, -9) - (4, 9)": {
         "position": [
           4,
@@ -2065,18 +2280,6 @@
         ],
         "two_players": true,
         "activated": true
-      },
-      "(-1, -15) - (2, 2)": {
-        "position": [
-          2,
-          2
-        ],
-        "portals": [
-          "(-1, -15) - (2, 3)",
-          "(-1, -15) - (2, 5)"
-        ],
-        "two_players": false,
-        "activated": false
       },
       "(-3, -10) - (8, 14)": {
         "position": [
@@ -2138,13 +2341,13 @@
         "two_players": false,
         "activated": false
       },
-      "(7, -17) - (2, 4)": {
+      "(3, -17) - (2, 4)": {
         "position": [
           2,
           4
         ],
         "portals": [
-          "(7, -17) - (2, 5)",
+          "(3, -17) - (2, 5)",
           "(0, -16) - (7, 4)"
         ],
         "two_players": false,
@@ -2210,10 +2413,178 @@
         "two_players": false,
         "activated": false
       },
-      "(-7, -5) - (9, 11)": {
+      "(-1, -15) - (5, 2)": {
+        "position": [
+          5,
+          2
+        ],
+        "portals": [
+          "(-1, -15) - (2, 3)",
+          "(-1, -15) - (2, 5)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(1, -5) - (14, 5)": {
+        "position": [
+          14,
+          5
+        ],
+        "portals": [
+          "(0, -5) - (14, 10)",
+          "(1, -5) - (14, 4)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(3, -10) - (5, 1)": {
+        "position": [
+          5,
+          1
+        ],
+        "portals": [
+          "(3, -9) - (4, 13)",
+          "(3, -10) - (4, 1)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(-7, -11) - (5, 11)": {
+        "position": [
+          5,
+          11
+        ],
+        "portals": [
+          "(-7, -11) - (5, 10)",
+          "(-2, -16) - (7, 4)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(0, -11) - (2, 1)": {
+        "position": [
+          2,
+          1
+        ],
+        "portals": [
+          "(0, -17) - (10, 13)",
+          "(0, -11) - (3, 1)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(-5, -15) - (9, 7)": {
         "position": [
           9,
-          11
+          7
+        ],
+        "portals": [
+          "(-5, -15) - (10, 7)",
+          "(2, -15) - (7, 11)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(-4, -17) - (2, 1)": {
+        "position": [
+          2,
+          1
+        ],
+        "portals": [
+          "(-4, -17) - (3, 1)",
+          "(-5, -15) - (6, 7)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(-3, -14) - (2, 1)": {
+        "position": [
+          2,
+          1
+        ],
+        "portals": [
+          "(-3, -14) - (3, 1)",
+          "(-2, -17) - (8, 11)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(0, -15) - (2, 1)": {
+        "position": [
+          2,
+          1
+        ],
+        "portals": [
+          "(0, -15) - (3, 1)",
+          "(-3, -18) - (2, 11)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(-3, -17) - (2, 1)": {
+        "position": [
+          2,
+          1
+        ],
+        "portals": [
+          "(-3, -17) - (2, 14)",
+          "(-3, -16) - (2, 1)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(-3, -17) - (8, 8)": {
+        "position": [
+          8,
+          8
+        ],
+        "portals": [
+          "(-3, -17) - (10, 5)",
+          "(-3, -17) - (10, 3)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(1, -14) - (3, 2)": {
+        "position": [
+          3,
+          2
+        ],
+        "portals": [
+          "(1, -14) - (6, 2)",
+          "(1, -17) - (7, 4)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(0, -13) - (2, 1)": {
+        "position": [
+          2,
+          1
+        ],
+        "portals": [
+          "(0, -13) - (3, 1)",
+          "(1, -18) - (10, 13)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(-5, -13) - (2, 1)": {
+        "position": [
+          2,
+          1
+        ],
+        "portals": [
+          "(-5, -13) - (3, 1)",
+          "(2, -14) - (8, 4)"
+        ],
+        "two_players": false,
+        "activated": false
+      },
+      "(-8, -6) - (7, 10)": {
+        "position": [
+          7,
+          10
         ],
         "portals": [
           "(-8, -6) - (8, 8)",
@@ -2222,10 +2593,10 @@
         "two_players": false,
         "activated": false
       },
-      "(-7, -7) - (7, 8)": {
+      "(-8, -6) - (8, 10)": {
         "position": [
-          7,
-          8
+          8,
+          10
         ],
         "portals": [
           "(-8, -6) - (6, 9)",
@@ -2236,6 +2607,12 @@
       }
     },
     "cryptids": {
+      "(-2, -14) - (0, -14)": {
+        "destination": "(3, -18) - (2, 2)"
+      },
+      "(0, -10) - (-1, -9)": {
+        "destination": "(0, -14) - (2, 2)"
+      },
       "(2, -12) - (11, 14), (2, -12) - (14, 9)": {
         "teleporters": [
           "(2, -12) - (11, 14)",
@@ -2277,6 +2654,111 @@
           "(1, -11) - (9, 2)"
         ],
         "destination": "(1, -16) - (2, 2)"
+      },
+      "(0, -6) - (2, 12), (0, -6) - (7, 11)": {
+        "teleporters": [
+          "(0, -6) - (2, 12)",
+          "(0, -6) - (7, 11)"
+        ],
+        "destination": "(0, -11) - (2, 2)"
+      },
+      "(-5, -13) - (11, 3), (-5, -13) - (3, 12)": {
+        "teleporters": [
+          "(-5, -13) - (11, 3)",
+          "(-5, -13) - (3, 12)"
+        ],
+        "destination": "(-5, -18) - (2, 2)"
+      },
+      "(-1, -15) - (2, 5), (-1, -15) - (2, 3)": {
+        "teleporters": [
+          "(-1, -15) - (2, 5)",
+          "(-1, -15) - (2, 3)"
+        ],
+        "destination": "(-1, -17) - (4, 1)"
+      },
+      "(-4, -12) - (8, 14), (-4, -12) - (7, 1)": {
+        "teleporters": [
+          "(-4, -12) - (8, 14)",
+          "(-4, -12) - (7, 1)"
+        ],
+        "destination": "(-4, -17) - (2, 2)"
+      },
+      "(-4, -13) - (4, 13), (-4, -13) - (7, 1)": {
+        "teleporters": [
+          "(-4, -13) - (4, 13)",
+          "(-4, -13) - (7, 1)"
+        ],
+        "destination": "(-4, -18) - (2, 2)"
+      },
+      "(3, -10) - (4, 1), (3, -10) - (6, 1)": {
+        "teleporters": [
+          "(3, -10) - (4, 1)",
+          "(3, -10) - (6, 1)"
+        ],
+        "destination": "(1, -15) - (2, 2)"
+      },
+      "(3, -11) - (10, 1), (3, -11) - (10, 8)": {
+        "teleporters": [
+          "(3, -11) - (10, 1)",
+          "(3, -11) - (10, 8)"
+        ],
+        "destination": "(3, -16) - (2, 2)"
+      },
+      "(-3, -10) - (8, 2), (-3, -10) - (7, 14)": {
+        "teleporters": [
+          "(-3, -10) - (8, 2)",
+          "(-3, -10) - (7, 14)"
+        ],
+        "destination": "(-3, -15) - (2, 2)"
+      },
+      "(-3, -9) - (7, 8), (-3, -9) - (3, 2)": {
+        "teleporters": [
+          "(-3, -9) - (7, 8)",
+          "(-3, -9) - (3, 2)"
+        ],
+        "destination": "(-3, -14) - (2, 2)"
+      },
+      "(0, -10) - (11, 8), (0, -10) - (5, 13)": {
+        "teleporters": [
+          "(0, -10) - (11, 8)",
+          "(0, -10) - (5, 13)"
+        ],
+        "destination": "(0, -15) - (2, 2)"
+      },
+      "(1, -10) - (13, 11), (1, -10) - (10, 11)": {
+        "teleporters": [
+          "(1, -10) - (13, 11)",
+          "(1, -10) - (10, 11)"
+        ],
+        "destination": "(1, -15) - (2, 2)"
+      },
+      "(1, -9) - (11, 14), (1, -9) - (2, 7)": {
+        "teleporters": [
+          "(1, -9) - (11, 14)",
+          "(1, -9) - (2, 7)"
+        ],
+        "destination": "(1, -14) - (2, 2)"
+      },
+      "(0, -8) - (12, 14), (0, -8) - (7, 7)": {
+        "teleporters": [
+          "(0, -8) - (12, 14)",
+          "(0, -8) - (7, 7)"
+        ],
+        "destination": "(0, -13) - (2, 2)"
+      },
+      "(-5, -8) - (8, 9), (-5, -8) - (6, 5)": {
+        "teleporters": [
+          "(-5, -8) - (8, 9)",
+          "(-5, -8) - (6, 5)"
+        ],
+        "destination": "(-5, -13) - (2, 2)"
+      },
+      "(-7, -5) - (1, 7), (-7, -5) - (10, 10)": {
+        "teleporters": [
+          "(-7, -5) - (1, 7)",
+          "(-7, -5) - (10, 10)"
+        ],
+        "destination": "(-7, -10) - (2, 2)"
       }
     }
   }

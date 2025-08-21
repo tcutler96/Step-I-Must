@@ -1816,7 +1816,7 @@
     "11:11": {
       "tile": {
         "name": "wall",
-        "state": "top"
+        "state": "top right"
       },
       "object": null,
       "player": null,
@@ -1824,19 +1824,16 @@
       "horizontal_barrier": null
     },
     "12:11": {
-      "tile": {
-        "name": "wall",
-        "state": "top"
-      },
       "object": null,
       "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "13:11": {
       "tile": {
         "name": "wall",
-        "state": "top"
+        "state": "top left"
       },
       "object": null,
       "player": null,
@@ -1967,7 +1964,7 @@
     "11:12": {
       "tile": {
         "name": "wall",
-        "state": "centre"
+        "state": "centre-tr"
       },
       "object": null,
       "player": null,
@@ -1977,7 +1974,7 @@
     "12:12": {
       "tile": {
         "name": "wall",
-        "state": "centre"
+        "state": "top"
       },
       "object": null,
       "player": null,
@@ -1987,7 +1984,7 @@
     "13:12": {
       "tile": {
         "name": "wall",
-        "state": "centre"
+        "state": "centre-tl"
       },
       "object": null,
       "player": null,

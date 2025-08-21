@@ -14,7 +14,6 @@
 
 *** shaders ***
 - look into loop hero noise transition shader
-- add reflection shader to ice tiles (would need to seperate ice into its own display layer and worry about how we apply grey effect alongside)
 - add distortion effect to grey effect that is used when low on/ out of steps
 
 
@@ -26,6 +25,8 @@
 - add ability when playing a sound to stop all other instances of that sound
 - in assets, save copies of images that have had their alpha set, so that future calls just grab the image instead of having to re set it ({image: alpha[0-255]: surface})
 - need to do a full game run through to test all the levels work as intended
+- track collectables and their locations when we save a level, so we know max counts for map tracker, and can tell which collectables are left (to guide player in right direction)
+- add way to loop over all levels and resave them, in order to fix any wrong data concerning teleporters etc.
 
 
 *** game bugs ***
@@ -34,17 +35,18 @@
 - picking up a collectable prevents animations from finishing, need to continue to resolve level loop
 - looped animations arent being stopped when we transision to another level
 - undo/ redo does not save game data (when we change levels) or update player location on map, it should also get any players out of sleeping state
+- bumping a player into the wall should wake it up from sleeping
 - we need to save game data as soon as teleport data is updated (when activating portals or setting teleported data in debug mode)
 - when map is opened during a cutscene, we need to reset the sprite timers (ie have players and teleporters show first)
 - leaving a level while stood on a sign plays the close text sound when we are in the new level, instead of straight away
 - setting certain cells in the level editor spams the sound effect (any player on a flag, any cell on a barrier)
 - remove player respawn sprite when that flag is deleted when a player is turned to stone on top of it
-- playing a level from the level editor and then opening the game menu shows button as 'main menu' but it actually takes you back to the level editor, can we change the button text easily?
+- playing a level from the level editor and then opening the game menu shows button as 'main menu' but it actually takes you back to the level editor, can we change the button text easily? from assets update_menu perhaps?
 - only draw game reset text and apply grey effect after cutscene has finished?
-- sliding on ice into a barrier that had ice behind it causes the game to crash
+- sliding on ice into a barrier that has ice behind it causes the game to crash
 
 
-*** level craches ***
+*** level crashes ***
 - (-3, -12): object conflict on ice
 - (-3, -13): sliding into a wall trigger bump a bunch of times
 - (-3, -14): rocks dont behave properly when they meet in the middle
@@ -61,7 +63,9 @@
 - add slight pause before continually undoing/ redoing, as we sometimes acidentally undo/ redo more then we mean to (similar to movement pause)
 - need to add a gem resetter tile that resets level and collected gem in that level (remove specific gem from game collectable data...), (4, -6)(4, 13), (5, -6)(10, 1), manually add data to game data
 -- when we step on a gem reseter tile, look up in data which gem to reset, then remove that gem from collected collectables, map collection, and add back to cached levels
-- cryptids: big finale room, teleports to (13, 3)/ (7, -18) here which leads to (13, 4)/ (7, -17) with portal that leads to (11, 10)
+- add a more cryptic hint to level (-6, -6) that tells the player that portals can be activated by stepping in bwtween two barriers
+- add mini maze to level (-1, -17) which leads to cryptid tracker (add overlay to map which shows which cryptids are remaining and sign explaining this) and then final cheese collectable, add a reciever teleporter to this room
+- add something to level (-3, -17) instead of the light puzzle
 
 *** level ideas ***
 - add level with numerical code written with barriers that tells the secret to beating the level, we need to something in a particular order?

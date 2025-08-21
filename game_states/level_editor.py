@@ -181,3 +181,7 @@ class LevelEditor:
             self.toolbar.draw(displays=displays)
             self.level.draw(displays=displays, mouse_cell=self.mouse_cell if (not self.main.transition.active and self.level.position_on_grid(position=self.mouse_cell.position)
                                                                               and not self.toolbar.hovered_element[0]) else None)
+            self.main.text_handler.activate_text(text_group='level_editor', text_id='controls')
+            self.main.text_handler.activate_text(text_group='level_editor', text_id='place')
+            self.main.text_handler.activate_text(text_group='level_editor', text_id='copy')
+            self.main.text_handler.activate_text(text_group='level_editor', text_id='clear')

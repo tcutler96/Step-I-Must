@@ -150,8 +150,8 @@ class Shaders:
         return effect_data_uniforms
 
     def update(self, mouse_position):
-        if self.main.events.check_key('x', 'held'):
-            self.apply_effect(display_layer=['ui'], effect='test')
+        if self.main.events.check_key('v', 'held'):
+            self.apply_effect(display_layer=['ui', 'level_main'], effect='test')
         if self.chromatic_aberration:
             self.apply_effect(display_layer=['ui'], effect='chromatic', effect_data={'length': 0})
         if self.background:

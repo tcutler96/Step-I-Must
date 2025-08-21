@@ -150,6 +150,23 @@ class Assets:
             settings = json.load(file_data)
         return settings
 
+    def save_data(self):
+        with open(os.path.join(self.assets_path, 'data.json'), 'w') as file:
+            json.dump(obj=self.data, fp=file, indent=2)
+
+    def save_settings(self):
+        if self.settings_changed:
+            self.settings_changed = False
+            settings = deepcopy(self.settings)
+            del settings['menus']['choose_level']
+            with open(os.path.join(self.assets_path, 'settings.json'), 'w') as file:
+                json.dump(obj=settings, fp=file, indent=2)
+
+    def reset_game_data(self, clear=False):
+        self.data['game'] = {'level': '(0, 0)' if not clear else None, 'respawn': [[[12, 2]], [[12, 2]], [False]],
+                             'collectables': {'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []}, 'discovered_levels': ['(0, 0)'], 'active_portals': []}
+        self.save_data()  # game (level, respawn, collectables, discovered_levels, active_portals)
+
     def change_setting(self, group, name, option):
         name = name.lower().replace(' ', '_')
         option = option.lower().replace(' ', '_')
@@ -198,23 +215,6 @@ class Assets:
                 self.main.game_states['level_editor'].level.undo_redo_delay = option
             elif name == 'movement_speed':
                 self.main.game_states['game'].movement_speed = option
-
-    def save_data(self):
-        with open(os.path.join(self.assets_path, 'data.json'), 'w') as file:
-            json.dump(obj=self.data, fp=file, indent=2)
-
-    def save_settings(self):
-        if self.settings_changed:
-            self.settings_changed = False
-            settings = deepcopy(self.settings)
-            del settings['menus']['choose_level']
-            with open(os.path.join(self.assets_path, 'settings.json'), 'w') as file:
-                json.dump(obj=settings, fp=file, indent=2)
-
-    def reset_game_data(self, clear=False):
-        self.data['game'] = {'level': '(0, 0)' if not clear else None, 'respawn': [[[12, 2]], [[12, 2]], [False]],
-                             'collectables': {'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []}, 'discovered_levels': ['(0, 0)'], 'active_portals': []}
-        self.save_data()
 
     def update_menu(self, menu=None):
         if menu == 'choose_level':

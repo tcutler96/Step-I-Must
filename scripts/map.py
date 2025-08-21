@@ -65,7 +65,7 @@ class Map:
                 self.main.assets.data['map'][level_name] = variant
                 data_updated = True
                 sprite = self.main.assets.images['map'][variant].copy()
-                print(f'{level_name} map data updated to {variant}...')
+                print(f'map data for {level_name} updated to {variant}...')
             teleporter = False
             for reciever in self.main.assets.data['teleporters']['recievers']:
                 if level_name in reciever:
@@ -75,7 +75,7 @@ class Map:
                                             player=level_name == self.main.assets.data['game']['level'], teleporter=teleporter,
                                             collectables={'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []})
         if data_updated:
-            self.main.assets.save_data()
+            self.main.assets.save_data()  # map
         return map_cells
 
     def reset_map(self):
@@ -144,7 +144,6 @@ class Map:
 
     def update_collectables(self, collectable_type, level_name, position):
         if collectable_type in self.collectable_data['types'] and position in self.map[level_name].collectables[collectable_type]:
-
             self.map[level_name].collectables[collectable_type].remove(position)
             self.update_collectable_count_text(collectable_type=collectable_type)
             self.update_tracker()

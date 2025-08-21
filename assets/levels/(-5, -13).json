@@ -206,7 +206,7 @@
       "player": null,
       "tile": {
         "name": "teleporter",
-        "state": "sender"
+        "state": "portal"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null

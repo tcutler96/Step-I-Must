@@ -1958,7 +1958,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "top"
+        "state": "top right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1967,8 +1967,8 @@
       "object": null,
       "player": null,
       "tile": {
-        "name": "wall",
-        "state": "top"
+        "name": "conveyor",
+        "state": "up"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1978,7 +1978,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "top"
+        "state": "top left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null

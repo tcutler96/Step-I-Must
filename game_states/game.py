@@ -69,7 +69,7 @@ class Game:
                     object_data['split'] = False
 
     def collect_collectable(self, cell):
-        self.main.audio.play_sound(name='collectable', existing='overlap')
+        self.main.audio.play_sound(name='collectable')
         # self.main.audio.play_sound(name=f'collectable_{cell.elements['object']['state'].replace(' ', '_')}')
         collectable_type = cell.elements['object']['state'] + 's'
         if self.level.name != 'custom':
@@ -190,13 +190,13 @@ class Game:
                     bump = self.main.utilities.get_opposite_movement(movement=self.players_exited[0].object_data['player']['last_moved'])
                 else:
                     self.main.audio.play_sound(name='cryprid_teleport')
-                    cryptid = ''
+                    double_warp = ''
                     for new_level in list(new_levels.keys()):
-                        if cryptid != '':
-                            cryptid += ' - '
-                        cryptid += new_level
-                    if cryptid in self.main.assets.data['teleporters']['cryptids']:
-                        new_level, respawn = self.main.assets.data['teleporters']['cryptids'][cryptid]['destination'].split(' - ')
+                        if double_warp != '':
+                            double_warp += ' - '
+                        double_warp += new_level
+                    if double_warp in self.main.assets.data['teleporters']['double_warps']:
+                        new_level, respawn = self.main.assets.data['teleporters']['double_warps'][double_warp]['destination'].split(' - ')
                         respawn = self.main.utilities.position_str_to_tuple(position=respawn)
                         respawn = [[respawn], [respawn], True]
                     else:
@@ -343,12 +343,12 @@ class Game:
                 self.set_steps(steps=5)
             if not self.main.debug:
                 if not new_level and self.level.steps == 0:
-                    self.main.audio.play_sound(name='game_over', existing='overlap')
+                    self.main.audio.play_sound(name='game_over')
                     self.no_steps = True
                     for cell in self.player_cells.values():
                         cell.elements['player']['state'] = 'dead'
                 if self.no_players:  # clean this up, checking for game over state...
-                    self.main.audio.play_sound(name='game_over', existing='overlap')
+                    self.main.audio.play_sound(name='game_over')
                 if respawn_updated:
                     self.level.current_respawn = respawn
 
@@ -400,12 +400,12 @@ class Game:
                     if self.move_object(cell=cell, object_type='player', movement=movement):
                         player_moved = True
             if self.players_exited:
-                self.main.audio.play_sound(name='player_move', existing='overlap')
+                self.main.audio.play_sound(name='player_move')
                 self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
                 self.no_movement = False
                 self.transition_level()
             elif player_moved:
-                self.main.audio.play_sound(name='player_move', existing='overlap')
+                self.main.audio.play_sound(name='player_move')
                 self.level.clear_cache_redo()
                 self.reset_animations(force_reset=True)
                 self.no_movement = False
@@ -456,7 +456,7 @@ class Game:
                                         new_cell = new_new_cell
                                         new_new_cell = self.level.get_new_cell(position=new_new_cell.position, movement=movement)
         if objects_slid:
-            self.main.audio.play_sound(name='ice', existing='overlap')
+            self.main.audio.play_sound(name='ice')
         if self.players_exited:
             self.transition_level()
         elif not objects_slid:
@@ -671,7 +671,7 @@ class Game:
                         second = self.teleporter_data['setting']['paired']
                         data_updated = True
                         self.teleporter_data['setting'] = None
-                        self.main.assets.data['teleporters']['cryptids'][first + ', ' + second] = {'teleporters': [first,  second], 'destination': level_and_position}
+                        self.main.assets.data['teleporters']['cryptids'][first + ', ' + second] = {'teleporters': [first,  second], 'destination': level_and_position, 'collectable': None}
                         print('cryptid pair destination set')
             elif self.teleporter_data['standing']:
                 if self.main.debug and self.main.events.check_key(key='t'):
@@ -754,7 +754,7 @@ class Game:
                     self.main.audio.play_sound(name='map_close')
                     self.map.show_map = False
                 else:
-                    self.main.audio.play_sound(name='teleport', existing='overlap')
+                    self.main.audio.play_sound(name='teleport')
                     self.teleporter_data['standing'] = None
                     position = (7, 7)
                     if not self.main.debug:
@@ -876,7 +876,6 @@ class Game:
                         # we dont play game over sound if we run out of players (last player dies on spikes)
                         self.main.shaders.apply_effect(display_layer=['level_player'], effect='grey', effect_data={'length': 0.5})
                     elif self.no_steps or not self.player_cells:  # no more steps or players, game over, you can not do anything except open menu, map, move to reset, and press 'e' to teleport...
-                        # self.main.audio.play_sound(name='game_over')
                         self.main.shaders.apply_effect(display_layer=['level_background', 'level_main'], effect='grey', effect_data={'length': 0.5})
                         # 'scale': 0.0 if not self.no_steps else 0.5, this doesnt work as no_steps is set to True if there are no players (regardless of how many steps are left), if it even needed if the length is short...
                         self.main.shaders.apply_effect(display_layer=['level_dead_player'], effect='invert', effect_data={'length': 0.5})

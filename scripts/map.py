@@ -27,7 +27,7 @@ class Map:
                       'icons': {'player': {'name': 'player', 'state': 'idle', 'sprite': None}, 'teleporter': {'name': 'teleporter', 'state': 'reciever', 'sprite': None},
                                 'silver keys': {'name': 'collectable', 'state': 'silver key', 'sprite': None}, 'silver gems': {'name': 'collectable', 'state': 'silver gem', 'sprite': None},
                                 'gold keys': {'name': 'collectable', 'state': 'gold key', 'sprite': None}, 'gold gems': {'name': 'collectable', 'state': 'gold gem', 'sprite': None},
-                                'cheeses': {'name': 'collectable', 'state': 'cheese', 'sprite': None}}}
+                                'cheeses': {'name': 'collectable', 'state': 'cheese', 'sprite': None}, 'cryptid': {'name': 'teleporter', 'state': 'portal animated', 'sprite': None}}}
         self.levels = self.load_levels()
         self.map = self.load_map()
 
@@ -69,8 +69,13 @@ class Map:
                     teleporter = True
             cryptid = False
             for warp in self.main.assets.data['teleporters']['cryptids'].values():
-                if warp['teleporters'] and level_name in warp['teleporters'][0]:
+                if level_name in warp['teleporters'][0] and warp['collectable'] not in self.main.assets.data['game']['collectables']['cheeses']:
                     cryptid = True
+                    break
+            for warp in self.main.assets.data['teleporters']['double_warps'].values():
+                if level_name in warp['level'] and warp['collectable'] not in self.main.assets.data['game']['collectables']['cheeses']:
+                    cryptid = True
+                    break
             map_cells[level_name] = MapCell(main=self.main, level_name=level_name, sprite=sprite, blit_position=blit_position,
                                             cell_size=self.cell_size, discovered=level_name in self.main.assets.data['game']['discovered_levels'],
                                             player=level_name == self.main.assets.data['game']['level'], teleporter=teleporter,
@@ -145,9 +150,19 @@ class Map:
 
     def update_collectables(self, collectable_type, level_name, position):
         if collectable_type in self.collectable_data['types'] and position in self.map[level_name].collectables[collectable_type]:
-            self.map[level_name].collectables[collectable_type].remove(position)
             self.update_collectable_count_text(collectable_type=collectable_type)
             self.update_tracker()
+            self.map[level_name].collectables[collectable_type].remove(position)
+            level_and_position = level_name + ' - ' + str(position)
+            if collectable_type == 'cheeses':
+                for warp in self.main.assets.data['teleporters']['cryptids'].values():
+                    if level_and_position == warp['collectable']:
+                        self.map[warp['teleporters'][0].split(' - ')[0]].cryptid = False
+                        break
+                for warp in self.main.assets.data['teleporters']['double_warps'].values():
+                    if level_and_position == warp['collectable']:
+                        self.map[warp['level']].cryptid = False
+                        break
 
     def update_interpolation(self):
         interpolating = False
@@ -168,10 +183,10 @@ class Map:
                 if self.icons['alpha']['alpha'] == 0 or self.icons['alpha']['alpha'] == 255:
                     self.icons['alpha']['step'] *= -1
                     self.icons['alpha']['timer'] = self.icons['alpha']['delay']
-            for icon in self.icons['icons'].values():
-                sprite = self.main.utilities.get_sprite(name=icon['name'], state=icon['state'],
-                                                        alpha=min(self.icons['alpha']['alpha'], self.alpha) if icon['name'] in ['player', 'teleporter'] else min(self.icons['alpha']['alpha_alt'], self.alpha))
-                icon['sprite'] = sprite
+            for icon_name, icon in self.icons['icons'].items():
+                icon['sprite'] = self.main.utilities.get_sprite(name=icon['name'], state=icon['state'],
+                                                                alpha=min(self.icons['alpha']['alpha'], self.alpha) if icon_name in ['player', 'teleporter']
+                                                                else min(self.icons['alpha']['alpha_alt'], self.alpha))
 
     def update_sprites(self):
         if self.show_map or self.alpha:
@@ -187,14 +202,14 @@ class Map:
             if self.main.events.check_key(key=['tab', 'm']):
                 self.show_map = not self.show_map
                 if not self.show_map:
-                    self.main.audio.play_sound(name='map_close', existing='overlap')
+                    self.main.audio.play_sound(name='map_close')
                 else:
-                    self.main.audio.play_sound(name='map_open', existing='overlap')
+                    self.main.audio.play_sound(name='map_open')
                     self.alpha = 0
                     self.icons['alpha'] = self.icons['alpha_default'].copy()
                     self.set_target(target=self.get_target(level=self.main.assets.data['game']['level']))
             if self.show_map and self.main.events.check_key(key='space') and ('(-1, -5)' in self.main.assets.data['game']['discovered_levels'] or self.main.debug):
-                self.main.audio.play_sound(name='map_switch', existing='overlap')
+                self.main.audio.play_sound(name='map_switch')
                 self.offset_dict['target'] = 1 if self.offset_dict['target'] == 2 else 2
                 mouse_position = None
         self.update_icons()

@@ -129,14 +129,14 @@ class Cutscene:
         self.bars[0].y = -self.bars_max_offset + self.bars_offset
         self.bars[1].y = self.main.display.height - self.bars_offset
 
-    def update_bars(self):
+    def update_bars(self, skip):
         if self.show_bars:
             self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui'], effect='pixelate', effect_data={'length': 1})
             if not self.bars_offset:
                 self.main.audio.play_sound(name='cutscene_start')
             if self.bars_offset < self.bars_max_offset:
-                if self.main.events.check_key(key='space', remove=True):
-                    self.main.audio.play_sound(name='cutscene_skip', existing='overlap')
+                if skip:
+                    self.main.audio.play_sound(name='cutscene_skip')
                     self.bars_offset = self.bars_max_offset
                 else:
                     self.bars_offset = min(self.bars_offset + self.bars_speed, self.bars_max_offset)
@@ -147,8 +147,8 @@ class Cutscene:
                     self.line_index = 0
                     self.character_index = 0
         elif self.bars_offset:
-            if self.main.events.check_key(key='space'):
-                self.main.audio.play_sound(name='cutscene_skip', existing='overlap')
+            if skip:
+                self.main.audio.play_sound(name='cutscene_skip')
                 self.bars_offset = 0
             else:
                 self.bars_offset = max(self.bars_offset - self.bars_speed, 0)
@@ -161,20 +161,20 @@ class Cutscene:
                 if self.end_response:
                     self.end_trigger = True
 
-    def update_text(self):
+    def update_text(self, skip):
         if self.show_text:
             if self.line_timer:
-                if self.main.events.check_key(key='space'):
-                    self.main.audio.play_sound(name='cutscene_skip', existing='overlap')
+                if skip:
+                    self.main.audio.play_sound(name='cutscene_skip')
                     self.line_timer = 0
                 else:
                     self.line_timer -= 1
             elif self.character_index < len(self.text[self.page_index][self.line_index]):
                 if not self.character_index:
-                    self.main.audio.play_sound(name='cutscene_dialogue', existing='overlap')
+                    self.main.audio.play_sound(name='cutscene_dialogue')
                 character_index = self.character_index
-                if self.main.events.check_key(key='space', remove=True):
-                    self.main.audio.play_sound(name='cutscene_skip', existing='overlap')
+                if skip:
+                    self.main.audio.play_sound(name='cutscene_skip')
                     self.character_index = len(self.text[self.page_index][self.line_index])
                     self.line_timer = 1
                 else:
@@ -197,13 +197,13 @@ class Cutscene:
                             self.line_index += 1
                             self.character_index = 0
 
-    def update_button(self):
+    def update_button(self, skip):
         if self.show_button:
             if not self.line_timer and self.button_alpha < 255:
                 self.button_alpha += self.alpha_step
                 self.button.set_alpha(self.button_alpha)
-            if self.main.events.check_key(key='space'):
-                self.main.audio.play_sound(name='cutscene_skip', existing='overlap')
+            if skip:
+                self.main.audio.play_sound(name='cutscene_skip')
                 self.show_button = False
                 if self.page_index == len(self.text) - 1:
                     self.main.audio.play_sound(name='cutscene_end')
@@ -252,9 +252,11 @@ class Cutscene:
                         self.collectable_sprite = self.main.utilities.get_sprite(name='collectable', state=self.collectable_type, alpha=self.get_sprite_alpha())
                         self.collectable_sprite_position = (self.main.display.half_width - self.main.sprite_size // 2 + 32 * cos(2 * self.main.runtime_seconds),
                                                             self.bars_max_offset + (self.main.display.half_height - self.bars_max_offset - self.main.sprite_size) // 2 + 16 * sin(2 * self.main.runtime_seconds))
-                self.update_bars()
-                self.update_text()
-                self.update_button()
+                # pass in skip variable here instead of checking for space everywhere...
+                skip = self.main.events.check_key(key='space', remove=True)
+                self.update_bars(skip=skip)
+                self.update_text(skip=skip)
+                self.update_button(skip=skip)
         return self.active  # do we really need to return this?
 
     def draw(self, displays):

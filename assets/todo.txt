@@ -23,10 +23,7 @@
 - clicking window 'x' does not close window while mid transition, we can't start a new transition mid transition
 - separate game back into more distinct display layers again that can be controlled individually, only add this as needed
 - in assets, save copies of images that have had their alpha set, so that future calls just grab the image instead of having to re set it ({image: alpha[0-255]: surface})
-- track collectables and their locations when we save a level, and can tell which collectables are left (to guide player in right direction with cryptid tracker)
--- we need to be able to easily tell which cryptid warps are left, maybe link them to their corresponding collectable, and if that collectable is not in the game collectable dict, then display cryptid warp on map
 - add a check in the map class for 100%, and draw something to show that
-- add way to trigger cryptid warp in game when in debug mode
 
 
 *** game bugs ***
@@ -40,6 +37,7 @@
 - remove player respawn sprite when that flag is deleted when a player is turned to stone on top of it
 - playing a level from the level editor and then opening the game menu shows button as 'main menu' but it actually takes you back to the level editor, can we change the button text easily? from assets update_menu perhaps?
 - sliding on ice into a barrier that has ice behind it causes the game to crash
+- sliding over ice while dead spams the game over sound, it should only play the first time we enter the game over state
 
 
 *** level crashes ***

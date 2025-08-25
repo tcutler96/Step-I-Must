@@ -55,12 +55,12 @@ class Menu:
 
     def scroll_up(self):
         if self.scroll > 0:
-            self.main.audio.play_sound(name='menu_scroll')
+            self.main.audio.play_sound(name='menu_scroll', existing=None)
             self.scroll = max(0, self.scroll - self.scroll_step)
 
     def scroll_down(self):
         if self.scroll < self.max_scroll:
-            self.main.audio.play_sound(name='menu_scroll')
+            self.main.audio.play_sound(name='menu_scroll', existing=None)
             self.scroll = min(self.max_scroll, self.scroll + self.scroll_step)
 
     def update(self, mouse_position):

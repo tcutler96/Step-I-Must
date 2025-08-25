@@ -89,7 +89,7 @@ class TextElement:
                 elif self.interactable and self.offset == (0, 0) and self.main.display.cursor.cursor and (self.menu_state == self.main.menu_state) and self.rect.collidepoint(mouse_position):
                     self.hovered = True
                     if not self.last_hovered:
-                        self.main.audio.play_sound(name='menu_highlight', existing='overlap')
+                        self.main.audio.play_sound(name='menu_highlight')
                     self.main.display.set_cursor(cursor='hand')
                     if self.main.events.check_key(key='mouse_1'):
                         self.selected = 'left'

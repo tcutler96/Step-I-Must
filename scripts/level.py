@@ -31,7 +31,7 @@ class Level:
         self.cached_levels = []
         self.undo_redo_delay = self.main.assets.settings['gameplay']['hold_to_undo']
         self.undo_redo_timer = 0
-        self.default_levels = ['empty', 'filled', 'saved']
+        self.default_levels = ['empty', 'filled']
 
     def get_cells(self):
         return [cell for cell in self.level.values() if not cell.is_empty()]

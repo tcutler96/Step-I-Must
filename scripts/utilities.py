@@ -222,7 +222,9 @@ class Utilities:
 
     def resave_levels(self):
         level = Level(main=self.main)
+        default_levels = level.default_levels.copy()
+        default_levels.append('saved')
         for level_name in self.main.assets.levels:
-            if level_name not in level.default_levels:
+            if level_name not in default_levels:
                 level.load_level(name=level_name)
                 level.create_tilemap()

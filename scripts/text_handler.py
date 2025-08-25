@@ -39,9 +39,10 @@ class TextHandler:
         self.add_text(text_group='map', text_id='move', text='Move: wasd | arrows', position=(56, 56), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
         self.add_text(text_group='map', text_id='menu', text='Menu: escape | p', position=(56, 72), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
         self.add_text(text_group='map', text_id='map', text='Map: tab | m', position=(56, 88), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='map', text_id='undo', text='Undo: z | 4', position=(56, 104), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='map', text_id='redo', text='Redo: c | 6', position=(56, 120), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='map', text_id='toggle_map', text='Toggle map: space', position=(56, 136), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.add_text(text_group='map', text_id='teleport', text='Teleport: LMB', position=(56, 104), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.add_text(text_group='map', text_id='undo', text='Undo: z | 4', position=(56, 120), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.add_text(text_group='map', text_id='redo', text='Redo: c | 6', position=(56, 136), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.add_text(text_group='map', text_id='toggle_map', text='Toggle map: space', position=(56, 152), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
         self.game_state_text_groups = {'game': ['tutorial', 'cutscene', 'game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'shaders', 'audio', 'gameplay', 'developer', 'quit_game'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],
                                        'main_menu': ['title_screen', 'options', 'video', 'shaders', 'audio', 'gameplay', 'developer', 'quit_game', 'new_game', 'are_you_sure', 'choose_level'],

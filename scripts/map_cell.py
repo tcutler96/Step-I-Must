@@ -2,7 +2,7 @@ import pygame as pg
 
 
 class MapCell:
-    def __init__(self, main, level_name, sprite, blit_position, cell_size, discovered, player, teleporter, collectables):
+    def __init__(self, main, level_name, sprite, blit_position, cell_size, discovered, player, teleporter, collectables, cryptid):
         self.main = main
         self.level_name = level_name
         self.sprite = sprite
@@ -13,6 +13,7 @@ class MapCell:
         self.player = player
         self.teleporter = teleporter
         self.collectables = collectables
+        self.cryptid = cryptid
         self.hovered = False
         self.was_hovered = False
         self.main.text_handler.add_text(text_group='map', text_id=self.level_name, text=self.level_name, position='top_right', bounce=-3, alignment=('r', 'c'), display_layer='level_map')
@@ -40,6 +41,12 @@ class MapCell:
         displays['level_map'].blit(source=sprite, dest=(self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]))
 
     def draw(self, displays, map_colour, alpha, icons, offset):
+        # if a map cell has a cheese in (that has not yet been collected)
+        # check if there is a cryptid warp with destination the same as this level position
+        # we would need to all cryptid warps go directly to their corresponding cheese (which they dont currently do)
+        # otherwise we need to manually add data that links a cryptid warp with a specific cheese/ collectable
+
+        # draw cryptid warps on the map once we reach a certain point in the game (the final room in the top of the map), no need to go back to the room everytime to see cryptids
         if self.rect.colliderect(self.main.display.rect):
             if self.discovered or self.main.debug:
                 if map_colour:
@@ -62,3 +69,7 @@ class MapCell:
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
                     elif collectable_type == 'cheeses' and self.main.utilities.check_collectable(collectable_type='cheese', count=False):
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
+            if self.cryptid:
+                displays['level_map'].blit(source=self.main.utilities.get_sprite(name='spike', alpha=min(alpha, 150)), dest=(self.blit_position[0] + offset[0], self.blit_position[1] + offset[1]))
+                # why does drawing a rect overwrite everything?
+                # pg.draw.rect(surface=displays['level_map'], color=self.main.utilities.get_colour(colour='light_green', alpha=min(alpha, 100)), rect=self.rect)

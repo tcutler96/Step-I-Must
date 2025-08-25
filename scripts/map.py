@@ -11,11 +11,11 @@ class Map:
         part_two_offset = (240.0, 400.0)
         self.offset_dict = {1: part_one_offset, 2: part_two_offset, 'current': None, 'target': 1,
                             'step': (abs(part_one_offset[0] - part_two_offset[0]) / (2 * self.cell_size), abs(part_one_offset[1] - part_two_offset[1]) / (2 * self.cell_size))}
-        self.collectable_data = {'base_position': (384, 50), 'y_overlap': 0.35, 'types': list(self.main.assets.data['game']['collectables']),
-                             'max_counts': {collectable_type: 0 for collectable_type in list(self.main.assets.data['game']['collectables'])},
-                             'sprites': {'fraction': self.main.assets.images['map']['fraction'].copy(), 'fraction_filled': self.main.assets.images['map']['fraction_filled'].copy()} |
-                                        {collectable_type[:-1]: None for collectable_type in list(self.main.assets.data['game']['collectables'])} |
-                                        {f'{collectable_type[:-1]} empty': None for collectable_type in list(self.main.assets.data['game']['collectables'])}}
+        self.collectable_data = {'base_position': (384, 50), 'y_overlap': 0.35, 'types': list(self.main.assets.data['collectables']),
+                                 'max_counts': {collectable_type: len(collectable_amounts) for collectable_type, collectable_amounts in self.main.assets.data['collectables'].items()},
+                                 'sprites': {'fraction': self.main.assets.images['map']['fraction'].copy(), 'fraction_filled': self.main.assets.images['map']['fraction_filled'].copy()} |
+                                            {collectable_type[:-1]: None for collectable_type in list(self.main.assets.data['collectables'])} |
+                                            {f'{collectable_type[:-1]} empty': None for collectable_type in list(self.main.assets.data['collectables'])}}
         self.tracker_data = {'current': 'part_two' if self.main.utilities.check_collectable(collectable_type='part_two', count=False) else
                                         'part_one' if self.main.utilities.check_collectable(collectable_type='part_one', count=False) else None,
                              'part_one': {'parts': ['part_one'], 'text_ids': ['part_one_percent_1'], 'texts': ['World: '], 'positions': [(424, 280)]},
@@ -39,9 +39,6 @@ class Map:
         levels = {}
         for level_name, level_data in self.main.assets.levels.items():
             if level_name.startswith('(') and level_name.endswith(')'):
-                for collectable, amount in level_data['collectables'].items():
-                    if amount:
-                        self.collectable_data['max_counts'][collectable] += len(amount)
                 levels[level_name] = level_data
         for x, collectable_type in enumerate(self.collectable_data['types']):
             self.update_collectable_count_text(collectable_type=collectable_type)
@@ -70,10 +67,14 @@ class Map:
             for reciever in self.main.assets.data['teleporters']['recievers']:
                 if level_name in reciever:
                     teleporter = True
+            cryptid = False
+            for warp in self.main.assets.data['teleporters']['cryptids'].values():
+                if warp['teleporters'] and level_name in warp['teleporters'][0]:
+                    cryptid = True
             map_cells[level_name] = MapCell(main=self.main, level_name=level_name, sprite=sprite, blit_position=blit_position,
                                             cell_size=self.cell_size, discovered=level_name in self.main.assets.data['game']['discovered_levels'],
                                             player=level_name == self.main.assets.data['game']['level'], teleporter=teleporter,
-                                            collectables={'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []})
+                                            collectables={collectable_type: [] for collectable_type in self.main.assets.data['collectables'].keys()}, cryptid=cryptid)
         if data_updated:
             self.main.assets.save_data()  # map
         return map_cells
@@ -223,6 +224,7 @@ class Map:
             self.main.text_handler.activate_text(text_group='map', text_id='menu')
         if '(0, 2)' in self.main.assets.data['game']['discovered_levels'] or self.main.debug:
             self.main.text_handler.activate_text(text_group='map', text_id='map')
+            self.main.text_handler.activate_text(text_group='map', text_id='teleport')
         if '(-1, 2)' in self.main.assets.data['game']['discovered_levels'] or self.main.debug:
             self.main.text_handler.activate_text(text_group='map', text_id='undo')
             self.main.text_handler.activate_text(text_group='map', text_id='redo')

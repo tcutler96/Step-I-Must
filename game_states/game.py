@@ -675,16 +675,30 @@ class Game:
                         print('cryptid pair destination set')
             elif self.teleporter_data['standing']:
                 if self.main.debug and self.main.events.check_key(key='t'):
-                    if self.teleporter_data['standing']['state'] == 'portal' and self.teleporter_data['standing']['level_and_position'] in self.main.assets.data['teleporters']['portals']:
-                        teleporter_data = self.main.assets.data['teleporters']['portals'][self.teleporter_data['standing']['level_and_position']]
-                        if teleporter_data['destination']:
-                            new_level, new_position = teleporter_data['destination'].split(' - ')
-                            self.transition_level(teleport=[new_level, self.main.utilities.position_str_to_tuple(position=new_position),
-                                                            self.level.grid_to_display(position=teleporter_data['position'], centre=True)])
+                    if self.teleporter_data['standing']['state'] == 'portal':
+                        if self.main.events.check_key(key='t', modifier='ctrl'):
+                            cryptid_warp = False
+                            for cryptid in self.main.assets.data['teleporters']['cryptids'].values():
+                                if self.teleporter_data['standing']['level_and_position'] in cryptid['teleporters']:
+                                    self.main.audio.play_sound(name='cryptid_teleport')
+                                    cryptid_warp = True
+                                    new_level, new_position = cryptid['destination'].split(' - ')
+                                    centres = [self.level.grid_to_display(position=self.main.utilities.position_str_to_tuple(position=position.split(' - ')[1]), centre=True) for position in cryptid['teleporters']]
+                                    self.transition_level(teleport=[new_level, self.main.utilities.position_str_to_tuple(position=new_position), centres])
+                                    break
+                            if not cryptid_warp:
+                                print('cryptid warp not set')
+                        elif self.teleporter_data['standing']['level_and_position'] in self.main.assets.data['teleporters']['portals']:
+                            teleporter_data = self.main.assets.data['teleporters']['portals'][self.teleporter_data['standing']['level_and_position']]
+                            if teleporter_data['destination']:
+                                self.main.audio.play_sound(name='teleport')
+                                new_level, new_position = teleporter_data['destination'].split(' - ')
+                                self.transition_level(teleport=[new_level, self.main.utilities.position_str_to_tuple(position=new_position),
+                                                                self.level.grid_to_display(position=teleporter_data['position'], centre=True)])
+                            else:
+                                print('warp not set')
                         else:
                             print('warp not set')
-                    else:
-                        print('warp not set')
                 if self.main.events.check_key(key='e'):
                     data_updated = self.check_teleport_data()
                     if self.main.debug:

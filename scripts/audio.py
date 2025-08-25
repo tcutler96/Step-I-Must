@@ -31,7 +31,7 @@ class Audio:
         if audio_type in ['sound', 'music']:
             return self.main.assets.settings['audio'][audio_type + '_volume'] * self.main.assets.settings['audio']['master_volume']
 
-    def play_sound(self, name, loops=0, fade=0, existing=None):
+    def play_sound(self, name, loops=0, fade=0, existing='overlap'):
         if name in self.audio['sound']:
             if existing == 'stop' and self.audio['sound'][name].get_num_channels():
                 self.stop_sound(name=name, fade=0)

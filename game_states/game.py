@@ -343,12 +343,12 @@ class Game:
                 self.set_steps(steps=5)
             if not self.main.debug:
                 if not new_level and self.level.steps == 0:
-                    self.main.audio.play_sound(name='game_over')
+                    self.main.audio.play_sound(name='game_over', existing='overlap')
                     self.no_steps = True
                     for cell in self.player_cells.values():
                         cell.elements['player']['state'] = 'dead'
                 if self.no_players:  # clean this up, checking for game over state...
-                    self.main.audio.play_sound(name='game_over')
+                    self.main.audio.play_sound(name='game_over', existing='overlap')
                 if respawn_updated:
                     self.level.current_respawn = respawn
 

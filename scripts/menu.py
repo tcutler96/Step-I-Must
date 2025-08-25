@@ -131,6 +131,8 @@ class Menu:
                             self.main.utilities.restore_file(file_name='data')
                         elif selected_element[1] == 'restore_settings':
                             self.main.utilities.restore_file(file_name='settings')
+                        elif selected_element[1] == 'resave_levels':
+                            self.main.utilities.resave_levels()
                 elif selected_element[0] == 'option':
                     response = self.main.assets.change_setting(group=self.menu_name, name=element.name, option=selected_element[1][0])
                     while response:

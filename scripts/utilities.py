@@ -1,3 +1,4 @@
+from scripts.level import Level
 from copy import deepcopy
 import pygame.freetype
 import pygame as pg
@@ -218,3 +219,10 @@ class Utilities:
             level_data['collectables'] = collectables
             with open(os.path.join('assets/levels', f'{level_name}.json'), 'w') as file_data:
                 json.dump(obj=level_data, fp=file_data, indent=2)
+
+    def resave_levels(self):
+        level = Level(main=self.main)
+        for level_name in self.main.assets.levels:
+            if level_name not in level.default_levels:
+                level.load_level(name=level_name)
+                level.create_tilemap()

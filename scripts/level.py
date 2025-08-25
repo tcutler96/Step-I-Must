@@ -31,7 +31,7 @@ class Level:
         self.cached_levels = []
         self.undo_redo_delay = self.main.assets.settings['gameplay']['hold_to_undo']
         self.undo_redo_timer = 0
-        self.default_levels = ['empty', 'filled']
+        self.default_levels = ['empty', 'filled', 'saved']
 
     def get_cells(self):
         return [cell for cell in self.level.values() if not cell.is_empty()]
@@ -94,11 +94,11 @@ class Level:
             level_and_position = self.main.utilities.level_and_position(level=self.name, position=position)
             if cell.check_element(name='player', state='idle'):
                 elements['player'] = None
-            if cell.check_element(name='collectable'):
-                collectable_type = cell.elements['object']['state'] + 's'
-                if collectable_type in self.collectables:
-                    elements['object'] = None
-                    self.collectables[collectable_type].append(position)
+            # if cell.check_element(name='collectable'):
+            #     collectable_type = cell.elements['object']['state'] + 's'
+            #     if collectable_type in self.collectables:
+            #         elements['object'] = None
+            #         self.collectables[collectable_type].append(position)
             if self.name.startswith('(') and self.name.endswith(')'):
                 if cell.check_element(name='sign'):  # signs
                     if level_and_position not in self.main.assets.data['signs']:
@@ -114,6 +114,28 @@ class Level:
                     print(f'sign data for {level_and_position} removed...')
                     del self.main.assets.data['signs'][level_and_position]
                     data_updated = True
+
+                collectable_type = None
+                if cell.check_element(name='collectable'):
+                    collectable_type = cell.elements['object']['state'] + 's'
+                    elements['object'] = None
+                    self.collectables[collectable_type].append(position)
+                    if collectable_type not in self.main.assets.data['collectables']:
+                        print(f'collectable data for {collectable_type} at {level_and_position} added...')
+                        self.main.assets.data['collectables'][collectable_type] = [level_and_position]
+                        data_updated = True
+                    elif level_and_position not in self.main.assets.data['collectables'][collectable_type]:
+                        print(f'collectable data for {collectable_type} at {level_and_position} added...')
+                        self.main.assets.data['collectables'][collectable_type].append(level_and_position)
+                        data_updated = True
+                collectable_types = list(self.main.assets.data['collectables'].keys())
+                if collectable_type:
+                    collectable_types.remove(collectable_type)
+                for collectable_type in collectable_types:
+                    if level_and_position in self.main.assets.data['collectables'][collectable_type]:
+                        print(f'collectable data for {collectable_type} at {level_and_position} removed...')
+                        self.main.assets.data['collectables'][collectable_type].remove(level_and_position)
+                        data_updated = True
 
                 if cell.check_element(name='lock'):  # locks
                     elements['tile'] = None
@@ -154,12 +176,12 @@ class Level:
                                 print(f'portal activation data for {empty_activation} removed...')
             self.tilemap[str(position[0]) + ':' + str(position[1])] = elements
         if data_updated:
-            self.main.assets.save_data()  # signs, locks, teleporters (recievers, senders, portals, activations)
+            self.main.assets.save_data()  # signs, collectables, locks, teleporters (recievers, senders, portals, activations)
         return {'respawn': self.current_respawn, 'collectables': self.collectables, 'locks': self.locks, 'tilemap': self.tilemap}
 
     def load_level(self, name='empty', load_respawn=None, bump_player=None):
         if name in self.default_levels and not self.name:
-                self.name = name
+            self.name = name
         else:
             if name in self.main.assets.levels:
                 self.name = name

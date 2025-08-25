@@ -18,15 +18,14 @@
 
 *** utility ***
 - add animation to 'other' images such as cell marker
-- add special transition for when a cryptid wrong warp is triggered (leaving a level in multiple directions at once), to signify the breaking of the game mechanics
 - need to rework game transition effect (player bump and pixealte shader)
 - clicking window 'x' does not close window while mid transition, we can't start a new transition mid transition
 - separate game back into more distinct display layers again that can be controlled individually, only add this as needed
 - in assets, save copies of images that have had their alpha set, so that future calls just grab the image instead of having to re set it ({image: alpha[0-255]: surface})
 - need to do a full game run through to test all the levels work as intended
-- track collectables and their locations when we save a level, so we know max counts for map tracker, and can tell which collectables are left (to guide player in right direction)
-- we dont have room on the map tracker for a tick under the cheeses anymore
-- add way to loop over all levels and resave them, in order to fix any wrong data concerning teleporters or collectables etc.
+- track collectables and their locations when we save a level, so we know max counts for map tracker, and can tell which collectables are left (to guide player in right direction with cryptid tracker)
+-- no longer need to work out collectable max counts in map tracker, just pull game game data instead
+-- add way to loop over all levels and resave them, in order to fix any wrong data concerning teleporters or collectables etc.
 
 
 *** game bugs ***

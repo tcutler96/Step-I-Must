@@ -316,6 +316,11 @@
         "button",
         "restore_settings"
       ],
+      "Resave Levels": [
+        "button",
+        "button",
+        "resave_levels"
+      ],
       "Back": [
         "button",
         "menu_state",

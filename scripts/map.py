@@ -13,7 +13,7 @@ class Map:
                             'step': (abs(part_one_offset[0] - part_two_offset[0]) / (2 * self.cell_size), abs(part_one_offset[1] - part_two_offset[1]) / (2 * self.cell_size))}
         self.collectable_data = {'base_position': (384, 50), 'y_overlap': 0.35, 'types': list(self.main.assets.data['game']['collectables']),
                              'max_counts': {collectable_type: 0 for collectable_type in list(self.main.assets.data['game']['collectables'])},
-                             'sprites': {'fraction': self.main.assets.images['map']['fraction'].copy(), 'fraction_filled': self.main.assets.images['map']['fraction_filled'].copy(), 'medal': self.main.assets.images['map']['medal'].copy()} |
+                             'sprites': {'fraction': self.main.assets.images['map']['fraction'].copy(), 'fraction_filled': self.main.assets.images['map']['fraction_filled'].copy()} |
                                         {collectable_type[:-1]: None for collectable_type in list(self.main.assets.data['game']['collectables'])} |
                                         {f'{collectable_type[:-1]} empty': None for collectable_type in list(self.main.assets.data['game']['collectables'])}}
         self.tracker_data = {'current': 'part_two' if self.main.utilities.check_collectable(collectable_type='part_two', count=False) else
@@ -121,12 +121,12 @@ class Map:
     def update_collectable_count_text(self, collectable_type):
         count = len(self.main.assets.data['game']['collectables'][collectable_type])
         max_count = self.collectable_data['max_counts'][collectable_type]
-        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_current', text=str(count), alignment=('c', 'c'), shadow_offset=(4, 4),
-                                        size=14, max_width=self.main.sprite_size * 0.75, display_layer='level_map', alpha_up=8.5, alpha_down=8.5, bounce=-3, colour='purple' if count < max_count else 'light_green',
+        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_current', text=str(count), alignment=('c', 'c'), size=12, shadow_offset=(4, 4),
+                                        display_layer='level_map', alpha_up=8.5, alpha_down=8.5, bounce=-3, colour='purple' if count < max_count else 'light_green',
                                         position=self.get_collectable_position(x=self.collectable_data['types'].index(collectable_type) + 0.5, y=max_count + 3))
-        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_max', text=str(max_count), alignment=('c', 'c'), size=14, shadow_offset=(4, 4),
-                                        max_width=self.main.sprite_size * 0.75, display_layer='level_map', alpha_up=8.5, alpha_down=8.5, bounce=-3, colour='purple' if count < max_count else 'light_green',
-                                        position=self.get_collectable_position(x=self.collectable_data['types'].index(collectable_type) + 0.5, y=max_count + (6.3 if count < max_count else 6.1)))
+        self.main.text_handler.add_text(text_group='map', text_id=f'{collectable_type}_max', text=str(max_count), alignment=('c', 'c'), size=12, shadow_offset=(4, 4),
+                                        display_layer='level_map', alpha_up=8.5, alpha_down=8.5, bounce=-3, colour='purple' if count < max_count else 'light_green',
+                                        position=self.get_collectable_position(x=self.collectable_data['types'].index(collectable_type) + 0.5, y=max_count + 6))
 
     def update_tracker(self):
         self.tracker_data['current'] = 'part_two' if self.main.utilities.check_collectable(collectable_type='part_two', count=False) else \
@@ -248,8 +248,6 @@ class Map:
                 if self.show_map:
                     self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_current')
                     self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_max')
-                if collectable_count >= max_count:
-                    displays['level_map'].blit(source=self.collectable_data['sprites']['medal'], dest=self.get_collectable_position(x=x, y=max_count + 8, bounce=-3))
         if collectables:
             self.main.text_handler.activate_text(text_group='map', text_id='collectables')
 

@@ -186,14 +186,14 @@ class Map:
             if self.main.events.check_key(key=['tab', 'm']):
                 self.show_map = not self.show_map
                 if not self.show_map:
-                    self.main.audio.play_sound(name='map_close', overlap=True)
+                    self.main.audio.play_sound(name='map_close', existing='overlap')
                 else:
-                    self.main.audio.play_sound(name='map_open', overlap=True)
+                    self.main.audio.play_sound(name='map_open', existing='overlap')
                     self.alpha = 0
                     self.icons['alpha'] = self.icons['alpha_default'].copy()
                     self.set_target(target=self.get_target(level=self.main.assets.data['game']['level']))
             if self.show_map and self.main.events.check_key(key='space') and ('(-1, -5)' in self.main.assets.data['game']['discovered_levels'] or self.main.debug):
-                self.main.audio.play_sound(name='map_switch', overlap=True)
+                self.main.audio.play_sound(name='map_switch', existing='overlap')
                 self.offset_dict['target'] = 1 if self.offset_dict['target'] == 2 else 2
                 mouse_position = None
         self.update_icons()

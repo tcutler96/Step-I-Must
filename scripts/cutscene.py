@@ -115,7 +115,6 @@ class Cutscene:
                     self.collectable_timer = self.collectable_pause * self.main.fps
                     self.collectable_type = cutscene_data['collectable_type'][:-1]
                     self.collectable_position = cutscene_data['collectable_position']
-                    self.main.audio.play_sound(name='collectable')  # temmporary for testing
             if self.active:
                 self.cutscene_type = cutscene_type
                 self.bars_offset = 0
@@ -137,7 +136,7 @@ class Cutscene:
                 self.main.audio.play_sound(name='cutscene_start')
             if self.bars_offset < self.bars_max_offset:
                 if self.main.events.check_key(key='space', remove=True):
-                    self.main.audio.play_sound(name='cutscene_skip', overlap=True)
+                    self.main.audio.play_sound(name='cutscene_skip', existing='overlap')
                     self.bars_offset = self.bars_max_offset
                 else:
                     self.bars_offset = min(self.bars_offset + self.bars_speed, self.bars_max_offset)
@@ -149,7 +148,7 @@ class Cutscene:
                     self.character_index = 0
         elif self.bars_offset:
             if self.main.events.check_key(key='space'):
-                self.main.audio.play_sound(name='cutscene_skip', overlap=True)
+                self.main.audio.play_sound(name='cutscene_skip', existing='overlap')
                 self.bars_offset = 0
             else:
                 self.bars_offset = max(self.bars_offset - self.bars_speed, 0)
@@ -166,16 +165,16 @@ class Cutscene:
         if self.show_text:
             if self.line_timer:
                 if self.main.events.check_key(key='space'):
-                    self.main.audio.play_sound(name='cutscene_skip', overlap=True)
+                    self.main.audio.play_sound(name='cutscene_skip', existing='overlap')
                     self.line_timer = 0
                 else:
                     self.line_timer -= 1
             elif self.character_index < len(self.text[self.page_index][self.line_index]):
                 if not self.character_index:
-                    self.main.audio.play_sound(name='cutscene_dialogue', overlap=True)
+                    self.main.audio.play_sound(name='cutscene_dialogue', existing='overlap')
                 character_index = self.character_index
                 if self.main.events.check_key(key='space', remove=True):
-                    self.main.audio.play_sound(name='cutscene_skip', overlap=True)
+                    self.main.audio.play_sound(name='cutscene_skip', existing='overlap')
                     self.character_index = len(self.text[self.page_index][self.line_index])
                     self.line_timer = 1
                 else:
@@ -204,7 +203,7 @@ class Cutscene:
                 self.button_alpha += self.alpha_step
                 self.button.set_alpha(self.button_alpha)
             if self.main.events.check_key(key='space'):
-                self.main.audio.play_sound(name='cutscene_skip', overlap=True)
+                self.main.audio.play_sound(name='cutscene_skip', existing='overlap')
                 self.show_button = False
                 if self.page_index == len(self.text) - 1:
                     self.main.audio.play_sound(name='cutscene_end')

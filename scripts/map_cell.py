@@ -29,7 +29,7 @@ class MapCell:
             self.hovered = True
             if self.teleporter or self.main.debug:
                 if not self.was_hovered:
-                    self.main.audio.play_sound(name='menu_highlight', overlap=True)
+                    self.main.audio.play_sound(name='menu_highlight', existing='overlap')
                 self.main.display.set_cursor(cursor='hand')
                 if self.main.events.check_key(key='mouse_1'):
                     return self.rect.center

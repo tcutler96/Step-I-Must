@@ -101,7 +101,7 @@ class Toolbar:
                 self.main.display.set_cursor(cursor='hand')
                 self.hovered_element = button_name
                 if self.hovered_element != self.last_hovered_element:
-                    self.main.audio.play_sound(name='menu_highlight', overlap=True)
+                    self.main.audio.play_sound(name='menu_highlight', existing='overlap')
                 if self.main.events.check_key(key='mouse_1'):
                     selected_elememt = ['button', button_name]
         if not selected_elememt:
@@ -112,7 +112,7 @@ class Toolbar:
                     if rect.collidepoint(mouse_position):
                         self.hovered_element = [element_name, count]
                         if self.hovered_element != self.last_hovered_element:
-                            self.main.audio.play_sound(name='menu_highlight', overlap=True)
+                            self.main.audio.play_sound(name='menu_highlight', existing='overlap')
                         self.main.display.set_cursor(cursor='hand')
                         if self.main.events.check_key(key='mouse_1'):
                             if element_data['element_type'] == 'object':

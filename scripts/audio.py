@@ -31,9 +31,11 @@ class Audio:
         if audio_type in ['sound', 'music']:
             return self.main.assets.settings['audio'][audio_type + '_volume'] * self.main.assets.settings['audio']['master_volume']
 
-    def play_sound(self, name, loops=0, fade=0, overlap=False):
+    def play_sound(self, name, loops=0, fade=0, existing=None):
         if name in self.audio['sound']:
-            if not self.audio['sound'][name].get_num_channels() or overlap:
+            if existing == 'stop' and self.audio['sound'][name].get_num_channels():
+                self.stop_sound(name=name, fade=0)
+            elif not self.audio['sound'][name].get_num_channels() or existing == 'overlap':
                 self.audio['sound'][name].play(loops=loops, fade_ms=self.main.utilities.s_to_ms(s=fade))
         elif self.main.testing:
             if name not in self.missing_sounds:

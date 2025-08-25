@@ -237,7 +237,7 @@ class Level:
 
     def undo(self):  # combine these back again...
         if self.main.game_state == 'game' and self.main.game_states['game'].interpolating:
-            self.main.audio.play_sound(name='undo', overlap=True)
+            self.main.audio.play_sound(name='undo', existing='overlap')
             self.undo_redo_timer = self.undo_redo_delay
             level_data = self.copy_level(level_data=self.cached_levels[self.active_level])
             self.steps = level_data['steps']
@@ -246,7 +246,7 @@ class Level:
             self.level = level_data['level']
             return True
         elif self.active_level > 0:
-            self.main.audio.play_sound(name='undo', overlap=True)
+            self.main.audio.play_sound(name='undo', existing='overlap')
             self.undo_redo_timer = self.undo_redo_delay
             self.active_level -= 1
             level_data = self.copy_level(level_data=self.cached_levels[self.active_level])
@@ -258,7 +258,7 @@ class Level:
 
     def redo(self):
         if self.active_level < len(self.cached_levels) - 1:
-            self.main.audio.play_sound(name='redo')
+            self.main.audio.play_sound(name='redo', existing='overlap')
             self.undo_redo_timer = self.undo_redo_delay
             self.active_level += 1
             level_data = self.copy_level(level_data=self.cached_levels[self.active_level])

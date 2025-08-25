@@ -69,7 +69,7 @@ class Game:
                     object_data['split'] = False
 
     def collect_collectable(self, cell):
-        self.main.audio.play_sound(name='collectable', overlap=True)
+        self.main.audio.play_sound(name='collectable', existing='overlap')
         # self.main.audio.play_sound(name=f'collectable_{cell.elements['object']['state'].replace(' ', '_')}')
         collectable_type = cell.elements['object']['state'] + 's'
         if self.level.name != 'custom':
@@ -400,12 +400,12 @@ class Game:
                     if self.move_object(cell=cell, object_type='player', movement=movement):
                         player_moved = True
             if self.players_exited:
-                self.main.audio.play_sound(name='player_move', overlap=True)
+                self.main.audio.play_sound(name='player_move', existing='overlap')
                 self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
                 self.no_movement = False
                 self.transition_level()
             elif player_moved:
-                self.main.audio.play_sound(name='player_move', overlap=True)
+                self.main.audio.play_sound(name='player_move', existing='overlap')
                 self.level.clear_cache_redo()
                 self.reset_animations(force_reset=True)
                 self.no_movement = False
@@ -456,7 +456,7 @@ class Game:
                                         new_cell = new_new_cell
                                         new_new_cell = self.level.get_new_cell(position=new_new_cell.position, movement=movement)
         if objects_slid:
-            self.main.audio.play_sound(name='ice', overlap=True)
+            self.main.audio.play_sound(name='ice', existing='overlap')
         if self.players_exited:
             self.transition_level()
         elif not objects_slid:
@@ -740,7 +740,7 @@ class Game:
                     self.main.audio.play_sound(name='map_close')
                     self.map.show_map = False
                 else:
-                    self.main.audio.play_sound(name='teleport', overlap=True)
+                    self.main.audio.play_sound(name='teleport', existing='overlap')
                     self.teleporter_data['standing'] = None
                     position = (7, 7)
                     if not self.main.debug:

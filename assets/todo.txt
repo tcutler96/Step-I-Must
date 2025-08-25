@@ -14,35 +14,32 @@
 
 *** shaders ***
 - look into loop hero noise transition shader
-- add distortion effect to grey effect that is used when low on/ out of steps
 
 
 *** utility ***
-- add way to specify what we want to save in data and settings files
 - add animation to 'other' images such as cell marker
+- add special transition for when a cryptid wrong warp is triggered (leaving a level in multiple directions at once), to signify the breaking of the game mechanics
+- need to rework game transition effect (player bump and shader)
 - clicking window 'x' does not close window while mid transition, we can't start a new transition mid transition
 - separate game back into more distinct display layers again that can be controlled individually
 - add ability when playing a sound to stop all other instances of that sound
 - in assets, save copies of images that have had their alpha set, so that future calls just grab the image instead of having to re set it ({image: alpha[0-255]: surface})
 - need to do a full game run through to test all the levels work as intended
 - track collectables and their locations when we save a level, so we know max counts for map tracker, and can tell which collectables are left (to guide player in right direction)
-- add way to loop over all levels and resave them, in order to fix any wrong data concerning teleporters etc.
+- we dont have room on the map tracker for a tick under the cheeses anymore
+- add way to loop over all levels and resave them, in order to fix any wrong data concerning teleporters or collectables etc.
 
 
 *** game bugs ***
-- starting the game in debug mode does not set steps correctly and crashes
-- spawning ontop of a collectable (seting respawn while in debug mode and so not collecting collectable) breaks the level loading, steps arent set properly
 - picking up a collectable prevents animations from finishing, need to continue to resolve level loop
 - looped animations arent being stopped when we transision to another level
 - undo/ redo does not save game data (when we change levels) or update player location on map, it should also get any players out of sleeping state
 - bumping a player into the wall should wake it up from sleeping
-- we need to save game data as soon as teleport data is updated (when activating portals or setting teleported data in debug mode)
 - when map is opened during a cutscene, we need to reset the sprite timers (ie have players and teleporters show first)
 - leaving a level while stood on a sign plays the close text sound when we are in the new level, instead of straight away
 - setting certain cells in the level editor spams the sound effect (any player on a flag, any cell on a barrier)
 - remove player respawn sprite when that flag is deleted when a player is turned to stone on top of it
 - playing a level from the level editor and then opening the game menu shows button as 'main menu' but it actually takes you back to the level editor, can we change the button text easily? from assets update_menu perhaps?
-- only draw game reset text and apply grey effect after cutscene has finished?
 - sliding on ice into a barrier that has ice behind it causes the game to crash
 
 

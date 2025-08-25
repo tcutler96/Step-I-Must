@@ -200,7 +200,7 @@ class Map:
         self.update_sprites()
         if self.show_map:
             interpolating = self.update_interpolation()
-            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui'], effect='pixelate', effect_data={'length': 0.5})
+            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_dead_player', 'level_player', 'level_ui'], effect='pixelate', effect_data={'length': 0.5})
             if self.alpha < 255:
                 self.alpha = min(self.alpha + self.alpha_step, 255)
             selected_level = [None, None]

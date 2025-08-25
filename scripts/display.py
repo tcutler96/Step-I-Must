@@ -15,7 +15,7 @@ class Display:
         self.scale_factor = self.main.assets.settings['video']['resolution']
         self.window_size = self.window_width, self.window_height = (self.size[0] * self.scale_factor, self.size[1] * self.scale_factor)
         self.window_centre = self.window_half_width, self.window_half_height = self.window_width // 2, self.window_height // 2
-        self.display_layers = ['background', 'level_background', 'level_main', 'level_player', 'level_ui', 'level_map', 'ui', 'transition']
+        self.display_layers = ['background', 'level_background', 'level_main', 'level_dead_player', 'level_player', 'level_ui', 'level_map', 'ui', 'transition']
         self.displays = self.load_displays()
         self.system = platform.system()
         if self.system == 'Darwin':

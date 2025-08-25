@@ -30,6 +30,7 @@ class Game:
         self.player_cells = None
         self.player_afk = 3600
         self.player_afk_timer = 0
+        self.no_players = True
         self.no_steps = False
         self.teleporter_data = None
         self.sign_data = None
@@ -157,20 +158,22 @@ class Game:
         self.resolve_state = None
         self.no_movement = False
         self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
+        new_levels = {}
         if self.level.name == 'custom':
             new_level = self.level.name
             respawn = self.get_respawn()
-            centre = self.level.grid_to_display(position=self.players_exited[0].position, centre=True)
+            centre = None
+            movement = self.players_exited[0].object_data['player']['last_moved']
             bump = self.main.utilities.get_opposite_movement(movement=self.players_exited[0].object_data['player']['last_moved'])
         elif teleport:
             new_level = teleport[0]
             respawn = [[tuple(teleport[1])], [tuple(teleport[1])], [True]]
             centre = teleport[2]
+            movement = None
             bump = None
         else:
             current_level = self.main.utilities.position_str_to_tuple(position=self.level.name)
             if len(self.players_exited) > 1:
-                new_levels = {}
                 for cell in self.players_exited:
                     movement = cell.object_data['player']['last_moved']
                     new_level = str((current_level[0] + movement[0], current_level[1] + movement[1]))
@@ -182,7 +185,8 @@ class Game:
                     self.main.audio.play_sound(name='level_transition')
                     new_level = list(new_levels.keys())[0]
                     respawn = self.get_respawn()
-                    centre = self.level.grid_to_display(position=self.players_exited[0].position, centre=True)
+                    centre = None
+                    movement = self.players_exited[0].object_data['player']['last_moved']
                     bump = self.main.utilities.get_opposite_movement(movement=self.players_exited[0].object_data['player']['last_moved'])
                 else:
                     self.main.audio.play_sound(name='cryprid_teleport')
@@ -198,14 +202,16 @@ class Game:
                     else:
                         new_level = '(4, 4)'
                         respawn = [[(2, 2)], [(2, 2)], [True]]
-                    centre = self.main.display.centre
+                    centre = [self.level.grid_to_display(position=player.position, centre=True) for player in self.players_exited]
+                    movement = None
                     bump = None
             else:
+                self.main.audio.play_sound(name='level_transition')
+                centre = None
                 movement = self.players_exited[0].object_data['player']['last_moved']
+                bump = self.main.utilities.get_opposite_movement(movement=movement)
                 new_level = str((current_level[0] + movement[0], current_level[1] + movement[1]))
                 respawn = self.get_respawn()
-                centre = self.level.grid_to_display(position=self.players_exited[0].position, centre=True)
-                bump = self.main.utilities.get_opposite_movement(movement=movement)
         if new_level in self.map.levels or new_level == 'custom':
             if new_level != 'custom':
                 self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': new_level})
@@ -215,14 +221,20 @@ class Game:
                 self.main.assets.save_data()  # game (level, respawn, discovered_levels)
             self.level.name = new_level
             self.level.orignal_respawn = respawn
-            self.main.transition.start_transition(style='circle', centre=centre, response=['level', self.level.name, 'original', bump],
-                                                  queue=(True, 'circle', self.level.grid_to_display(position=respawn[0][0], centre=True)))
+            transition_length = 1 if self.main.assets.settings['gameplay']['movement_speed'] == 0.125 else 0.5
+            if teleport or len(new_levels) > 1:
+                self.main.transition.start_transition(style='circle', style_data=centre, length=transition_length, response=['level', self.level.name, 'original', bump],
+                                                      queue=(True, 'circle', self.level.grid_to_display(position=respawn[0][0], centre=True), transition_length))
+            else:
+                self.main.transition.start_transition(style='square', style_data=movement, length=transition_length, response=['level', self.level.name, 'original', bump],
+                                                      queue=(True, 'square', (movement[0] * -1, movement[1] * -1), transition_length))
             if self.main.debug and self.teleporter_data['setting']:
                 self.teleporter_data['setting']['new_level'] = new_level
                 self.teleporter_data['setting']['new_position'] = respawn[0][0]
         else:
             self.reset_objects_end()
-            print(f'level {new_level} not found...')
+            if self.main.testing:
+                print(f'level {new_level} not found...')
 
     def set_steps(self, increment=None, steps=None):
         if increment:
@@ -240,6 +252,7 @@ class Game:
             steps_updated = False
             respawn_updated = False
             self.player_cells = {}
+            self.no_players = True
             self.no_steps = True
             self.teleporter_data['standing'] = []
             sign_data = self.sign_data
@@ -279,6 +292,7 @@ class Game:
                             self.collect_collectable(cell=cell)
 
                         if not cell.check_element(name='player', state='dead'):  # players
+                            self.no_players = False
                             self.no_steps = False
 
                         for direction in cell.adjacent_directions:  # locks
@@ -333,6 +347,8 @@ class Game:
                     self.no_steps = True
                     for cell in self.player_cells.values():
                         cell.elements['player']['state'] = 'dead'
+                if self.no_players:  # clean this up, checking for game over state...
+                    self.main.audio.play_sound(name='game_over')
                 if respawn_updated:
                     self.level.current_respawn = respawn
 
@@ -694,7 +710,8 @@ class Game:
                                     self.main.audio.play_sound(name='cryptid_teleport')
                                     cryptid_warp = True
                                     new_level, new_position = cryptid['destination'].split(' - ')
-                                    self.transition_level(teleport=[new_level, self.main.utilities.position_str_to_tuple(position=new_position), self.main.display.centre])
+                                    centres = [self.level.grid_to_display(position=self.main.utilities.position_str_to_tuple(position=position.split(' - ')[1]), centre=True) for position in cryptid['teleporters']]
+                                    self.transition_level(teleport=[new_level, self.main.utilities.position_str_to_tuple(position=new_position), centres])
                                     break
                             if not cryptid_warp:
                                 print('cryptid warp not set')
@@ -794,6 +811,7 @@ class Game:
         self.players_exited = None
         self.player_cells = None
         self.player_afk_timer = 0
+        self.no_players = True
         self.no_steps = False
         self.teleporter_data = {'standing': None, 'setting': None}
         self.sign_data = None
@@ -825,7 +843,7 @@ class Game:
         if self.main.menu_state:  # we need to update all game aspects (tutorial, map etc) even when the menu is open
             self.main.display.set_cursor(cursor='arrow')
             self.update_map(mouse_position=None)
-            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui', 'level_map'], effect='pixelate', effect_data={'length': 0.5})
+            self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_dead_player', 'level_player', 'level_ui', 'level_map'], effect='pixelate', effect_data={'length': 0.5})
         else:
             if self.main.debug or self.map.show_map:
                 self.main.display.set_cursor(cursor='arrow')
@@ -839,11 +857,15 @@ class Game:
                     self.main.change_menu_state(menu_state='game_paused')
                 self.update_map(mouse_position=mouse_position)
                 if not self.update_cutscene():
-                    if self.player_cells and self.level.steps == 1:
-                        self.main.shaders.apply_effect(display_layer=['level_player'], effect='grey')
+                    if self.player_cells and self.level.steps == 1:  # we need to check if any of the players are alive here...
+                        # we need to keep better track of if there are any alive players/ if there are any steps left...
+                        # we dont play game over sound if we run out of players (last player dies on spikes)
+                        self.main.shaders.apply_effect(display_layer=['level_player'], effect='grey', effect_data={'length': 0.5})
                     elif self.no_steps or not self.player_cells:  # no more steps or players, game over, you can not do anything except open menu, map, move to reset, and press 'e' to teleport...
                         # self.main.audio.play_sound(name='game_over')
-                        self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player'], effect='grey')
+                        self.main.shaders.apply_effect(display_layer=['level_background', 'level_main'], effect='grey', effect_data={'length': 0.5})
+                        # 'scale': 0.0 if not self.no_steps else 0.5, this doesnt work as no_steps is set to True if there are no players (regardless of how many steps are left), if it even needed if the length is short...
+                        self.main.shaders.apply_effect(display_layer=['level_dead_player'], effect='invert', effect_data={'length': 0.5})
                     self.update_teleporters()
                     if not self.map.show_map:
                         if self.level.update():
@@ -917,7 +939,7 @@ class Game:
             else:
                 if not self.main.transition.fade_in:
                     # this triggers when we close the game, need to check that were transitioning levels, also it is a cool effect
-                    self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui', 'level_map'], effect='pixelate', effect_data={'length': 0.5})
+                    self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_dead_player', 'level_player', 'level_ui'], effect='pixelate', effect_data={'length': 1})
 
     def draw(self, displays):
         self.level.draw(displays=displays)

@@ -5,36 +5,40 @@ import math
 class Transition:
     def __init__(self, main):
         self.main = main
-        self.surface = pg.Surface(size=self.main.display.size, flags=pg.SRCALPHA)
-        self.surface_2 = pg.Surface(size=self.main.display.size)
+        self.num_surfaces = 2
+        self.surfaces = [pg.Surface(size=self.main.display.size, flags=pg.SRCALPHA) for _ in range(self.num_surfaces)]
         self.active = False
         self.fade_in = False
         self.style = 'fade'
-        self.centre = (0, 0)
-        self.max_distance = 0
+        self.style_data = None
+        self.circle_distance = 0
         self.current = 0
         self.step = 0
-        self.length = 0
         self.length = 0
         self.scale = 0
         self.response = None
         self.queue = None
         self.start_transition(fade_in=True, length=2)
-        # add another transition style that is a black square moves from one side of the screen to the other relative to player movement, triggered whenever we exit/ enter a new level...
 
-    def start_transition(self, fade_in=False, style='fade', centre=(0, 0), length=1, response=None, queue=None):
+    def start_transition(self, fade_in=False, style='fade', style_data=None, length=1, response=None, queue=None):
         # if active to quit game state then overide current transition...
         # need to take current transition state/ display and fade it to black...
         if not self.active:
             self.active = True
             self.style = style
-            if centre == 'player':
-                self.centre = self.main.game_states['game'].level.grid_to_display(position=self.main.game_states['game'].level.current_respawn[0][0],
-                                                                                             centre=True) if self.main.game_states['game'].level.current_respawn else self.main.display.centre
+            if self.style == 'circle':
+                if style_data == 'player':
+                    self.style_data = [self.main.game_states['game'].level.grid_to_display(position=self.main.game_states['game'].level.current_respawn[0][0],
+                                                                                          centre=True) if self.main.game_states['game'].level.current_respawn else self.main.display.centre]
+                else:
+                    self.style_data = style_data if isinstance(style_data, list) else [style_data]
+                self.circle_distance = []
+                for data in self.style_data:
+                    circle_distance = (max(data[0], self.main.display.width - data[0]), max(data[1], self.main.display.height - data[1]))
+                    circle_distance = math.sqrt(circle_distance[0] ** 2 + circle_distance[1] ** 2)
+                    self.circle_distance.append(circle_distance)
             else:
-                self.centre = centre
-            self.max_distance = (max(self.centre[0], self.main.display.width - self.centre[0]), max(self.centre[1], self.main.display.height - self.centre[1]))
-            self.max_distance = math.sqrt(self.max_distance[0] ** 2 + self.max_distance[1] ** 2)
+                self.style_data = style_data
             self.length = length * self.main.fps
             self.fade_in = fade_in
             if fade_in:
@@ -56,13 +60,14 @@ class Transition:
         if self.active:
             self.main.display.set_cursor(cursor=None)
             self.current += self.step
-            self.scale = (self.current / self.length) ** 4
+            self.scale = (self.current / self.length) ** 5
+            # if self.current <= 0 or self.current >= self.length:
             if self.current in [0, self.length]:
                 self.active = False
                 if self.response:
                     if self.response[0] == 'game_state':
                         self.main.change_game_state(game_state=self.response[1])
-                    if self.response[0] == 'menu_state':
+                    elif self.response[0] == 'menu_state':
                         self.main.change_menu_state(menu_state=self.response[1])
                     elif self.response[0] == 'level':
                         self.main.menu_state = None
@@ -75,14 +80,22 @@ class Transition:
     def draw(self, displays):
         if self.active:
             if self.style == 'fade':
-                self.surface.fill(self.main.assets.colours['dark_purple'])
-                self.surface.set_alpha(275 - 275 * self.scale)
-                displays['transition'].blit(source=self.surface, dest=(0, 0))
+                self.surfaces[0].fill(self.main.assets.colours['dark_purple'])
+                self.surfaces[0].set_alpha(255 - 255 * self.scale)
+                displays['transition'].blit(source=self.surfaces[0], dest=(0, 0))
             elif self.style == 'circle':
-                self.surface.fill(self.main.assets.colours['purple'])
-                self.surface.set_alpha(255 - 255 * self.scale)
-                displays['transition'].blit(source=self.surface, dest=(0, 0))
-                self.surface_2.fill(self.main.assets.colours['dark_purple'])
-                pg.draw.circle(surface=self.surface_2, color=(255, 255, 255), center=self.centre, radius=self.max_distance * self.scale)
-                self.surface_2.set_colorkey((255, 255, 255))
-                displays['transition'].blit(source=self.surface_2, dest=(0, 0))
+                self.surfaces[0].fill(self.main.assets.colours['purple'])
+                self.surfaces[0].set_alpha(255 - 255 * self.scale)
+                displays['transition'].blit(source=self.surfaces[0], dest=(0, 0))
+                self.surfaces[1].fill(self.main.assets.colours['dark_purple'])
+                for count, (centre, circle_distance) in enumerate(zip(self.style_data, self.circle_distance)):
+                    pg.draw.circle(surface=self.surfaces[1], color=(255, 255, 255), center=centre, radius=circle_distance * self.scale)
+                self.surfaces[1].set_colorkey((255, 255, 255))
+                displays['transition'].blit(source=self.surfaces[1], dest=(0, 0))
+            elif self.style == 'square':
+                self.surfaces[0].fill(self.main.assets.colours['purple'])
+                self.surfaces[0].set_alpha(255 - 255 * self.scale)
+                displays['transition'].blit(source=self.surfaces[0], dest=(0, 0))
+                self.surfaces[1].fill(self.main.assets.colours['dark_purple'])
+                displays['transition'].blit(source=self.surfaces[1], dest=(-self.style_data[0] * self.main.display.width * self.scale,
+                                                                         -self.style_data[1] * self.main.display.width * self.scale))

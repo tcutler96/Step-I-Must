@@ -1,5 +1,21 @@
 {
-  "respawn": null,
+  "respawn": [
+    [
+      [
+        1,
+        1
+      ]
+    ],
+    [
+      [
+        1,
+        1
+      ]
+    ],
+    [
+      true
+    ]
+  ],
   "collectables": {
     "silver keys": [],
     "silver gems": [],
@@ -14,7 +30,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "centre-br"
+        "state": "bottom right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -22,10 +38,7 @@
     "1:0": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "wall",
-        "state": "bottom"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -34,7 +47,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "bottom"
+        "state": "bottom left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -144,7 +157,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "bottom"
+        "state": "bottom right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -152,10 +165,7 @@
     "14:0": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "wall",
-        "state": "bottom"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -164,7 +174,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "centre-bl"
+        "state": "bottom left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -172,10 +182,7 @@
     "0:1": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "wall",
-        "state": "right"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -280,10 +287,7 @@
     "15:1": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "wall",
-        "state": "left"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -292,7 +296,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "right"
+        "state": "top right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -400,7 +404,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "left"
+        "state": "top left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1590,7 +1594,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "right"
+        "state": "bottom right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1698,7 +1702,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "left"
+        "state": "bottom left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1706,10 +1710,7 @@
     "0:14": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "wall",
-        "state": "right"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1814,10 +1815,7 @@
     "15:14": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "wall",
-        "state": "left"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1826,7 +1824,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "centre-tr"
+        "state": "top right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1834,10 +1832,7 @@
     "1:15": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "wall",
-        "state": "top"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1846,7 +1841,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "top"
+        "state": "top left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1956,7 +1951,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "top"
+        "state": "top right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1964,10 +1959,7 @@
     "14:15": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "wall",
-        "state": "top"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -1976,7 +1968,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "centre-tl"
+        "state": "top left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null

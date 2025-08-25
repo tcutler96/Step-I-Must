@@ -18,6 +18,8 @@ uniform sampler2D level_background_display;
 uniform float level_background_effect[effect_data_length];
 uniform sampler2D level_main_display;
 uniform float level_main_effect[effect_data_length];
+uniform sampler2D level_dead_player_display;
+uniform float level_dead_player_effect[effect_data_length];
 uniform sampler2D level_player_display;
 uniform float level_player_effect[effect_data_length];
 uniform sampler2D level_ui_display;
@@ -32,7 +34,6 @@ uniform sampler2D buffer_display;
 
 uniform float grey_index;
 uniform float invert_index;
-uniform float blur_index;
 uniform float pixelate_index;
 uniform float chromatic_index;
 uniform float shockwave_index;
@@ -47,42 +48,9 @@ uniform float test_index;
 #define effect_current 4
 #define effect_current_2 7
 
-const vec4 gol_on_colour = vec4(0.96, 0.95, 0.76, 1.0);
-const vec4 gol_off_colour = vec4(0.19, 0.16, 0.24, 1.0);
-
 in vec2 uv;
 vec2 uv_flipped = vec2(uv.x, 1.0 - uv.y);
 out vec4 out_colour;
-
-bool check_colour(vec4 colour) {
-    vec4 difference = colour - gol_on_colour;
-    float absolute = abs(difference.r) + abs(difference.g) + abs(difference.b);
-    return absolute < 0.015;
-}
-
-int get_current(vec2 offset) {
-    return int(check_colour(texture(background_display, uv + pixel_size * offset))) |
-    int(check_colour(texture(buffer_display, uv_flipped + pixel_size * offset)));
-}
-
-vec4 game_of_life() {
-        int current = get_current(vec2(0.0));
-        if (bool(background_effect[3])) {
-            int surround = -current;
-            for (float i = -1.0; i < 2.0; i++) {
-                for (float j = -1.0; j < 2.0; j++) {
-                    surround += get_current(vec2(i, j));
-                }
-            }
-            if (current == 1 && (surround < 1.5 || surround > 3.5)) {
-                current = 0;
-            } else if (current == 0 && (surround > 2.5 && surround < 3.5)) {
-                current = 1;
-            }
-        }
-        vec4 colour = vec4(mix(gol_off_colour.rgb, gol_on_colour.rgb, current), 1.0);
-    return colour;
-}
 
 vec4 grey(sampler2D display_layer, float effect_data[effect_data_length]) {
     vec4 colour = texture(display_layer, uv);
@@ -96,11 +64,6 @@ vec4 invert(sampler2D display_layer, float effect_data[effect_data_length]) {
     return colour;
 }
 
-vec4 blur(sampler2D display_layer, float effect_data[effect_data_length]) {
-    vec4 colour = texture(display_layer, uv);
-    return colour;
-}
-
 vec4 pixelate(sampler2D display_layer, float effect_data[effect_data_length]) {
     float pixelate_size = int(effect_data[effect_current]) * pixel_size[0];
     vec2 centre = pixelate_size * (floor(uv / pixelate_size) + 0.5);
@@ -111,7 +74,6 @@ vec4 pixelate(sampler2D display_layer, float effect_data[effect_data_length]) {
     colour += 0.15 * texture(display_layer, centre + vec2(half_pixelate_size.x, -half_pixelate_size.y));
     colour += 0.15 * texture(display_layer, centre + vec2(half_pixelate_size.x, half_pixelate_size.y));
     colour += 0.15 * texture(display_layer, centre + vec2(-half_pixelate_size.x, half_pixelate_size.y));
-
     colour.rgb *= 1.0 - 0.5 * effect_data[effect_scale];
     return colour;
 }
@@ -188,46 +150,33 @@ vec4 galaxy(sampler2D display_layer) {
 
     vec2 uv_scaled = 2.0 * uv - 1.0;
     vec2 uvs = uv_scaled * aspect_ratio;
-
     vec3 p = vec3(uvs / 4.0, 0) + vec3(1.0, -1.3, 0.0);
     p += 0.2 * vec3(sin(time / 16.0), sin(time / 12.0), sin(time / 128.0));
 
     float t = field(p, freqs[2], 20);
-    // Second layer
     vec3 p2 = vec3(uvs / (4.0 + sin(time * 0.11) * 0.2 + 0.2 + sin(time * 0.15) * 0.3 + 0.4), 1.5) + vec3(2.0, -1.3, -1.0);
     p2 += 0.25 * vec3(sin(time / 16.0), sin(time / 12.0), sin(time / 128.0));
     float t2 = field(p2, freqs[3], 15);
     vec4 c2 = vec4(1.5 * t2 * t2 * t2, 1.9 * t2 * t2, 1.3 * t2 * freqs[0], 1.0);
 
-    // Stars
     vec2 seed1 = floor(p.xy * 2.0 * resolution.x);
     vec3 rnd1 = nrand3(seed1);
     vec4 starcolor = vec4(pow(rnd1.y, 35.0));
     if (rnd1.x > 0.975) starcolor.rgb *= vec3(1.3, 1.0, 0.8);
     if (rnd1.x < 0.025) starcolor.rgb *= vec3(0.7, 0.9, 1.4);
-
     vec2 seed2 = floor(p2.xy * resolution.x);
     vec3 rnd2 = nrand3(seed2);
     starcolor += vec4(pow(rnd2.y, 35.0));
 
     vec4 colour = vec4(1.8 * freqs[2] * t * t * t + c2.r + starcolor.r, 1.4 * freqs[1] * t * t + c2.g + starcolor.g, 1.2 * freqs[3] * t + c2.b + starcolor.b, 1.0);
-
-    // Slight gamma correction
     colour.rgb = pow(colour.rgb, vec3(0.88));
-
-    return colour;
-}
-
-vec4 gol(sampler2D display_layer) {
-    vec4 colour = texture(display_layer, uv_flipped);
     return colour;
 }
 
 float hash(float n) { return fract(sin(n) * 43758.5453); }
 vec2 hash2(float n) { return vec2(hash(n * 1.13), hash(n * 7.77)); }
 
-
-void processDroplets(int max_count, float life, float size, float size_var, float speed, float speed_var,
+void get_ripple(int max_count, float life, float size, float size_var, float speed, float speed_var,
                      float strength, int type, inout vec2 ripple_uv, inout float brightness) {
     for (int i = 0; i < max_count; i++) {
         float start_phase = hash(float(i) * 12.345) * life;
@@ -261,12 +210,50 @@ vec4 ripple(sampler2D display_layer) {
     vec2 ripple_uv = uv;
     float brightness = 0.0;
 
-    processDroplets(10, 5.0, 0.006, 0.005, 0.25, 0.15, 0.015, 0, ripple_uv, brightness);
-    processDroplets(20, 2.5, 0.01, 0.0, 0.0, 0.0, 0.02, 1, ripple_uv, brightness);
-    processDroplets(5, 10.0, 0.015, 0.0, 0.12, 0.0, 0.03, 0, ripple_uv, brightness);
+    get_ripple(10, 5.0, 0.006, 0.005, 0.25, 0.15, 0.015, 0, ripple_uv, brightness);
+    get_ripple(20, 2.5, 0.01, 0.0, 0.0, 0.0, 0.02, 1, ripple_uv, brightness);
+    get_ripple(5, 10.0, 0.015, 0.0, 0.12, 0.0, 0.03, 0, ripple_uv, brightness);
 
     vec4 colour = texture(display_layer, ripple_uv);
     colour.rgb += brightness;
+    return colour;
+}
+
+const vec4 gol_on_colour = vec4(0.96, 0.95, 0.76, 1.0);
+const vec4 gol_off_colour = vec4(0.19, 0.16, 0.24, 1.0);
+
+bool check_colour(vec4 colour) {
+    vec4 difference = colour - gol_on_colour;
+    float absolute = abs(difference.r) + abs(difference.g) + abs(difference.b);
+    return absolute < 0.015;
+}
+
+int get_current(vec2 offset) {
+    return int(check_colour(texture(background_display, uv + pixel_size * offset))) |
+    int(check_colour(texture(buffer_display, uv_flipped + pixel_size * offset)));
+}
+
+vec4 game_of_life() {
+        int current = get_current(vec2(0.0));
+        if (bool(background_effect[3])) {
+            int surround = -current;
+            for (float i = -1.0; i < 2.0; i++) {
+                for (float j = -1.0; j < 2.0; j++) {
+                    surround += get_current(vec2(i, j));
+                }
+            }
+            if (current == 1 && (surround < 1.5 || surround > 3.5)) {
+                current = 0;
+            } else if (current == 0 && (surround > 2.5 && surround < 3.5)) {
+                current = 1;
+            }
+        }
+        vec4 colour = vec4(mix(gol_off_colour.rgb, gol_on_colour.rgb, current), 1.0);
+    return colour;
+}
+
+vec4 gol(sampler2D display_layer) {
+    vec4 colour = texture(display_layer, uv_flipped);
     return colour;
 }
 
@@ -317,7 +304,6 @@ vec4 get_colour(sampler2D display_layer, float effect_data[effect_data_length], 
     vec4 colour;
     if (effect_data[effect_active] == grey_index) colour = grey(display_layer, effect_data);
     else if (effect_data[effect_active] == invert_index) colour = invert(display_layer, effect_data);
-    else if (effect_data[effect_active] == blur_index) colour = blur(display_layer, effect_data);
     else if (effect_data[effect_active] == pixelate_index) colour = pixelate(display_layer, effect_data);
     else if (effect_data[effect_active] == chromatic_index) colour = chromatic(display_layer, effect_data);
     else if (effect_data[effect_active] == shockwave_index) colour = shockwave(display_layer, effect_data);
@@ -338,6 +324,7 @@ void main() {
         else out_colour = get_colour(background_display, background_effect, out_colour);
         out_colour = get_colour(level_background_display, level_background_effect, out_colour);
         out_colour = get_colour(level_main_display, level_main_effect, out_colour);
+        out_colour = get_colour(level_dead_player_display, level_dead_player_effect, out_colour);
         out_colour = get_colour(level_player_display, level_player_effect, out_colour);
         out_colour = get_colour(level_ui_display, level_ui_effect, out_colour);
         out_colour = get_colour(level_map_display, level_map_effect, out_colour);

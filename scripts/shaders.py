@@ -22,11 +22,8 @@ class Shaders:
         self.vignette = self.main.assets.settings['shaders']['vignette']
         self.effect_data_length = 10
         self.default_effect_data = {'applied': 0, 'active': 0, 'scale': 0, 'length': 1, 'step': 0}
-        self.effect_data = {'grey': {}, 'invert': {}, 'blur': {'current': 2, 'min': 2, 'max': 5},
-                            'pixelate': {'current': 1, 'min': 1, 'max': 4}, 'chromatic': {},
-                            'shockwave': {'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05},
-                            'galaxy': {}, 'ripple': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False},
-                            'test': {}}
+        self.effect_data = {'grey': {}, 'invert': {}, 'pixelate': {'current': 1, 'min': 1, 'max': 8}, 'chromatic': {}, 'shockwave': {'x': 240, 'y': 160, 'amount': 0.1, 'width': 0.05},
+                            'galaxy': {}, 'ripple': {}, 'gol': {'tick': False, 'counter': self.main.fps, 'speed': 5, 'draw': False}, 'test': {}}
         self.shaders = self.load_shaders()
         self.missing_display_layers = []
         self.missing_effects = []
@@ -92,7 +89,7 @@ class Shaders:
                         self.shaders[display_layer] = apply_effect_data
                     elif not self.shaders[display_layer]['applied']:
                         self.shaders[display_layer]['applied'] = self.effect_data[effect]['index']
-                else:
+                elif self.main.testing:
                     if display_layer not in self.main.display.display_layers and display_layer not in self.missing_display_layers:
                         print(f"'{display_layer}' display layer not found...")
                         self.missing_display_layers.append(display_layer)
@@ -121,19 +118,7 @@ class Shaders:
         for display_layer, effect_data in self.shaders.items():  # dont need display_layer in the end, just use .values...
             if effect_data['active']:
                 self.update_effect_scale(effect_data=effect_data)
-                if effect_data['active'] == self.effect_data['grey']['index']:
-                    pass
-                elif effect_data['active'] == self.effect_data['invert']['index']:
-                    pass
-                elif effect_data['active'] == self.effect_data['blur']['index']:
-                    pass
-                elif effect_data['active'] == self.effect_data['pixelate']['index']:
-                    pass
-                elif effect_data['active'] == self.effect_data['shockwave']['index']:
-                    pass
-                elif effect_data['active'] == self.effect_data['test']['index']:
-                    pass
-                elif effect_data['active'] == self.effect_data['gol']['index']:
+                if effect_data['active'] == self.effect_data['gol']['index']:
                     effect_data['tick'] = False
                     effect_data['counter'] -= (self.main.fps // effect_data['speed'])
                     if effect_data['counter'] <= 0:
@@ -151,7 +136,7 @@ class Shaders:
 
     def update(self, mouse_position):
         if self.main.events.check_key('v', 'held'):
-            self.apply_effect(display_layer=['ui', 'level_main'], effect='test')
+            self.apply_effect(display_layer=['ui', 'level_main'], effect='invert', effect_data={'length': 1})
         if self.chromatic_aberration:
             self.apply_effect(display_layer=['ui'], effect='chromatic', effect_data={'length': 0})
         if self.background:

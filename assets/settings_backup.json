@@ -3,7 +3,7 @@
     "cursor_type": "sprite",
     "map_colour": "green",
     "particles": true,
-    "resolution": 2,
+    "resolution": 3,
     "screen_shake": true
   },
   "shaders": {
@@ -113,10 +113,10 @@
         "button",
         "option",
         [
-          "(896, 640)",
           "(1344, 960)",
           "(1792, 1280)",
-          "(448, 320)"
+          "(448, 320)",
+          "(896, 640)"
         ]
       ],
       "Screen Shake": [
@@ -315,6 +315,11 @@
         "button",
         "button",
         "restore_settings"
+      ],
+      "Resave Levels": [
+        "button",
+        "button",
+        "resave_levels"
       ],
       "Back": [
         "button",

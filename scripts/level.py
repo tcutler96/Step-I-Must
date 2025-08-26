@@ -74,7 +74,7 @@ class Level:
             level_and_position = self.main.utilities.level_and_position(level=self.name, position=position)
             if level_and_position in self.main.assets.data['locks']:
                 lock_data =  self.main.assets.data['locks'][level_and_position]
-                if game and (not lock_data['collectable_type'] or not lock_data['collectable_amount']):
+                if game and (not lock_data['collectable_type'] or not lock_data['collectable_amount']) and self.main.testing:
                     print(f'lock {level_and_position} not set')
                 elif (game and (lock_data['collectable_type'] and lock_data['collectable_amount']) and
                         (len(self.main.assets.data['game']['collectables'][lock_data['collectable_type']]) >= lock_data['collectable_amount'])):
@@ -102,7 +102,8 @@ class Level:
             if self.name.startswith('(') and self.name.endswith(')'):
                 if cell.check_element(name='sign'):  # signs
                     if level_and_position not in self.main.assets.data['signs']:
-                        print(f'sign data for {level_and_position} added...')
+                        if self.main.testing:
+                            print(f'sign data for {level_and_position} added...')
                         self.main.assets.data['signs'][level_and_position] = "empty sign..."
                         data_updated = True
                         cell_position = self.main.utilities.position_str_to_tuple(position=level_and_position.split(' - ')[-1])
@@ -111,7 +112,8 @@ class Level:
                                                         position=(text_position[0], text_position[1]), size=12, bounce=3, display_layer='level_main')
                         self.main.text_handler.sign_lines[level_and_position] = 1
                 elif level_and_position in self.main.assets.data['signs']:
-                    print(f'sign data for {level_and_position} removed...')
+                    if self.main.testing:
+                        print(f'sign data for {level_and_position} removed...')
                     del self.main.assets.data['signs'][level_and_position]
                     data_updated = True
 
@@ -121,11 +123,13 @@ class Level:
                     elements['object'] = None
                     self.collectables[collectable_type].append(position)
                     if collectable_type not in self.main.assets.data['collectables']:
-                        print(f'collectable data for {collectable_type} at {level_and_position} added...')
+                        if self.main.testing:
+                            print(f'collectable data for {collectable_type} at {level_and_position} added...')
                         self.main.assets.data['collectables'][collectable_type] = [level_and_position]
                         data_updated = True
                     elif level_and_position not in self.main.assets.data['collectables'][collectable_type]:
-                        print(f'collectable data for {collectable_type} at {level_and_position} added...')
+                        if self.main.testing:
+                            print(f'collectable data for {collectable_type} at {level_and_position} added...')
                         self.main.assets.data['collectables'][collectable_type].append(level_and_position)
                         data_updated = True
                 collectable_types = list(self.main.assets.data['collectables'].keys())
@@ -133,7 +137,8 @@ class Level:
                     collectable_types.remove(collectable_type)
                 for collectable_type in collectable_types:
                     if level_and_position in self.main.assets.data['collectables'][collectable_type]:
-                        print(f'collectable data for {collectable_type} at {level_and_position} removed...')
+                        if self.main.testing:
+                            print(f'collectable data for {collectable_type} at {level_and_position} removed...')
                         self.main.assets.data['collectables'][collectable_type].remove(level_and_position)
                         data_updated = True
 
@@ -141,11 +146,13 @@ class Level:
                     elements['tile'] = None
                     self.locks.append(position)
                     if level_and_position not in self.main.assets.data['locks']:
-                        print(f'lock data for {level_and_position} added...')
+                        if self.main.testing:
+                            print(f'lock data for {level_and_position} added...')
                         self.main.assets.data['locks'][level_and_position] = {'position': position, 'collectable_type': None, 'collectable_amount': None}
                         data_updated = True
                 elif level_and_position in self.main.assets.data['locks']:
-                    print(f'lock data for {level_and_position} removed...')
+                    if self.main.testing:
+                        print(f'lock data for {level_and_position} removed...')
                     del self.main.assets.data['locks'][level_and_position]
                     data_updated = True
 
@@ -153,7 +160,8 @@ class Level:
                 if cell.check_element(name='teleporter'):  # teleporters
                     state = cell.elements['tile']['state']
                     if level_and_position not in self.main.assets.data['teleporters'][state + 's']:
-                        print(f'teleporter {state} data for {level_and_position} added...')
+                        if self.main.testing:
+                            print(f'teleporter {state} data for {level_and_position} added...')
                         self.main.assets.data['teleporters'][state + 's'][level_and_position] = {'position': position, 'destination': level_and_position if state == 'reciever' else None}
                         data_updated = True
                 teleporters = ['reciever', 'sender', 'portal']
@@ -161,7 +169,8 @@ class Level:
                     teleporters.remove(state)
                 for state in teleporters:
                     if level_and_position in self.main.assets.data['teleporters'][state + 's']:
-                        print(f'teleporter {state} data for {level_and_position} removed...')
+                        if self.main.testing:
+                            print(f'teleporter {state} data for {level_and_position} removed...')
                         del self.main.assets.data['teleporters'][state + 's'][level_and_position]
                         data_updated = True
                         if state == 'portal':
@@ -172,8 +181,9 @@ class Level:
                                     if not activation_data['portals']:
                                         empty_activations.append(activation)
                             for empty_activation in empty_activations:
+                                if self.main.testing:
+                                    print(f'portal activation data for {empty_activation} removed...')
                                 del self.main.assets.data['teleporters']['activations'][empty_activation]
-                                print(f'portal activation data for {empty_activation} removed...')
             self.tilemap[str(position[0]) + ':' + str(position[1])] = elements
         if data_updated:
             self.main.assets.save_data()  # signs, collectables, locks, teleporters (recievers, senders, portals, activations)

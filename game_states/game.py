@@ -628,7 +628,8 @@ class Game:
                 level_and_position = self.main.utilities.level_and_position(level=self.teleporter_data['setting']['new_level'], position=self.teleporter_data['setting']['new_position'])
                 if not self.main.debug:
                     self.teleporter_data['setting'] = None
-                    print('no longer setting warp')
+                    if self.main.testing:
+                        print('no longer setting warp')
                 elif self.main.events.check_key(key='e'):
                     if self.teleporter_data['setting']['stage'] == 'warp destination':
                         self.main.assets.data['teleporters'][self.teleporter_data['setting']['state'] + 's'][self.teleporter_data['setting']['level_and_position']]['destination'] = level_and_position
@@ -639,13 +640,15 @@ class Game:
                                 self.check_teleport_data()
                                 self.teleporter_data['setting']['paired'] = level_and_position
                                 self.main.assets.data['teleporters'][self.teleporter_data['setting']['state'] + 's'][level_and_position]['destination'] = self.teleporter_data['setting']['level_and_position']
-                                print('warp pair destination set, set warp pair activation...')
-                            else:
+                                if self.main.testing:
+                                    print('warp pair destination set, set warp pair activation...')
+                            elif self.main.testing:
                                 print('warp destination set, set warp activation...')
                             self.teleporter_data['setting']['stage'] = 'warp activation'
                         else:
                             self.teleporter_data['setting'] = None
-                            print('warp destination set')
+                            if self.main.testing:
+                                print('warp destination set')
                     elif self.teleporter_data['setting']['stage'] == 'warp activation':
                         activation = level_and_position
                         self.main.assets.data['teleporters']['activations'][activation] = {'position': self.teleporter_data['setting']['new_position'], 'portals': [self.teleporter_data['setting']['level_and_position']],
@@ -654,8 +657,9 @@ class Game:
                         if 'paired' in self.teleporter_data['setting']:
                             self.main.assets.data['teleporters']['activations'][activation]['portals'].append(self.teleporter_data['setting']['paired'])
                             data_updated = True
-                            print('warp pair activation set')
-                        else:
+                            if self.main.testing:
+                                print('warp pair activation set')
+                        elif self.main.testing:
                             print('warp activation set')
                         self.update_activations(activation=activation)
                         self.teleporter_data['setting'] = None
@@ -665,14 +669,16 @@ class Game:
                             data_updated = self.check_teleport_data()
                             self.teleporter_data['setting']['paired'] = level_and_position
                             self.teleporter_data['setting']['stage'] = 'cryptid destination'
-                            print('cryptid pair set, set cryptid pair destination...')
+                            if self.main.testing:
+                                print('cryptid pair set, set cryptid pair destination...')
                     elif self.teleporter_data['setting']['stage'] == 'cryptid destination':
                         first = self.teleporter_data['setting']['level_and_position']
                         second = self.teleporter_data['setting']['paired']
                         data_updated = True
                         self.teleporter_data['setting'] = None
                         self.main.assets.data['teleporters']['cryptids'][first + ', ' + second] = {'teleporters': [first,  second], 'destination': level_and_position, 'collectable': None}
-                        print('cryptid pair destination set')
+                        if self.main.testing:
+                            print('cryptid pair destination set')
             elif self.teleporter_data['standing']:
                 if self.main.debug and self.main.events.check_key(key='t'):
                     if self.teleporter_data['standing']['state'] == 'portal':
@@ -686,7 +692,7 @@ class Game:
                                     centres = [self.level.grid_to_display(position=self.main.utilities.position_str_to_tuple(position=position.split(' - ')[1]), centre=True) for position in cryptid['teleporters']]
                                     self.transition_level(teleport=[new_level, self.main.utilities.position_str_to_tuple(position=new_position), centres])
                                     break
-                            if not cryptid_warp:
+                            if not cryptid_warp and self.main.testing:
                                 print('cryptid warp not set')
                         elif self.teleporter_data['standing']['level_and_position'] in self.main.assets.data['teleporters']['portals']:
                             teleporter_data = self.main.assets.data['teleporters']['portals'][self.teleporter_data['standing']['level_and_position']]
@@ -695,15 +701,15 @@ class Game:
                                 new_level, new_position = teleporter_data['destination'].split(' - ')
                                 self.transition_level(teleport=[new_level, self.main.utilities.position_str_to_tuple(position=new_position),
                                                                 self.level.grid_to_display(position=teleporter_data['position'], centre=True)])
-                            else:
+                            elif self.main.testing:
                                 print('warp not set')
-                        else:
+                        elif self.main.testing:
                             print('warp not set')
                 if self.main.events.check_key(key='e'):
                     data_updated = self.check_teleport_data()
                     if self.main.debug:
                         self.remove_extra_players()
-                        if self.teleporter_data['standing']['state'] == 'reciever':
+                        if self.teleporter_data['standing']['state'] == 'reciever' and self.main.testing:
                             print('warp destination set')
                         else:
                             self.teleporter_data['setting'] = self.teleporter_data['standing'].copy()
@@ -712,10 +718,12 @@ class Game:
                                                                                     [self.teleporter_data['setting']['level_and_position']]['position'])
                             if self.main.events.check_key(key='e', modifier='ctrl'):
                                 self.teleporter_data['setting']['stage'] = 'cryptid pair'
-                                print('set cryptid pair...')
+                                if self.main.testing:
+                                    print('set cryptid pair...')
                             else:
                                 self.teleporter_data['setting']['stage'] = 'warp destination'
-                                print('set warp destination...')
+                                if self.main.testing:
+                                    print('set warp destination...')
                     else:
                         if isinstance(self.teleporter_data['standing'], list):
                             cryptid_warp = False
@@ -727,7 +735,7 @@ class Game:
                                     centres = [self.level.grid_to_display(position=self.main.utilities.position_str_to_tuple(position=position.split(' - ')[1]), centre=True) for position in cryptid['teleporters']]
                                     self.transition_level(teleport=[new_level, self.main.utilities.position_str_to_tuple(position=new_position), centres])
                                     break
-                            if not cryptid_warp:
+                            if not cryptid_warp and self.main.testing:
                                 print('cryptid warp not set')
                         elif self.teleporter_data['standing']['state'] == 'reciever':
                             self.main.audio.play_sound(name='map_open')
@@ -741,7 +749,7 @@ class Game:
                                 new_level, new_position = teleporter_data['destination'].split(' - ')
                                 self.transition_level(teleport=[new_level, self.main.utilities.position_str_to_tuple(position=new_position),
                                                                 self.level.grid_to_display(position=teleporter_data['position'], centre=True)])
-                            else:
+                            elif self.main.testing:
                                 print(f'warp not set')
             if data_updated:
                 self.main.assets.save_data()  # teleporters (recievers, senders, portals, activations, cryptids)

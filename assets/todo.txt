@@ -6,10 +6,9 @@
 
 *** sprites ***
 - add remaining sprites (flags, barriers, player spawner?)
-- neaten the cursor sprite up a bit
+-- make temp flags the inverse colours of the perm flags
 - rework scrollbar images to better fit the theme, antialias the edges
 - main menu title sprite
-- add better silhouette version of fraction sprite
 
 
 *** shaders ***
@@ -18,12 +17,10 @@
 
 *** utility ***
 - need to do a full game run through to test all the levels work as intended
-- add animation to 'other' images, such as cell marker
-- need to rework game transition effect (player bump and pixealte shader)
-- clicking window 'x' does not close window while mid transition, we can't start a new transition mid transition
 - separate game back into more distinct display layers again that can be controlled individually, only add this as needed
+- add animation to 'other' images, such as cell marker
+- clicking window 'x' does not close window while mid transition, we can't start a new transition mid transition
 - in assets, save copies of images that have had their alpha set, so that future calls just grab the image instead of having to re set it ({image: alpha[0-255]: surface})
-- add a check in the map class for 100%, and draw something to show that
 
 
 *** game bugs ***
@@ -57,9 +54,9 @@
 - add slight pause before continually undoing/ redoing, as we sometimes acidentally undo/ redo more then we mean to (similar to movement pause)
 - need to add a gem resetter tile that resets level and collected gem in that level (remove specific gem from game collectable data...), (4, -6)(4, 13), (5, -6)(10, 1), manually add data to game data
 -- when we step on a gem reseter tile, look up in data which gem to reset, then remove that gem from collected collectables, map collection, and add back to cached levels
-- add a more cryptic hint to level (-6, -6) that tells the player that portals can be activated by stepping in bwtween two barriers
-- add mini maze to level (-1, -17) which leads to cryptid tracker (add overlay to map which shows which cryptids are remaining and sign explaining this) and then final cheese collectable, add a reciever teleporter to this room
-- add something to level (-3, -17) instead of the light puzzle
+- we can always add something in the bottom left space of the map
+- need to rework game transition effect (player bump and pixealte shader)
+
 
 *** level ideas ***
 - add level with numerical code written with barriers that tells the secret to beating the level, we need to something in a particular order?
@@ -69,4 +66,8 @@
 -- this triggers a portal to level (-1, 0) which contains more puzzles the player must navigate
 -- add the last collectable to the top left of the spawn level that is unreachable until we come back from this new secret level into the spawn level
 - add level that starts very pixelated (very hard to tell what anything is) but get clearer/ less pixelated as the player moves towards some secret spot in the level
+- add a more cryptic hint/ cutscene to level (-6, -6) that tells the player that portals can be activated by stepping in bewtween two barriers
+-- add sign in between first pair of barriers to attract player, that says "Hmmm, I wonder why these barriers are placed like this..."
+- add mini maze to level (-1, -17) which leads to cryptid tracker (add overlay to map which shows which cryptids are remaining and sign explaining this) and then final cheese collectable, add a reciever teleporter to this room
+- add something to level (-3, -17) instead of the light puzzle
 

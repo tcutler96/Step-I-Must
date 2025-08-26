@@ -12,6 +12,8 @@ class MenuScrollbar:
         self.alpha_step = 15.5
         self.arrows = self.get_arrows()
         self.bar = self.get_bar()
+        self.delay = 2
+        self.timer = 0
 
     def get_arrows(self):
         arrows = {}
@@ -49,6 +51,8 @@ class MenuScrollbar:
         self.bar['surface'].set_alpha(self.bar['alpha'])
 
     def update(self, scroll, offset, mouse_position):
+        if self.timer:
+            self.timer -= 1
         response = None
         for direction in ['up', 'down']:
             arrow_data = self.arrows[direction]
@@ -61,7 +65,8 @@ class MenuScrollbar:
                 elif offset == [0, 0] and arrow_data['rect'].collidepoint(mouse_position):
                     arrow_data['active_surface'] = 'hovered'
                     self.main.display.set_cursor(cursor='hand')
-                    if self.main.events.check_key(key='mouse_1'):
+                    if not self.timer and self.main.events.check_key(key='mouse_1', action='held'):
+                        self.timer = self.delay
                         response = direction
             elif arrow_data['alpha'] > self.alpha_start:
                 arrow_data['alpha'] = max(arrow_data['alpha'] - self.alpha_step, self.alpha_start)

@@ -5,8 +5,8 @@
 
 
 *** sprites ***
-- add remaining sprites (flags, barriers, player spawner?)
--- make temp flags the inverse colours of the perm flags
+- add remaining sprites (barriers, player spawner?)
+-- flags need a bit more work to make it llok like their flowing
 - rework scrollbar images to better fit the theme, antialias the edges
 - main menu title sprite
 

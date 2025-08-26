@@ -3,13 +3,13 @@
     [
       [
         2,
-        2
+        3
       ]
     ],
     [
       [
         2,
-        2
+        3
       ]
     ],
     [
@@ -329,8 +329,8 @@
     },
     "3:2": {
       "object": {
-        "name": "rock",
-        "state": "rock"
+        "name": "permanent flag",
+        "state": "0"
       },
       "player": null,
       "tile": null,
@@ -339,8 +339,8 @@
     },
     "4:2": {
       "object": {
-        "name": "statue",
-        "state": "statue"
+        "name": "permanent flag",
+        "state": "1"
       },
       "player": null,
       "tile": null,
@@ -349,8 +349,8 @@
     },
     "5:2": {
       "object": {
-        "name": "collectable",
-        "state": "silver key"
+        "name": "permanent flag",
+        "state": "2"
       },
       "player": null,
       "tile": null,
@@ -359,8 +359,8 @@
     },
     "6:2": {
       "object": {
-        "name": "collectable",
-        "state": "silver gem"
+        "name": "permanent flag",
+        "state": "3"
       },
       "player": null,
       "tile": null,
@@ -369,8 +369,8 @@
     },
     "7:2": {
       "object": {
-        "name": "collectable",
-        "state": "gold key"
+        "name": "permanent flag",
+        "state": "4"
       },
       "player": null,
       "tile": null,
@@ -379,8 +379,8 @@
     },
     "8:2": {
       "object": {
-        "name": "collectable",
-        "state": "gold gem"
+        "name": "permanent flag",
+        "state": "5"
       },
       "player": null,
       "tile": null,
@@ -389,8 +389,8 @@
     },
     "9:2": {
       "object": {
-        "name": "collectable",
-        "state": "cheese"
+        "name": "permanent flag",
+        "state": "6"
       },
       "player": null,
       "tile": null,
@@ -398,21 +398,30 @@
       "horizontal_barrier": null
     },
     "10:2": {
-      "object": null,
+      "object": {
+        "name": "permanent flag",
+        "state": "7"
+      },
       "player": null,
       "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "11:2": {
-      "object": null,
+      "object": {
+        "name": "permanent flag",
+        "state": "8"
+      },
       "player": null,
       "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "12:2": {
-      "object": null,
+      "object": {
+        "name": "permanent flag",
+        "state": "9"
+      },
       "player": null,
       "tile": null,
       "vertical_barrier": null,
@@ -585,79 +594,100 @@
       "horizontal_barrier": null
     },
     "3:4": {
-      "object": null,
+      "object": {
+        "name": "temporary flag",
+        "state": "0"
+      },
       "player": null,
       "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "4:4": {
-      "object": null,
+      "object": {
+        "name": "temporary flag",
+        "state": "1"
+      },
       "player": null,
       "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "5:4": {
-      "object": null,
-      "player": null,
-      "tile": {
-        "name": "spike",
-        "state": "spike"
+      "object": {
+        "name": "temporary flag",
+        "state": "2"
       },
+      "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "6:4": {
-      "object": null,
-      "player": null,
-      "tile": {
-        "name": "conveyor",
-        "state": "up"
+      "object": {
+        "name": "temporary flag",
+        "state": "3"
       },
+      "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "7:4": {
-      "object": null,
-      "player": null,
-      "tile": {
-        "name": "ice",
-        "state": "ice"
+      "object": {
+        "name": "temporary flag",
+        "state": "4"
       },
+      "player": null,
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "8:4": {
-      "object": null,
+      "object": {
+        "name": "temporary flag",
+        "state": "5"
+      },
       "player": null,
       "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "9:4": {
-      "object": null,
+      "object": {
+        "name": "temporary flag",
+        "state": "6"
+      },
       "player": null,
       "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "10:4": {
-      "object": null,
+      "object": {
+        "name": "temporary flag",
+        "state": "7"
+      },
       "player": null,
       "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "11:4": {
-      "object": null,
+      "object": {
+        "name": "temporary flag",
+        "state": "8"
+      },
       "player": null,
       "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "12:4": {
-      "object": null,
+      "object": {
+        "name": "temporary flag",
+        "state": "9"
+      },
       "player": null,
       "tile": null,
       "vertical_barrier": null,
@@ -728,20 +758,14 @@
     "5:5": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "player spawner",
-        "state": "player spawner"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "6:5": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "splitter",
-        "state": "vertical"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -749,10 +773,7 @@
       "object": null,
       "player": null,
       "tile": null,
-      "vertical_barrier": {
-        "name": "barrier",
-        "state": "vertical"
-      },
+      "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "8:5": {
@@ -855,30 +876,21 @@
     "5:6": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "teleporter",
-        "state": "reciever"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "6:6": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "teleporter",
-        "state": "sender"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "7:6": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "teleporter",
-        "state": "portal"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
@@ -982,30 +994,21 @@
     "5:7": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "lock",
-        "state": "lock"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "6:7": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "sign",
-        "state": "sign"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },
     "7:7": {
       "object": null,
       "player": null,
-      "tile": {
-        "name": "star reseter",
-        "state": "star reseter"
-      },
+      "tile": null,
       "vertical_barrier": null,
       "horizontal_barrier": null
     },

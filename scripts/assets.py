@@ -102,10 +102,13 @@ class Assets:
                                     sprite_sheet = self.main.utilities.load_image(path=os.path.join(sprite_name_path, sprite_file))
                                     sprite_size = sprite_sheet.get_height()
                                     num_frames = sprite_sheet.get_width() // sprite_size
-                                    if len(sprite_info) > 1:
-                                        frames_counts = [int(frame_count) for frame_count in sprite_info[1].split(', ')]
-                                        if len(frames_counts) != num_frames:
-                                            frames_counts = frames_counts + [frames_counts[-1]] * (num_frames - len(frames_counts))
+                                    if num_frames > 1:
+                                        if len(sprite_info) > 1:
+                                            frames_counts = [int(frame_count) for frame_count in sprite_info[1].split(', ')]
+                                            if len(frames_counts) != num_frames:
+                                                frames_counts = frames_counts + [frames_counts[-1]] * (num_frames - len(frames_counts))
+                                        else:
+                                            frames_counts = [60] * num_frames
                                     else:
                                         frames_counts = None
                                     for frame in range(num_frames):

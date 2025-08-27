@@ -1692,7 +1692,10 @@
       "horizontal_barrier": null
     },
     "12:12": {
-      "tile": null,
+      "tile": {
+        "name": "sign",
+        "state": "sign"
+      },
       "object": null,
       "player": null,
       "vertical_barrier": null,

@@ -48,7 +48,6 @@ class Main:
         self.testing = True
         self.draw_gol = False
         self.clear_gol = False
-        self.conway = 0
 
     def change_game_state(self, game_state):
         if game_state != self.game_state:
@@ -89,12 +88,8 @@ class Main:
 
     def update_game_of_life(self):
         if self.shaders.background == 'gol':
-            self.draw_gol = self.display.cursor.cursor and self.events.check_key(key='mouse_3', action='held') and not self.transition.active
+            self.draw_gol = self.display.cursor.cursor and not self.transition.active and self.events.check_key(key='mouse_3', action='held')
             self.clear_gol = self.events.check_key(key='escape') and self.game_state != 'game'
-            if self.conway:
-                self.conway -= 1
-            if self.events.check_key(key='conway', action='last_pressed'):
-                self.conway = self.fps * 2
 
     def update(self):
         self.true_fps = self.clock.get_fps()
@@ -131,8 +126,6 @@ class Main:
                 pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=12, width=1, draw_top_left=True)
                 pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=16, width=1, draw_top_right=True)
                 pg.draw.circle(surface=self.display.displays['background'], color=self.assets.colours['cream'], center=self.events.mouse_display_position, radius=20, width=1, draw_bottom_right=True)
-            if self.conway:
-                self.text_handler.activate_text(text_group='main', text_id='conway')
 
     def draw(self):
         if self.debug:

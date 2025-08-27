@@ -135,8 +135,8 @@ class Shaders:
         return effect_data_uniforms
 
     def update(self, mouse_position):
-        if self.main.events.check_key('v', 'held'):
-            self.apply_effect(display_layer=['ui', 'level_main'], effect='invert', effect_data={'length': 1})
+        if self.main.testing and self.main.events.check_key('v', 'held'):
+            self.apply_effect(display_layer=['level_background', 'level_main'], effect='invert', effect_data={'length': 1})
         if self.chromatic_aberration:
             self.apply_effect(display_layer=['ui'], effect='chromatic', effect_data={'length': 0})
         if self.background:

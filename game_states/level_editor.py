@@ -117,9 +117,18 @@ class LevelEditor:
             self.main.change_menu_state()
             del self.main.assets.levels['custom']
 
+    def play_level(self):
+        self.reset_toolbar(hovered=True, selected=True)
+        self.main.menu_states['game_paused'].menu['Main Menu'].button_type = 'game_state'
+        self.main.menu_states['game_paused'].menu['Main Menu'].button_response = 'level_editor'
+        self.temp_save_tilemap()
+        self.main.change_game_state(game_state='game')
+
     def update(self, mouse_position):
         self.main.display.set_cursor(cursor='arrow')
         if not self.main.menu_state and not self.main.transition.active:
+            if self.main.testing and self.main.events.check_key(key='space'):
+                self.play_level()
             self.level.update()
             self.mouse_cell.position = self.level.display_to_grid(position=mouse_position)
             selected_element = self.toolbar.update(mouse_position=mouse_position)
@@ -127,12 +136,8 @@ class LevelEditor:
                 self.main.audio.play_sound(name='menu_select')
                 if selected_element[0] == 'button':
                     if selected_element[1] == 'Play Level':
-                        self.reset_toolbar(hovered=True, selected=True)
-                        self.main.menu_states['game_paused'].menu['Main Menu'].button_type = 'game_state'
-                        self.main.menu_states['game_paused'].menu['Main Menu'].button_response = 'level_editor'
-                        self.temp_save_tilemap()
-                        self.main.change_game_state(game_state='game')
-                    if selected_element[1] == 'Toggle Grid':
+                        self.play_level()
+                    elif selected_element[1] == 'Toggle Grid':
                         self.level.show_grid = not self.level.show_grid
                     elif selected_element[1] == 'Reset Level':
                         self.main.text_handler.deactivate_text_group(text_group='level_editor')

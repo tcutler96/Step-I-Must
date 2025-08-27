@@ -5,8 +5,8 @@
 
 
 *** sprites ***
-- add remaining sprites (barriers, player spawner?)
--- flags need a bit more work to make it llok like their flowing
+- add player thinking sprite (or just use idle sprite)
+- clean up portal sprite edges, make smaller so that it looks better on the map?
 - rework scrollbar images to better fit the theme, antialias the edges
 - main menu title sprite
 
@@ -21,6 +21,7 @@
 - add animation to 'other' images, such as cell marker
 - clicking window 'x' does not close window while mid transition, we can't start a new transition mid transition
 - in assets, save copies of images that have had their alpha set, so that future calls just grab the image instead of having to re set it ({image: alpha[0-255]: surface})
+- changing order that elements are drawn does not seem to update in game, may need to draw barriers before objects/ players
 
 
 *** game bugs ***
@@ -30,7 +31,7 @@
 - bumping a player into the wall should wake it up from sleeping
 - when map is opened during a cutscene, we need to reset the sprite timers (ie have players and teleporters show first)
 - leaving a level while stood on a sign plays the close text sound when we are in the new level, instead of straight away
-- setting certain cells in the level editor spams the sound effect (any player on a flag, any cell on a barrier)
+- setting certain cells in the level editor spams the sound effect (any player (/object?) on a flag, any cell on a barrier)
 - remove player respawn sprite when that flag is deleted when a player is turned to stone on top of it
 - playing a level from the level editor and then opening the game menu shows button as 'main menu' but it actually takes you back to the level editor, can we change the button text easily? from assets update_menu perhaps?
 - sliding on ice into a barrier that has ice behind it causes the game to crash
@@ -70,4 +71,5 @@
 -- add sign in between first pair of barriers to attract player, that says "Hmmm, I wonder why these barriers are placed like this..."
 - add mini maze to level (-1, -17) which leads to cryptid tracker (add overlay to map which shows which cryptids are remaining and sign explaining this) and then final cheese collectable, add a reciever teleporter to this room
 - add something to level (-3, -17) instead of the light puzzle
+- need to populate the signs in level (1, -6) that tell the player about cryptid warps
 

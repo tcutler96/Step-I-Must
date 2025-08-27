@@ -202,8 +202,6 @@ class Map:
 
     def update(self, mouse_position, active_cutscene):
         if not active_cutscene and not self.main.menu_state:
-            if self.main.events.check_key(key='v'):
-                self.update_tracker()
             if self.main.events.check_key(key=['tab', 'm']):
                 self.show_map = not self.show_map
                 if not self.show_map:

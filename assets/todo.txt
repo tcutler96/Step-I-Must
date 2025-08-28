@@ -5,7 +5,7 @@
 
 
 *** sprites ***
-- add player thinking sprite (or just use idle sprite)
+- add player thinking sprite (or just use idle sprite in cutscenes)
 - clean up portal sprite edges, make smaller so that it looks better on the map?
 - rework scrollbar images to better fit the theme, antialias the edges
 - main menu title sprite
@@ -32,7 +32,7 @@
 - when map is opened during a cutscene, we need to reset the sprite timers (ie have players and teleporters show first)
 - leaving a level while stood on a sign plays the close text sound when we are in the new level, instead of straight away
 - setting certain cells in the level editor spams the sound effect (any player (/object?) on a flag, any cell on a barrier)
-- remove player respawn sprite when that flag is deleted when a player is turned to stone on top of it
+- remove player respawn sprite when that flag is deleted when a player is turned to stone on top of it (check if associated flag still exists)
 - playing a level from the level editor and then opening the game menu shows button as 'main menu' but it actually takes you back to the level editor, can we change the button text easily? from assets update_menu perhaps?
 - sliding on ice into a barrier that has ice behind it causes the game to crash
 - sliding over ice while dead spams the game over sound, it should only play the first time we enter the game over state
@@ -44,6 +44,7 @@
 - (-3, -14): rocks dont behave properly when they meet in the middle
 - (-5, -6): sliding into a barrier crashes game
 - (-2, -7): conveying a chain of flags into edge of level doesnt move the flags but it does push the player when it shoudnt
+-- the function that checks if an object can move just returns True/ False, it doesnt say which object has prevented it, causing an object to be able to move an object it wouldnt normally be able to
 
 
 *** game features ***

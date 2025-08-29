@@ -133,7 +133,7 @@ class Toolbar:
             displays[self.display_layer].blit(source=button_data['sprite'], dest=button_data['position'])
             if button_name == self.hovered_element:
                 self.main.text_handler.activate_text(text_group='toolbar', text_id=button_name)
-                displays[self.display_layer].blit(source=self.main.assets.images['toolbar']['marker'], dest=(button_data['position'][0] + self.cell_marker_offset[0], button_data['position'][1]  + self.cell_marker_offset[1]))
+                displays[self.display_layer].blit(source=self.main.utilities.get_image(name='marker'), dest=(button_data['position'][0] + self.cell_marker_offset[0], button_data['position'][1]  + self.cell_marker_offset[1]))
         for element_name, element_data in self.toolbar['elements'].items():
             if element_name == self.hovered_element[0] and element_data['num_choices'] > 1:
                 self.main.text_handler.activate_text(text_group='toolbar', text_id=element_name + element_data['states'][self.hovered_element[1]])
@@ -158,5 +158,5 @@ class Toolbar:
                         pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['bright_green'], rect=pg.Rect(position[0] - 2, position[1] - 2, 20, 20), border_radius=3)
                     displays[self.display_layer].blit(source=sprite, dest=position)
                     if element_name == self.hovered_element[0] and count == self.hovered_element[1]:
-                        displays[self.display_layer].blit(source=self.main.assets.images['toolbar']['marker'], dest=(position[0] + self.cell_marker_offset[0], position[1] + self.cell_marker_offset[1]))
+                        displays[self.display_layer].blit(source=self.main.utilities.get_image(name='marker'), dest=(position[0] + self.cell_marker_offset[0], position[1] + self.cell_marker_offset[1]))
                         self.main.text_handler.activate_text(text_group='toolbar', text_id=element_name + element_data['states'][self.hovered_element[1]])

@@ -1,21 +1,21 @@
 {
   "game": {
-    "level": "(0, 2)",
+    "level": "(-1, 2)",
     "respawn": [
       [
         [
-          7,
-          0
+          15,
+          12
         ]
       ],
       [
         [
-          7,
-          0
+          15,
+          12
         ]
       ],
       [
-        true
+        false
       ]
     ],
     "collectables": {

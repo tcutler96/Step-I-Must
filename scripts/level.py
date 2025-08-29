@@ -348,5 +348,5 @@ class Level:
                 mouse_cell.draw(displays=displays, animated=self.animated, alpha=self.mouse_cell_alpha, element_types=['tile'])
                 mouse_cell.draw(displays=displays, animated=self.animated, alpha=self.mouse_cell_alpha,
                                 element_types=['object', 'player', 'vertical_barrier', 'horizontal_barrier'])
-                displays['level_main'].blit(source=self.main.assets.images['toolbar']['marker'], dest=(self.level_offset[0] + mouse_cell.position[0] * self.main.sprite_size + self.cell_marker_offset[0],
+                displays['level_main'].blit(source=self.main.utilities.get_image(name='marker'), dest=(self.level_offset[0] + mouse_cell.position[0] * self.main.sprite_size + self.cell_marker_offset[0],
                                                                                                   self.level_offset[1] + mouse_cell.position[1] * self.main.sprite_size + self.cell_marker_offset[1]))

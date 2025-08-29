@@ -69,6 +69,13 @@ class Utilities:
             images.append(self.load_image(path=path + '/' + image_name))
         return images
 
+    def get_image(self, name, animated=True, alpha=None):
+        if name in self.main.assets.images['other2']['images']:
+            image = self.main.assets.images['other2']['images'][name][self.main.assets.images['other2']['data'][name]['frame_index'] if animated else 0].copy()
+            if alpha is not None and alpha != 255:
+                image.set_alpha(alpha)
+            return image
+
     def get_sprite(self, name, state=None, animated=True, alpha=None):
         if name in ['no object', 'no tile']:
             return self.main.assets.images['toolbar']['empty']

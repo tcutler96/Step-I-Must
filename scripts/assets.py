@@ -80,12 +80,41 @@ class Assets:
         for folder in self.list_directory(path=path):
             folder_path = os.path.join(path, folder)
             if os.path.isdir(folder_path):
-                if folder in ['cursor', 'map', 'other', 'scrollbar', 'toolbar']:
+
+
+
+                if folder == 'other2':
+                    other_images = {}
+                    other_data = {}
+                    for image in self.list_directory(path=folder_path):
+                        image_info = image[:-4].split(' - ')
+                        if len(image_info) > 1:
+                            frames = []
+                            image_sheet = self.main.utilities.load_image(path=os.path.join(folder_path, image))
+                            num_frames = int(image_info[1])
+                            image_size = (image_sheet.get_width() // num_frames, image_sheet.get_height())
+                            if len(image_info) > 2:
+                                frames_counts = [int(frame_count) for frame_count in image_info[2].split(', ')]
+                                if len(frames_counts) != num_frames:
+                                    frames_counts = frames_counts + [frames_counts[-1]] * (num_frames - len(frames_counts))
+                            else:
+                                frames_counts = [60] * num_frames
+                            for frame in range(num_frames):
+                                frames.append(image_sheet.subsurface(pg.Rect((frame * image_size[0], 0), image_size)))
+                            other_images[image_info[0]] = frames
+                            other_data[image_info[0]] = {'frame_counts': frames_counts, 'num_frames': num_frames, 'frame_count': 0, 'frame_index': 0, 'loops': 0}
+                        else:
+                            other_images[image_info[0]] = self.main.utilities.load_image(path=os.path.join(folder_path, image))
+                    images[folder] = {'images': other_images, 'data': other_data}
+
+
+
+                elif folder != 'sprites':
                     folder_images = {}
                     for image in self.list_directory(path=folder_path):
                         folder_images[image.split('.')[0]] = self.main.utilities.load_image(path=os.path.join(folder_path, image))
                     images[folder] = folder_images
-                elif folder == 'sprites':
+                else:
                     sprites = {}
                     sprites_data = {}
                     for sprite_type in self.list_directory(path=folder_path):
@@ -121,6 +150,8 @@ class Assets:
                     images['sprites'] = sprites
                     images['sprites_data'] = sprites_data
                     images['sprite_list'] = list(sprites_data)
+        print(images.keys())
+        print(images['other2']['data'])
         return images
 
     def load_levels(self):
@@ -236,6 +267,15 @@ class Assets:
                 frame_data['loops'] = 0
 
     def update(self):
+        for image_data in self.images['other2']['data'].values():
+            if image_data['num_frames'] > 1:
+                image_data['frame_count'] += 1
+                if image_data['frame_count'] >= image_data['frame_counts'][image_data['frame_index']]:
+                    image_data['frame_count'] = 0
+                    image_data['frame_index'] += 1
+                    if image_data['frame_index'] >= image_data['num_frames']:
+                        image_data['frame_index'] = 0
+                        image_data['loops'] += 1
         for sprite_name, sprite_data in self.images['sprites_data'].items():
             for sprite_state, state_data in self.images['sprites_data'][sprite_name]['frame_data'].items():
                 if sprite_state not in ['states', 'num_states', 'sprite_type']:

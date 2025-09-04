@@ -15,10 +15,10 @@ class Game:
         self.movement_dict = {'w': 'up', 'a': 'left', 's': 'down', 'd': 'right'}
         self.movement_held = {'up': 0, 'left': 0, 'down': 0, 'right': 0}
         self.movement_directions = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0), 'up': (0, -1), 'left': (-1, 0), 'down': (0, 1), 'right': (1, 0)}
-        self.move_delay = self.main.assets.settings['gameplay']['hold_to_move']
+        self.move_delay = self.main.assets.settings['game']['hold_to_move']
         self.move_timer = 0
         self.hold_move_delay = 30
-        self.movement_speed = self.main.assets.settings['gameplay']['movement_speed']
+        self.movement_speed = self.main.assets.settings['game']['movement_speed']
         self.bump_amount = 0.4
         self.last_movement = None
         self.no_movement = False
@@ -221,7 +221,7 @@ class Game:
                 self.main.assets.save_data()  # game (level, respawn, discovered_levels)
             self.level.name = new_level
             self.level.orignal_respawn = respawn
-            transition_length = 1 if self.main.assets.settings['gameplay']['movement_speed'] == 0.125 else 0.5
+            transition_length = 1 if self.main.assets.settings['game']['movement_speed'] == 0.125 else 0.5
             if teleport or len(new_levels) > 1:
                 self.main.transition.start_transition(style='circle', style_data=centre, length=transition_length, response=['level', self.level.name, 'original', bump],
                                                       queue=(True, 'circle', self.level.grid_to_display(position=respawn[0][0], centre=True), transition_length))

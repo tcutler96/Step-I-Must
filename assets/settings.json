@@ -1,28 +1,27 @@
 {
+  "game": {
+    "movement_speed": 0.25,
+    "hold_to_move": 5,
+    "hold_to_undo": 5,
+    "cutscene_speed": 1,
+    "map_colour": "green"
+  },
   "video": {
+    "resolution": 2,
     "cursor_type": "sprite",
-    "map_colour": "green",
-    "particles": true,
-    "resolution": 3,
-    "screen_shake": true
+    "particles": true
   },
   "shaders": {
     "all": true,
     "background": "galaxy",
+    "chromatic_ui": true,
     "crt": true,
-    "vignette": true,
-    "chromatic_aberration": true
+    "vignette": true
   },
   "audio": {
     "master_volume": 0.2,
     "music_volume": 0.1,
     "sound_volume": 0.5
-  },
-  "gameplay": {
-    "cutscene_speed": 1,
-    "hold_to_move": 5,
-    "hold_to_undo": 5,
-    "movement_speed": 0.25
   },
   "menus": {
     "title_screen": {
@@ -55,6 +54,11 @@
     },
     "options": {
       "Options": "title",
+      "Game": [
+        "button",
+        "menu_state",
+        "game"
+      ],
       "Video": [
         "button",
         "menu_state",
@@ -64,11 +68,6 @@
         "button",
         "menu_state",
         "audio"
-      ],
-      "Gameplay": [
-        "button",
-        "menu_state",
-        "gameplay"
       ],
       "Developer": [
         "button",
@@ -81,14 +80,40 @@
         "title_screen"
       ]
     },
-    "video": {
-      "Video": "title",
-      "Cursor Type": [
+    "game": {
+      "game": "title",
+      "Movement Speed": [
         "button",
         "option",
         [
-          "Sprite",
-          "System"
+          "Fast",
+          "Slow"
+        ]
+      ],
+      "Hold to Move": [
+        "button",
+        "option",
+        [
+          "Fast",
+          "Disabled",
+          "Slow"
+        ]
+      ],
+      "Hold to Undo": [
+        "button",
+        "option",
+        [
+          "Fast",
+          "Disabled",
+          "Slow"
+        ]
+      ],
+      "Cutscene Speed": [
+        "button",
+        "option",
+        [
+          "Fast",
+          "Slow"
         ]
       ],
       "Map Colour": [
@@ -101,25 +126,33 @@
           "Disabled"
         ]
       ],
-      "Particles": [
+      "Back": [
         "button",
-        "option",
-        [
-          "Enabled",
-          "Disabled"
-        ]
-      ],
+        "menu_state",
+        "options"
+      ]
+    },
+    "video": {
+      "Video": "title",
       "Resolution": [
         "button",
         "option",
         [
+          "(896, 640)",
           "(1344, 960)",
           "(1792, 1280)",
-          "(448, 320)",
-          "(896, 640)"
+          "(448, 320)"
         ]
       ],
-      "Screen Shake": [
+      "Cursor Type": [
+        "button",
+        "option",
+        [
+          "Sprite",
+          "System"
+        ]
+      ],
+      "Particles": [
         "button",
         "option",
         [
@@ -158,12 +191,12 @@
           "Disabled"
         ]
       ],
-      "Chromatic Aberration": [
+      "Chromatic UI": [
         "button",
         "option",
         [
-          "Enabled",
-          "Disabled"
+          "Disabled",
+          "Enabled"
         ]
       ],
       "CRT": [
@@ -247,50 +280,23 @@
         "options"
       ]
     },
-    "gameplay": {
-      "Gameplay": "title",
-      "Cutscene Speed": [
-        "button",
-        "option",
-        [
-          "Fast",
-          "Slow"
-        ]
-      ],
-      "Hold to Move": [
-        "button",
-        "option",
-        [
-          "Fast",
-          "Disabled",
-          "Slow"
-        ]
-      ],
-      "Hold to Undo": [
-        "button",
-        "option",
-        [
-          "Fast",
-          "Disabled",
-          "Slow"
-        ]
-      ],
-      "Movement Speed": [
-        "button",
-        "option",
-        [
-          "Fast",
-          "Slow"
-        ]
-      ],
-      "Back": [
-        "button",
-        "menu_state",
-        "options"
-      ]
-    },
     "developer": {
       "Developer": "title",
+      "Reset Game Data": [
+        "button",
+        "button",
+        "reset_game_data"
+      ],
+      "Update Levels": [
+        "button",
+        "button",
+        "update_levels"
+      ],
+      "Resave Levels": [
+        "button",
+        "button",
+        "resave_levels"
+      ],
       "Backup Data": [
         "button",
         "button",
@@ -301,11 +307,6 @@
         "button",
         "backup_settings"
       ],
-      "Clear Game Data": [
-        "button",
-        "button",
-        "clear_game_data"
-      ],
       "Restore Data": [
         "button",
         "button",
@@ -315,11 +316,6 @@
         "button",
         "button",
         "restore_settings"
-      ],
-      "Resave Levels": [
-        "button",
-        "button",
-        "resave_levels"
       ],
       "Back": [
         "button",

@@ -23,7 +23,8 @@
 - clicking window 'x' does not close window while mid transition, we can't start a new transition mid transition
 - in assets, save copies of images that have had their alpha set, so that future calls just grab the image instead of having to re set it ({image: alpha[0-255]: surface})
 - changing order that elements are drawn does not seem to update in game, may need to draw barriers before objects/ players
-- align text handler bounce properly with asset animation timer
+- update all collectable names (replace ' ' with '_'), all levels, data game collectables, data collectables, in code references (game, map)
+- add particle system, just port from old game and have particles for collectables, movement
 
 
 *** game bugs ***

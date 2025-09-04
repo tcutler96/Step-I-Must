@@ -5,7 +5,7 @@ class Cutscene:
     def __init__(self, main):
         self.main = main
         self.display_layer = 'level_map'
-        self.cutscene_speed = self.main.assets.settings['gameplay']['cutscene_speed']
+        self.cutscene_speed = self.main.assets.settings['game']['cutscene_speed']
         self.active = False
         self.cutscene_type = None
         self.alpha_step = 8.5

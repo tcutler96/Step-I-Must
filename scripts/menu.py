@@ -119,20 +119,7 @@ class Menu:
                     else:
                         self.main.text_handler.deactivate_text_group(text_group='main')
                         self.main.text_handler.activate_text(text_group='main', text_id=selected_element[1], duration=2)
-                        if selected_element[1] == 'backup_data':
-                            self.main.utilities.backup_file(file_name='data')
-                        elif selected_element[1] == 'backup_settings':
-                            self.main.utilities.backup_file(file_name='settings')
-                        elif selected_element[1] == 'clear_game_data':
-                            self.main.assets.reset_game_data(clear=True)
-                            self.main.update_menu(menu='title_screen')
-                            self.main.change_game_state(game_state='main_menu')
-                        elif selected_element[1] == 'restore_data':
-                            self.main.utilities.restore_file(file_name='data')
-                        elif selected_element[1] == 'restore_settings':
-                            self.main.utilities.restore_file(file_name='settings')
-                        elif selected_element[1] == 'resave_levels':
-                            self.main.utilities.resave_levels()
+                        self.main.assets.trigger_button(button=selected_element[1])
                 elif selected_element[0] == 'option':
                     response = self.main.assets.change_setting(group=self.menu_name, name=element.name, option=selected_element[1][0])
                     while response:

@@ -48,7 +48,7 @@ class LevelEditor:
                 tile['state'] = state
 
     def temp_save_tilemap(self):
-        level_data = {'respawn': self.level.current_respawn, 'collectables': {'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []}, 'tilemap': {}}
+        level_data = {'respawn': self.level.current_respawn, 'collectables': {'silver_keys': [], 'silver_gems': [], 'gold_keys': [], 'gold_gems': [], 'cheeses': []}, 'tilemap': {}}
         for position, cell in self.level.level.items():
             elements = deepcopy(cell.elements)
             if cell.check_element(name='player', state='idle'):

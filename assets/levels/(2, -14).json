@@ -1,10 +1,10 @@
 {
   "respawn": null,
   "collectables": {
-    "silver keys": [],
-    "silver gems": [],
-    "gold keys": [],
-    "gold gems": [],
+    "silver_keys": [],
+    "silver_gems": [],
+    "gold_keys": [],
+    "gold_gems": [],
     "cheeses": [
       [
         8,
@@ -99,7 +99,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "bottom left"
+        "state": "bottom_left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -119,7 +119,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "centre-bl"
+        "state": "centre_bl"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -997,7 +997,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "centre-tr"
+        "state": "centre_tr"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1037,7 +1037,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "centre-tl"
+        "state": "centre_tl"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null

@@ -1,10 +1,10 @@
 {
   "respawn": null,
   "collectables": {
-    "silver keys": [],
-    "silver gems": [],
-    "gold keys": [],
-    "gold gems": [
+    "silver_keys": [],
+    "silver_gems": [],
+    "gold_keys": [],
+    "gold_gems": [
       [
         6,
         15
@@ -109,7 +109,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "centre-br"
+        "state": "centre_br"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -457,7 +457,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "top end"
+        "state": "top_end"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -603,7 +603,7 @@
     "13:3": {
       "tile": {
         "name": "wall",
-        "state": "left-tr"
+        "state": "left_tr"
       },
       "object": null,
       "player": null,
@@ -747,7 +747,7 @@
     "12:4": {
       "tile": {
         "name": "wall",
-        "state": "top left"
+        "state": "top_left"
       },
       "object": null,
       "player": null,
@@ -757,7 +757,7 @@
     "13:4": {
       "tile": {
         "name": "wall",
-        "state": "centre-tl"
+        "state": "centre_tl"
       },
       "object": null,
       "player": null,
@@ -994,7 +994,7 @@
     "5:6": {
       "tile": {
         "name": "wall",
-        "state": "centre-br"
+        "state": "centre_br"
       },
       "object": null,
       "player": null,
@@ -1034,7 +1034,7 @@
     "9:6": {
       "tile": {
         "name": "wall",
-        "state": "bottom right"
+        "state": "bottom_right"
       },
       "object": null,
       "player": null,
@@ -1103,7 +1103,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "centre-br"
+        "state": "centre_br"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1151,7 +1151,7 @@
     "5:7": {
       "tile": {
         "name": "wall",
-        "state": "bottom right"
+        "state": "bottom_right"
       },
       "object": null,
       "player": null,
@@ -1310,7 +1310,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "top left"
+        "state": "top_left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1348,7 +1348,7 @@
     "12:8": {
       "tile": {
         "name": "wall",
-        "state": "centre-tl"
+        "state": "centre_tl"
       },
       "object": null,
       "player": null,
@@ -1405,7 +1405,7 @@
     "2:9": {
       "tile": {
         "name": "wall",
-        "state": "top left"
+        "state": "top_left"
       },
       "object": null,
       "player": null,
@@ -1425,7 +1425,7 @@
     "4:9": {
       "tile": {
         "name": "wall",
-        "state": "top right"
+        "state": "top_right"
       },
       "object": null,
       "player": null,
@@ -1544,7 +1544,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "bottom right"
+        "state": "bottom_right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -1867,7 +1867,7 @@
     "2:12": {
       "tile": {
         "name": "wall",
-        "state": "centre-tl"
+        "state": "centre_tl"
       },
       "object": null,
       "player": null,
@@ -2038,7 +2038,7 @@
     "4:13": {
       "tile": {
         "name": "wall",
-        "state": "centre-tr"
+        "state": "centre_tr"
       },
       "object": null,
       "player": null,
@@ -2050,7 +2050,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "top right"
+        "state": "top_right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -2070,7 +2070,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "top left"
+        "state": "top_left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -2078,7 +2078,7 @@
     "8:13": {
       "tile": {
         "name": "wall",
-        "state": "centre-tl"
+        "state": "centre_tl"
       },
       "object": null,
       "player": null,

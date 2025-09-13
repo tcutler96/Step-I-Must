@@ -1,10 +1,10 @@
 {
   "respawn": null,
   "collectables": {
-    "silver keys": [],
-    "silver gems": [],
-    "gold keys": [],
-    "gold gems": [],
+    "silver_keys": [],
+    "silver_gems": [],
+    "gold_keys": [],
+    "gold_gems": [],
     "cheeses": []
   },
   "locks": [],
@@ -615,7 +615,7 @@
     "11:4": {
       "tile": {
         "name": "wall",
-        "state": "left end"
+        "state": "left_end"
       },
       "object": null,
       "player": null,
@@ -625,7 +625,7 @@
     "12:4": {
       "tile": {
         "name": "wall",
-        "state": "left right"
+        "state": "left_right"
       },
       "object": null,
       "player": null,
@@ -635,7 +635,7 @@
     "13:4": {
       "tile": {
         "name": "wall",
-        "state": "left right"
+        "state": "left_right"
       },
       "object": null,
       "player": null,
@@ -645,7 +645,7 @@
     "14:4": {
       "tile": {
         "name": "wall",
-        "state": "left right"
+        "state": "left_right"
       },
       "object": null,
       "player": null,
@@ -1543,7 +1543,7 @@
     "4:12": {
       "tile": {
         "name": "wall",
-        "state": "top right"
+        "state": "top_right"
       },
       "object": null,
       "player": null,
@@ -1998,7 +1998,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "top right"
+        "state": "top_right"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
@@ -2015,7 +2015,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "top left"
+        "state": "top_left"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null

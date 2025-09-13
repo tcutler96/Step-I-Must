@@ -1,15 +1,15 @@
 {
   "respawn": null,
   "collectables": {
-    "silver keys": [],
-    "silver gems": [],
-    "gold keys": [
+    "silver_keys": [],
+    "silver_gems": [],
+    "gold_keys": [
       [
         8,
         4
       ]
     ],
-    "gold gems": [],
+    "gold_gems": [],
     "cheeses": []
   },
   "locks": [],
@@ -237,7 +237,7 @@
     "6:1": {
       "tile": {
         "name": "wall",
-        "state": "centre-br"
+        "state": "centre_br"
       },
       "object": null,
       "player": null,
@@ -277,7 +277,7 @@
     "10:1": {
       "tile": {
         "name": "wall",
-        "state": "centre-bl"
+        "state": "centre_bl"
       },
       "object": null,
       "player": null,
@@ -1004,7 +1004,7 @@
     "6:6": {
       "tile": {
         "name": "wall",
-        "state": "centre-tr-br"
+        "state": "centre_tr_br"
       },
       "object": null,
       "player": null,
@@ -1014,7 +1014,7 @@
     "7:6": {
       "tile": {
         "name": "wall",
-        "state": "right end"
+        "state": "right_end"
       },
       "object": null,
       "player": null,
@@ -1034,7 +1034,7 @@
     "9:6": {
       "tile": {
         "name": "wall",
-        "state": "left end"
+        "state": "left_end"
       },
       "object": null,
       "player": null,
@@ -1044,7 +1044,7 @@
     "10:6": {
       "tile": {
         "name": "wall",
-        "state": "centre-tl-bl"
+        "state": "centre_tl_bl"
       },
       "object": null,
       "player": null,
@@ -1311,7 +1311,7 @@
     "5:8": {
       "tile": {
         "name": "wall",
-        "state": "centre-br"
+        "state": "centre_br"
       },
       "object": null,
       "player": null,
@@ -1321,7 +1321,7 @@
     "6:8": {
       "tile": {
         "name": "wall",
-        "state": "bottom-tr"
+        "state": "bottom_tr"
       },
       "object": null,
       "player": null,
@@ -1331,7 +1331,7 @@
     "7:8": {
       "tile": {
         "name": "wall",
-        "state": "right end"
+        "state": "right_end"
       },
       "object": null,
       "player": null,
@@ -1348,7 +1348,7 @@
     "9:8": {
       "tile": {
         "name": "wall",
-        "state": "left end"
+        "state": "left_end"
       },
       "object": null,
       "player": null,
@@ -1358,7 +1358,7 @@
     "10:8": {
       "tile": {
         "name": "wall",
-        "state": "bottom-tl"
+        "state": "bottom_tl"
       },
       "object": null,
       "player": null,
@@ -1368,7 +1368,7 @@
     "11:8": {
       "tile": {
         "name": "wall",
-        "state": "centre-bl"
+        "state": "centre_bl"
       },
       "object": null,
       "player": null,
@@ -2057,7 +2057,7 @@
     "5:13": {
       "tile": {
         "name": "wall",
-        "state": "centre-tr"
+        "state": "centre_tr"
       },
       "object": null,
       "player": null,
@@ -2067,7 +2067,7 @@
     "6:13": {
       "tile": {
         "name": "wall",
-        "state": "top-br"
+        "state": "top_br"
       },
       "object": null,
       "player": null,
@@ -2077,7 +2077,7 @@
     "7:13": {
       "tile": {
         "name": "wall",
-        "state": "right end"
+        "state": "right_end"
       },
       "object": null,
       "player": null,
@@ -2097,7 +2097,7 @@
     "9:13": {
       "tile": {
         "name": "wall",
-        "state": "left end"
+        "state": "left_end"
       },
       "object": null,
       "player": null,
@@ -2107,7 +2107,7 @@
     "10:13": {
       "tile": {
         "name": "wall",
-        "state": "left right"
+        "state": "left_right"
       },
       "object": null,
       "player": null,
@@ -2117,7 +2117,7 @@
     "11:13": {
       "tile": {
         "name": "wall",
-        "state": "bottom-tl"
+        "state": "bottom_tl"
       },
       "object": null,
       "player": null,
@@ -2368,7 +2368,7 @@
       "player": null,
       "tile": {
         "name": "wall",
-        "state": "centre-tr"
+        "state": "centre_tr"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null

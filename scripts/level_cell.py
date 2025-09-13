@@ -74,7 +74,7 @@ class LevelCell:
                 self.elements['vertical_barrier'] = None
                 self.elements['horizontal_barrier'] = None
                 if element_name == 'wall':
-                    self.elements['tile'] = {'name': 'wall', 'state': 'auto-tile'}
+                    self.elements['tile'] = {'name': 'wall', 'state': 'auto_tile'}
                     self.elements['object'] = None
                     self.elements['player'] = None
                 elif element_name == 'teleporter':

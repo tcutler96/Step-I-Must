@@ -86,7 +86,7 @@ class Level:
 
     def create_tilemap(self):
         self.tilemap = {}
-        self.collectables = {'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []}
+        self.collectables = {'silver_keys': [], 'silver_gems': [], 'gold_keys': [], 'gold_gems': [], 'cheeses': []}
         self.locks = []
         data_updated = False
         for position, cell in self.level.items():

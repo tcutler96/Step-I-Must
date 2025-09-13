@@ -11,7 +11,7 @@ class Toolbar:
         self.cell_marker_offset = (-3, -3)
         self.element_choices = {'objects': {'no object': ['no object'], 'player': ['idle', 'dead'], 'permanent flag': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
                                             'temporary flag': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], 'rock': ['rock'], 'statue': ['statue'],
-                                            'collectable': ['silver key', 'silver gem', 'gold key', 'gold gem', 'cheese']},
+                                            'collectable': ['silver_key', 'silver_gem', 'gold_key', 'gold_gem', 'cheese']},
                                 'tiles': {'no tile': ['no tile'], 'wall': ['centre'], 'ice': ['ice'], 'conveyor': ['up', 'right', 'down', 'left'], 'spike': ['spike'],
                                           'player spawner': ['player spawner'], 'splitter': ['vertical', 'horizontal'], 'barrier': ['vertical', 'horizontal'],
                                           'teleporter': ['reciever', 'sender', 'portal'], 'lock': ['lock'], 'sign': ['sign'], 'star reseter': ['star reseter']}}
@@ -80,17 +80,6 @@ class Toolbar:
             if elements[element]:
                 self.selected_tile = self.get_element(element_type='tiles', elements=elements, element=element)
                 break
-        # if elements['object']:
-        #     self.selected_object = [elements['object']['name'], self.element_choices['objects'][elements['object']['name']].index(elements['object']['state'])]
-        # elif elements['player']:
-        #     self.selected_object = [elements['player']['name'], self.element_choices['objects'][elements['player']['name']].index(elements['player']['state'])]
-        # if elements['tile']:
-        #     self.selected_tile = [elements['tile']['name'], self.element_choices['tiles'][elements['tile']['name']].index(elements['tile']['state'])]
-        # elif elements['vertical_barrier']:
-        #     self.selected_tile = [elements['vertical_barrier']['name'], self.element_choices['tiles'][elements['vertical_barrier']['name']].index(elements['vertical_barrier']['state'])]
-        # elif elements['horizontal_barrier']:
-        #     self.selected_tile = [elements['horizontal_barrier']['name'], self.element_choices['tiles'][elements['horizontal_barrier']['name']].index(elements['horizontal_barrier']['state'])]
-
 
     def update(self, mouse_position):
         self.last_hovered_element = self.hovered_element
@@ -126,7 +115,8 @@ class Toolbar:
         return selected_elememt
 
     def draw(self, displays):
-        for background_rect in self.toolbar['background_rects']:  # add smaller rects to cover up overlapping border...
+        # add smaller rects to cover up overlapping border...
+        for background_rect in self.toolbar['background_rects']:
             pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['dark_purple'], rect=background_rect, border_radius=5)
             pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['purple'], rect=background_rect, width=1, border_radius=5)
         for button_name, button_data in self.toolbar['buttons'].items():

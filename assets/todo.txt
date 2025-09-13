@@ -19,19 +19,13 @@
 *** utility ***
 - need to do a full game run through to test all the levels work as intended
 - separate game back into more distinct display layers again that can be controlled individually, only add this as needed
-- add animation to 'other' images, such as cell marker
+- add particle system, just port from old game and have particles for movement (player and objects), stepping on a flag, collectables (idle and on collection)
 - clicking window 'x' does not close window while mid transition, we can't start a new transition mid transition
 - in assets, save copies of images that have had their alpha set, so that future calls just grab the image instead of having to re set it ({image: alpha[0-255]: surface})
 - changing order that elements are drawn does not seem to update in game, may need to draw barriers before objects/ players
-- align text handler bounce properly with asset animation timer
-- rename data map data to include '_', use backup data file, need to update all the wall elements in all the levels as well, loop over all levels, then all cells, then equals wall, change state name ('-' and ' ' to '_')
-- animate game icon itself, rather than pulling from player idle sprite
-- cant see collectable sprites in level editor toolbar, need to update names to include '_'
-- reverse toolbar marker animation?
+- align text handler bounce properly with asset animation timer (use same in game timer?)
 - add border to level editor toolbar, crude implementation in place but we need to clean up the corners and stop them from overlapping
 - update reset sprite function in assets to work with new image dict
-- update all collectable names (replace ' ' with '_'), all levels, data game collectables, data collectables, in code references (game, map)
-- add particle system, just port from old game and have particles for collectables, movement
 
 
 *** game bugs ***

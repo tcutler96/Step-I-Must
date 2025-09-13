@@ -13,9 +13,9 @@ class Map:
                             'step': (abs(part_one_offset[0] - part_two_offset[0]) / (2 * self.cell_size), abs(part_one_offset[1] - part_two_offset[1]) / (2 * self.cell_size))}
         self.collectable_data = {'base_position': (384, 50), 'y_overlap': 0.35, '100%': False, 'types': list(self.main.assets.data['collectables']),
                                  'max_counts': {collectable_type: len(collectable_amounts) for collectable_type, collectable_amounts in self.main.assets.data['collectables'].items()},
-                                 'sprites': {'fraction_empty': self.main.assets.images['map']['fraction_empty'].copy(), 'fraction_filled': self.main.assets.images['map']['fraction_filled'].copy()} |
+                                 'sprites': {'fraction_empty': self.main.utilities.get_image(group='map', name='fraction_empty'), 'fraction_filled': self.main.utilities.get_image(group='map', name='fraction_filled')} |
                                             {collectable_type[:-1]: None for collectable_type in list(self.main.assets.data['collectables'])} |
-                                            {f'{collectable_type[:-1]} empty': None for collectable_type in list(self.main.assets.data['collectables'])}}
+                                            {f'{collectable_type[:-1]}_empty': None for collectable_type in list(self.main.assets.data['collectables'])}}
         self.tracker_data = {'current': 'part_two' if self.main.utilities.check_collectable(collectable_type='part_two', count=False) else
                                         'part_one' if self.main.utilities.check_collectable(collectable_type='part_one', count=False) else None,
                              'part_one': {'parts': ['part_one'], 'text_ids': ['part_one_percent_1'], 'texts': ['World: '], 'positions': [(424, 280)]},
@@ -25,9 +25,9 @@ class Map:
         self.alpha_step = 8.5
         self.icons = {'alpha': {'alpha': 255, 'alpha_alt': 0, 'step': -4.25, 'timer': 120, 'delay': 120}, 'alpha_default': {'alpha': 255, 'alpha_alt': 0, 'step': -4.25, 'timer': 120, 'delay': 120},
                       'icons': {'player': {'name': 'player', 'state': 'idle', 'sprite': None}, 'teleporter': {'name': 'teleporter', 'state': 'reciever', 'sprite': None},
-                                'silver keys': {'name': 'collectable', 'state': 'silver key', 'sprite': None}, 'silver gems': {'name': 'collectable', 'state': 'silver gem', 'sprite': None},
-                                'gold keys': {'name': 'collectable', 'state': 'gold key', 'sprite': None}, 'gold gems': {'name': 'collectable', 'state': 'gold gem', 'sprite': None},
-                                'cheeses': {'name': 'collectable', 'state': 'cheese', 'sprite': None}, 'cryptid': {'name': 'teleporter', 'state': 'portal animated', 'sprite': None}}}
+                                'silver_keys': {'name': 'collectable', 'state': 'silver_key', 'sprite': None}, 'silver_gems': {'name': 'collectable', 'state': 'silver_gem', 'sprite': None},
+                                'gold_keys': {'name': 'collectable', 'state': 'gold_key', 'sprite': None}, 'gold_gems': {'name': 'collectable', 'state': 'gold_gem', 'sprite': None},
+                                'cheeses': {'name': 'collectable', 'state': 'cheese', 'sprite': None}, 'cryptid': {'name': 'teleporter', 'state': 'portal_animated', 'sprite': None}}}
         self.levels = self.load_levels()
         self.map = self.load_map()
 
@@ -50,8 +50,8 @@ class Map:
         for level_name, level_data in self.levels.items():
             level_position = self.main.utilities.position_str_to_tuple(position=level_name)
             blit_position = ((level_position[0] - (3 if level_position == (4, 4) else 0)) * self.cell_size, (level_position[1] - (4 if level_position[1] < -3 else -1 if level_position == (4, 4) else 0)) * self.cell_size)
-            if level_name in self.main.assets.data['map'] and self.main.assets.data['map'][level_name] in self.main.assets.images['map']:
-                sprite = self.main.assets.images['map'][self.main.assets.data['map'][level_name]].copy()
+            if level_name in self.main.assets.data['map']:
+                sprite = self.main.utilities.get_image(group='map', name=self.main.assets.data['map'][level_name])
             else:
                 neighbours = set()
                 for neighbour in self.main.utilities.neighbour_offsets:
@@ -61,7 +61,7 @@ class Map:
                 variant = self.main.utilities.neighbour_auto_tile_map[tuple(sorted(neighbours))]
                 self.main.assets.data['map'][level_name] = variant
                 data_updated = True
-                sprite = self.main.assets.images['map'][variant].copy()
+                sprite = self.main.utilities.get_image(group='map', name=variant)
                 if self.main.testing:
                     print(f'map data for {level_name} updated to {variant}...')
             teleporter = False
@@ -265,7 +265,7 @@ class Map:
                 collectables = True
                 max_count = self.collectable_data['max_counts'][collectable_type]
                 for y in list(range(collectable_count, max_count)) + list(range(collectable_count)):
-                    collectable_sprite = self.collectable_data['sprites'][collectable_type[:-1]] if y <= collectable_count - 1 else self.collectable_data['sprites'][collectable_type[:-1] + ' empty']
+                    collectable_sprite = self.collectable_data['sprites'][collectable_type[:-1]] if y <= collectable_count - 1 else self.collectable_data['sprites'][collectable_type[:-1] + '_empty']
                     displays['level_map'].blit(source=collectable_sprite, dest=self.get_collectable_position(x=x, y=y, bounce=-3))
                 displays['level_map'].blit(source=self.collectable_data['sprites']['fraction_empty' if collectable_count < max_count else 'fraction_filled'], dest=self.get_collectable_position(x=x, y=max_count + 4.1, bounce=-3))
                 if self.show_map:

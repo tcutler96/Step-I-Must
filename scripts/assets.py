@@ -184,7 +184,7 @@ class Assets:
 
     def reset_game_data(self, clear=False):
         self.data['game'] = {'level': '(0, 0)' if not clear else None, 'respawn': [[[12, 2]], [[12, 2]], [False]],
-                             'collectables': {'silver keys': [], 'silver gems': [], 'gold keys': [], 'gold gems': [], 'cheeses': []}, 'discovered_levels': ['(0, 0)'], 'active_portals': []}
+                             'collectables': {'silver_keys': [], 'silver_gems': [], 'gold_keys': [], 'gold_gems': [], 'cheeses': []}, 'discovered_levels': ['(0, 0)'], 'active_portals': []}
         self.save_data()  # game (level, respawn, collectables, discovered_levels, active_portals)
 
     def change_setting(self, group, name, option):

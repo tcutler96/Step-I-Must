@@ -57,9 +57,9 @@ class MapCell:
                 if collectables:
                     if self.main.debug:
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
-                    elif collectable_type in ['silver keys', 'silver gems'] and self.main.utilities.check_collectable(collectable_type='part_one', count=False):
+                    elif collectable_type in ['silver_keys', 'silver_gems'] and self.main.utilities.check_collectable(collectable_type='part_one', count=False):
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
-                    elif collectable_type in ['gold keys', 'gold gems'] and self.main.utilities.check_collectable(collectable_type='part_two', count=False):
+                    elif collectable_type in ['gold_keys', 'gold_gems'] and self.main.utilities.check_collectable(collectable_type='part_two', count=False):
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)
                     elif collectable_type == 'cheeses' and self.main.utilities.check_collectable(collectable_type='cheese', count=False):
                         self.draw_cell(displays=displays, sprite=icons[collectable_type]['sprite'], offset=offset)

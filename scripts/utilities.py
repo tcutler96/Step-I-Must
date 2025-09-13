@@ -39,11 +39,11 @@ class Utilities:
 
     def get_collectable_types(self, part='all'):
         if part == 'part_one':
-            return ['silver keys', 'silver gems']
+            return ['silver_keys', 'silver_gems']
         elif part == 'part_two':
-            return ['gold keys', 'gold gems', 'cheeses']
+            return ['gold_keys', 'gold_gems', 'cheeses']
         elif part == 'all':
-            return ['silver keys', 'silver gems', 'gold keys', 'gold gems', 'cheeses']
+            return ['silver_keys', 'silver_gems', 'gold_keys', 'gold_gems', 'cheeses']
 
     def check_collectable(self, collectable_type, count=True):
         if collectable_type in ['part_one', 'part_two', 'all']:
@@ -223,17 +223,18 @@ class Utilities:
                     json.dump(obj=json.load(file_data), fp=file, indent=2)
 
     def update_levels(self):
-        for level_name, level_data in self.main.assets.levels.items():
-            for cell in level_data['tilemap'].values():
-                if cell['tile'] and cell['tile']['name'] == 'wall':
-                    state = cell['tile']['state'].replace('-', '_').replace(' ', '_')
-                    cell['tile']['state'] = state
-            collectables = {}
-            for collectable in level_data['collectables']:
-                collectables[collectable.replace(' ', '_')] = level_data['collectables'][collectable]
-            level_data['collectables'] = collectables
-            with open(os.path.join('assets/levels', f'{level_name}.json'), 'w') as file_data:
-                json.dump(obj=level_data, fp=file_data, indent=2)
+        pass
+        # for level_name, level_data in self.main.assets.levels.items():
+        #     for cell in level_data['tilemap'].values():
+        #         if cell['tile'] and cell['tile']['name'] == 'wall':
+        #             state = cell['tile']['state'].replace('-', '_').replace(' ', '_')
+        #             cell['tile']['state'] = state
+        #     collectables = {}
+        #     for collectable in level_data['collectables']:
+        #         collectables[collectable.replace(' ', '_')] = level_data['collectables'][collectable]
+        #     level_data['collectables'] = collectables
+        #     with open(os.path.join('assets/levels', f'{level_name}.json'), 'w') as file_data:
+        #         json.dump(obj=level_data, fp=file_data, indent=2)
 
     def resave_levels(self):
         level = Level(main=self.main)

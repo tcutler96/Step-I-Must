@@ -30,7 +30,7 @@ class Toolbar:
         for button_type in self.button_choices:
             for button_count, button_name in enumerate(self.button_choices[button_type]):
                 button_position = (self.main.display.width - 24 - (24 * (button_count + 1) if button_type == 'top' else 0), 8 + (24 * (button_count + 1) if button_type == 'right' else 0))
-                buttons[button_name] = {'position': button_position, 'sprite': self.main.assets.images['toolbar'][self.button_choices[button_type][button_name]],
+                buttons[button_name] = {'position': button_position, 'sprite': self.main.utilities.get_image(group='toolbar', name=self.button_choices[button_type][button_name]),
                                         'rect': pg.Rect(button_position[0] - 4, button_position[1] - 4, 24, 24)}
                 self.main.text_handler.add_text(text_group='toolbar', text_id=button_name, text=button_name, position=self.text_position, bounce=-3,
                                                 alignment=('c', 'c'), size=self.text_size, max_width=self.max_width, display_layer=self.display_layer)
@@ -126,18 +126,19 @@ class Toolbar:
         return selected_elememt
 
     def draw(self, displays):
-        for background_rect in self.toolbar['background_rects']:
+        for background_rect in self.toolbar['background_rects']:  # add smaller rects to cover up overlapping border...
             pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['dark_purple'], rect=background_rect, border_radius=5)
-            # pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['cream'], rect=background_rect, width=1, border_radius=5)
+            pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['purple'], rect=background_rect, width=1, border_radius=5)
         for button_name, button_data in self.toolbar['buttons'].items():
             displays[self.display_layer].blit(source=button_data['sprite'], dest=button_data['position'])
             if button_name == self.hovered_element:
                 self.main.text_handler.activate_text(text_group='toolbar', text_id=button_name)
-                displays[self.display_layer].blit(source=self.main.utilities.get_image(name='marker'), dest=(button_data['position'][0] + self.cell_marker_offset[0], button_data['position'][1]  + self.cell_marker_offset[1]))
+                displays[self.display_layer].blit(source=self.main.utilities.get_image(group='toolbar', name='marker'), dest=(button_data['position'][0] + self.cell_marker_offset[0], button_data['position'][1]  + self.cell_marker_offset[1]))
         for element_name, element_data in self.toolbar['elements'].items():
             if element_name == self.hovered_element[0] and element_data['num_choices'] > 1:
                 self.main.text_handler.activate_text(text_group='toolbar', text_id=element_name + element_data['states'][self.hovered_element[1]])
                 pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['cream'], rect=element_data['hover_rect'], border_radius=5)
+                pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['purple'], rect=element_data['hover_rect'], width=1, border_radius=5)
             if element_name != self.hovered_element[0] and element_name == (self.selected_object[0] if element_data['element_type'] == 'object' else self.selected_tile[0]):
                 pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['bright_green'], rect=pg.Rect(element_data['position'][0][0] - 2, element_data['position'][0][1] - 2, 20, 20), border_radius=3)
                 if element_name == 'player' and element_data['states'][self.selected_object[1]] == 'idle':
@@ -158,5 +159,6 @@ class Toolbar:
                         pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['bright_green'], rect=pg.Rect(position[0] - 2, position[1] - 2, 20, 20), border_radius=3)
                     displays[self.display_layer].blit(source=sprite, dest=position)
                     if element_name == self.hovered_element[0] and count == self.hovered_element[1]:
-                        displays[self.display_layer].blit(source=self.main.utilities.get_image(name='marker'), dest=(position[0] + self.cell_marker_offset[0], position[1] + self.cell_marker_offset[1]))
+                        displays[self.display_layer].blit(source=self.main.utilities.get_image(group='toolbar', name='marker'),
+                                                          dest=(position[0] + self.cell_marker_offset[0], position[1] + self.cell_marker_offset[1]))
                         self.main.text_handler.activate_text(text_group='toolbar', text_id=element_name + element_data['states'][self.hovered_element[1]])

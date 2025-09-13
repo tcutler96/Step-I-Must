@@ -28,7 +28,7 @@ class Cutscene:
         self.line_pause = (1 - self.cutscene_speed) * 1 + self.cutscene_speed * 0.25
         self.line_timer = 0
         self.show_button = False
-        self.button = self.main.assets.images['other']['button_5'].copy()
+        self.button = self.main.utilities.get_image(group='other', name='button_5')
         self.button_position = (self.main.display.half_width - self.button.get_width() // 2, self.main.display.height - self.bars_max_offset - self.button.get_height() * 1.5)
         self.button_alpha = 0
         self.collectable_pause = 2

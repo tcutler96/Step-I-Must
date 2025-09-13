@@ -14,7 +14,7 @@ class Cursor:
     def load_cursors(self):
         cursors = {'system': {'arrow': pg.cursors.Cursor(pg.SYSTEM_CURSOR_ARROW), 'hand': pg.cursors.Cursor(pg.SYSTEM_CURSOR_HAND)}, 'sprite': {'default': {}, 'held': {}}}
         for cursor in ['arrow', 'hand']:
-            surface = self.main.assets.images['other']['cursor_' + cursor].copy()
+            surface = self.main.utilities.get_image(group='other', name=f'cursor_{cursor}')
             cursors['sprite']['default'][cursor] = surface
             cursors['sprite']['held'][cursor] = pg.transform.scale(surface=surface, size=(surface.get_size()[0] * 0.9, surface.get_size()[1] * 0.9))
         return cursors

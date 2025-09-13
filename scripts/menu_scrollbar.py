@@ -19,8 +19,8 @@ class MenuScrollbar:
         arrows = {}
         for direction in ['up', 'down']:
             arrows[direction] = {}
-            default_surface = self.main.assets.images['scrollbar'][f'{direction}_default']
-            hovered_surface = self.main.assets.images['scrollbar'][f'{direction}_hovered']
+            default_surface = self.main.utilities.get_image(group='scrollbar', name=f'{direction}_default')
+            hovered_surface = self.main.utilities.get_image(group='scrollbar', name=f'{direction}_hovered')
             size = default_surface.get_size()
             position = (self.main.display.width - size[0] - self.padding, self.padding if direction == 'up' else self.main.display.height - self.padding - size[1])
             rect = pg.Rect(position, size)
@@ -28,7 +28,7 @@ class MenuScrollbar:
         return arrows
 
     def get_bar(self):
-        surface = self.main.assets.images['scrollbar']['bar']
+        surface = self.main.utilities.get_image(group='scrollbar', name='bar')
         size = surface.get_size()
         bar_start = self.arrows['up']['rect'].bottom - self.overlap
         bar_end = self.arrows['down']['rect'].top - size[1] + self.overlap

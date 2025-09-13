@@ -11,13 +11,16 @@ class Utilities:
         self.main = main
         self.assets_path = self.main.assets_path
         self.neighbour_offsets = [(-1, 0), (0, -1), (1, 0), (0, 1)]
-        self.neighbour_auto_tile_map = {tuple(sorted([])): 'single', tuple(sorted([(0, -1)])): 'bottom end', tuple(sorted([(1, 0)])): 'left end', tuple(sorted([(0, 1)])): 'top end',
-                                        tuple(sorted([(-1, 0)])): 'right end', tuple(sorted([(-1, 0), (1, 0)])): 'left right', tuple(sorted([(0, -1), (0, 1)])): 'top bottom',
-                                        tuple(sorted([(1, 0), (0, 1)])): 'top left', tuple(sorted([(-1, 0), (1, 0), (0, 1)])): 'top', tuple(sorted([(-1, 0), (0, 1)])): 'top right',
-                                        tuple(sorted([(0, -1), (0, 1), (-1, 0)])): 'right', tuple(sorted([(0, -1), (-1, 0)])): 'bottom right', tuple(sorted([(-1, 0), (0, -1), (1, 0)])): 'bottom',
-                                        tuple(sorted([(0, -1), (1, 0)])): 'bottom left', tuple(sorted([(0, -1), (1, 0), (0, 1)])): 'left', tuple(sorted([(-1, 0), (0, -1), (1, 0), (0, 1)])): 'centre'}
+        self.neighbour_auto_tile_map = {tuple(sorted([])): 'single', tuple(sorted([(0, -1)])): 'bottom_end', tuple(sorted([(1, 0)])): 'left_end', tuple(sorted([(0, 1)])): 'top_end',
+                                        tuple(sorted([(-1, 0)])): 'right_end', tuple(sorted([(-1, 0), (1, 0)])): 'left_right', tuple(sorted([(0, -1), (0, 1)])): 'top_bottom',
+                                        tuple(sorted([(1, 0), (0, 1)])): 'top_left', tuple(sorted([(-1, 0), (1, 0), (0, 1)])): 'top', tuple(sorted([(-1, 0), (0, 1)])): 'top_right',
+                                        tuple(sorted([(0, -1), (0, 1), (-1, 0)])): 'right', tuple(sorted([(0, -1), (-1, 0)])): 'bottom_right', tuple(sorted([(-1, 0), (0, -1), (1, 0)])): 'bottom',
+                                        tuple(sorted([(0, -1), (1, 0)])): 'bottom_left', tuple(sorted([(0, -1), (1, 0), (0, 1)])): 'left', tuple(sorted([(-1, 0), (0, -1), (1, 0), (0, 1)])): 'centre'}
         self.corner_offsets = [(-1, -1), (1, -1), (1, 1), (-1, 1)]
         self.corner_auto_tile_map = {(-1, -1): 'tl', (1, -1): 'tr', (1, 1): 'br', (-1, 1): 'bl'}
+        self.missing_images = []
+        self.empty_image = pg.Surface((1, 1))
+        self.empty_image.set_colorkey((0, 0, 0))
 
     def s_to_ms(self, s):
         return int(s * 1000)
@@ -69,23 +72,26 @@ class Utilities:
             images.append(self.load_image(path=path + '/' + image_name))
         return images
 
-    def get_image(self, name, animated=True, alpha=None):
-        if name in self.main.assets.images['other2']['images']:
-            image = self.main.assets.images['other2']['images'][name][self.main.assets.images['other2']['data'][name]['frame_index'] if animated else 0].copy()
+    def get_image(self, group, name, animated=True, alpha=None):
+        if group in self.main.assets.images and name in self.main.assets.images[group]:
+            image = self.main.assets.images[group][name]['frames'][self.main.assets.images[group][name].get('frame_index', 0) if animated else 0].copy()
             if alpha is not None and alpha != 255:
                 image.set_alpha(alpha)
             return image
+        else:
+            if self.main.testing:
+                group_name = f'{group} - {name}'
+                if group_name not in self.missing_images:
+                    print(f"'{group_name}' image file not found...")
+                    self.missing_images.append(group_name)
+            return self.empty_image.copy()
 
     def get_sprite(self, name, state=None, animated=True, alpha=None):
         if name in ['no object', 'no tile']:
-            return self.main.assets.images['toolbar']['empty']
+            return self.get_image(group='toolbar', name='empty', animated=False)
         if not state:
             state = name
-        if name in self.main.assets.images['sprite_list'] and state in self.main.assets.images['sprites_data'][name]['state_list']:
-            sprite = self.main.assets.images['sprites'][name][state][self.main.assets.images['sprites_data'][name]['frame_data'][state]['frame_index'] if animated else 0].copy()
-            if alpha is not None and alpha != 255:
-                sprite.set_alpha(alpha)
-            return sprite
+        return self.get_image(group=name, name=state, animated=animated, alpha=alpha)
 
     def get_colour(self, colour, alpha=0):
         if colour in self.main.assets.colours:

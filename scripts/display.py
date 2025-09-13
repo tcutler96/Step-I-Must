@@ -26,7 +26,7 @@ class Display:
         self.window = pg.display.set_mode(size=self.window_size, flags=pg.OPENGL | pg.DOUBLEBUF)
         self.main.assets.post_load()
         pg.display.set_caption(self.main.game_name)
-        pg.display.set_icon(self.main.assets.images['other']['game_icon'])
+        pg.display.set_icon(self.main.utilities.get_image(group='other', name='game_icon'))
         self.cursor = Cursor(main=self.main)
         self.rect = pg.Rect((0, 0), self.size)
 

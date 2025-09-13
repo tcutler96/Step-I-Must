@@ -44,7 +44,7 @@ class LevelEditor:
                             if corner_tile_data and corner_tile_data['name'] == tile['name']:
                                 pass
                             else:
-                                state += f'-{self.main.utilities.corner_auto_tile_map[corner]}'
+                                state += f'_{self.main.utilities.corner_auto_tile_map[corner]}'
                 tile['state'] = state
 
     def temp_save_tilemap(self):
@@ -63,7 +63,7 @@ class LevelEditor:
     def compare_cells(self, cell_1, cell_2):
         for cell in [cell_1, cell_2]:
             if cell.elements['tile'] and cell.elements['tile']['name'] == 'wall':
-                cell.elements['tile']['state'] = 'auto-tile'
+                cell.elements['tile']['state'] = 'auto_tile'
         return cell_1.elements == cell_2.elements
 
     def check_unique_elements(self, cell):

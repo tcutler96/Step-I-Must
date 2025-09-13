@@ -44,19 +44,31 @@ class Assets:
     def post_load(self):
         self.images = self.load_images()
 
-    def list_directory(self, path):
+    def list_directory(self, path, folders=True, extensions='all'):
+        directory = []
+        if extensions is None:
+            extensions = []
+        elif extensions != 'all' and not isinstance(extensions, list):
+            extensions = [extensions]
         for f in os.listdir(path):
             if not f.startswith('.'):
-                yield f
+                p = os.path.join(path, f)
+                if os.path.isdir(p):
+                    if folders:
+                        directory.append(f)
+                else:
+                    if extensions == 'all' or f.split('.')[-1] in extensions:
+                        directory.append(f)
+        return directory
 
     def load_audio(self):
         path = os.path.join(self.assets_path, 'audio')
         audio = {}
-        for folder in self.list_directory(path=path):
+        for folder in self.list_directory(path=path, extensions=None):
             if folder in ['music', 'sound']:
                 folder_path = os.path.join(path, folder)
                 folder_audio = {}
-                for file in self.list_directory(path=folder_path):
+                for file in self.list_directory(path=folder_path, folders=False, extensions=['wav', 'mp3']):
                     if folder == 'music':
                         music = pg.mixer.Sound(file=os.path.join(folder_path, file))
                         folder_audio[file.split('.')[0]] = {'path': os.path.join(folder_path, file), 'length': int(music.get_length() * 1000)}
@@ -69,107 +81,81 @@ class Assets:
     def load_fonts(self):
         path = os.path.join(self.assets_path, 'fonts')
         fonts = {}
-        for file in self.list_directory(path=path):
-            if file.endswith('.ttf'):
-                fonts[file.split('.')[0]] = pg.freetype.Font(file=os.path.join(path, file), size=0)
+        for file in self.list_directory(path=path, folders=False, extensions='ttf'):
+            fonts[file.split('.')[0]] = pg.freetype.Font(file=os.path.join(path, file), size=0)
         return fonts
+
+    def load_image_data(self, folder_path, image_path, sprite):
+        image_sheet = self.main.utilities.load_image(path=os.path.join(folder_path, image_path))
+        image_info = image_path.split('.')[0].split(' _ ')[-1].split(' -- ')
+        if sprite:
+            image_size = (image_sheet.get_height(), image_sheet.get_height())
+            num_frames = image_sheet.get_width() // image_size[1]
+        elif len(image_info) > 1:
+            num_frames = int(image_info[1])
+            image_size = (image_sheet.get_width() // num_frames, image_sheet.get_height())
+        else:
+            image_size = None
+            num_frames = 1
+        image_info = image_info[0].split(' - ')
+        if len(image_info) > 1:
+            frame_counts = image_info[1]
+        else:
+            frame_counts = None
+        image_name = image_info[0]
+        if num_frames > 1:
+            frames = []
+            if frame_counts:
+                frames_counts = [int(frame_count) for frame_count in frame_counts.split(', ')]
+                if len(frames_counts) != num_frames:
+                    frames_counts = frames_counts + [frames_counts[-1]] * (num_frames - len(frames_counts))
+            else:
+                frames_counts = [60] * num_frames
+            for frame_num in range(num_frames):
+                frames.append(image_sheet.subsurface(pg.Rect((frame_num * image_size[0], 0), image_size)))
+            image_data = {'frames': frames, 'frame_counts': frames_counts, 'num_frames': num_frames, 'frame_count': 0, 'frame_index': 0, 'loops': 0}
+        else:
+            image_data = {'frames': [image_sheet]}
+        return image_name, image_data
 
     def load_images(self):
         path = os.path.join(self.assets_path, 'images')
         images = {}
-        for folder in self.list_directory(path=path):
+        for folder in self.list_directory(path=path, extensions=None):
             folder_path = os.path.join(path, folder)
-            if os.path.isdir(folder_path):
-
-
-
-                if folder == 'other2':
-                    other_images = {}
-                    other_data = {}
-                    for image in self.list_directory(path=folder_path):
-                        image_info = image[:-4].split(' - ')
-                        if len(image_info) > 1:
-                            frames = []
-                            image_sheet = self.main.utilities.load_image(path=os.path.join(folder_path, image))
-                            num_frames = int(image_info[1])
-                            image_size = (image_sheet.get_width() // num_frames, image_sheet.get_height())
-                            if len(image_info) > 2:
-                                frames_counts = [int(frame_count) for frame_count in image_info[2].split(', ')]
-                                if len(frames_counts) != num_frames:
-                                    frames_counts = frames_counts + [frames_counts[-1]] * (num_frames - len(frames_counts))
-                            else:
-                                frames_counts = [60] * num_frames
-                            for frame in range(num_frames):
-                                frames.append(image_sheet.subsurface(pg.Rect((frame * image_size[0], 0), image_size)))
-                            other_images[image_info[0]] = frames
-                            other_data[image_info[0]] = {'frame_counts': frames_counts, 'num_frames': num_frames, 'frame_count': 0, 'frame_index': 0, 'loops': 0}
-                        else:
-                            other_images[image_info[0]] = self.main.utilities.load_image(path=os.path.join(folder_path, image))
-                    images[folder] = {'images': other_images, 'data': other_data}
-
-
-
-                elif folder != 'sprites':
-                    folder_images = {}
-                    for image in self.list_directory(path=folder_path):
-                        folder_images[image.split('.')[0]] = self.main.utilities.load_image(path=os.path.join(folder_path, image))
-                    images[folder] = folder_images
-                else:
-                    sprites = {}
-                    sprites_data = {}
-                    for sprite_type in self.list_directory(path=folder_path):
-                        sprite_type_path = os.path.join(folder_path, sprite_type)
-                        for sprite_folder_name in self.list_directory(path=sprite_type_path):
-                            sprite_name = sprite_folder_name.split('_')[-1]
-                            sprite_name_path = os.path.join(sprite_type_path, sprite_folder_name)
-                            if os.path.isdir(sprite_name_path):
-                                sprite = {}
-                                frame_data = {}
-                                for sprite_file in self.list_directory(path=sprite_name_path):
-                                    frames = []
-                                    sprite_info = sprite_file[:-4].split(' - ')
-                                    sprite_sheet = self.main.utilities.load_image(path=os.path.join(sprite_name_path, sprite_file))
-                                    sprite_size = sprite_sheet.get_height()
-                                    num_frames = sprite_sheet.get_width() // sprite_size
-                                    if num_frames > 1:
-                                        if len(sprite_info) > 1:
-                                            frames_counts = [int(frame_count) for frame_count in sprite_info[1].split(', ')]
-                                            if len(frames_counts) != num_frames:
-                                                frames_counts = frames_counts + [frames_counts[-1]] * (num_frames - len(frames_counts))
-                                        else:
-                                            frames_counts = [60] * num_frames
-                                    else:
-                                        frames_counts = None
-                                    for frame in range(num_frames):
-                                        frames.append(sprite_sheet.subsurface(pg.Rect((frame * sprite_size, 0), (sprite_size, sprite_size))))
-                                    sprite_info = sprite_info[0].split('_')[-1]
-                                    sprite[sprite_info] = frames
-                                    frame_data[sprite_info] = {'frame_counts': frames_counts, 'num_frames': num_frames, 'frame_count': 0, 'frame_index': 0, 'loops': 0}
-                                sprites[sprite_name] = sprite
-                                sprites_data[sprite_name] = {'frame_data': frame_data, 'state_list': list(sprite), 'num_states': len(list(sprite)), 'sprite_type': sprite_type[:-1]}
-                    images['sprites'] = sprites
-                    images['sprites_data'] = sprites_data
-                    images['sprite_list'] = list(sprites_data)
-        print(images.keys())
-        print(images['other2']['data'])
+            if folder == 'sprites':
+                for sprite_type in self.list_directory(path=folder_path, extensions=None):
+                    sprite_type_path = os.path.join(folder_path, sprite_type)
+                    for sprite_name in self.list_directory(path=sprite_type_path, extensions=None):
+                        sprite_name_path = os.path.join(sprite_type_path, sprite_name)
+                        sprite_name = sprite_name.split(' _ ')[1]
+                        folder_images = {}
+                        for sprite_file in self.list_directory(path=sprite_name_path, folders=False, extensions=['png', 'jpg']):
+                            image_name, image_data = self.load_image_data(folder_path=sprite_name_path, image_path=sprite_file, sprite=True)
+                            folder_images[image_name] = image_data
+                        images[sprite_name] = folder_images
+            else:
+                folder_images = {}
+                for image in self.list_directory(path=folder_path, folders=False, extensions=['png', 'jpg']):
+                    image_name, image_data = self.load_image_data(folder_path=folder_path, image_path=image, sprite=False)
+                    folder_images[image_name] = image_data
+                images[folder] = folder_images
         return images
 
     def load_levels(self):
         path = os.path.join(self.assets_path, 'levels')
         levels = {}
-        for file in self.list_directory(path=path):
-            if file.endswith('.json'):
-                with open(os.path.join(path, file), 'r') as file_data:
-                    levels[file.split('.')[0]] = json.load(file_data)
+        for file in self.list_directory(path=path, folders=False, extensions='json'):
+            with open(os.path.join(path, file), 'r') as file_data:
+                levels[file.split('.')[0]] = json.load(file_data)
         return levels
 
     def load_shaders(self):
         path = os.path.join(self.assets_path, 'shaders')
         shaders = {}
-        for file in self.list_directory(path=path):
-            if file.endswith('.glsl'):
-                with open(os.path.join(path, file), 'r') as file_data:
-                    shaders[file.split('.')[0]] = file_data.read()
+        for file in self.list_directory(path=path, folders=False, extensions='glsl'):
+            with open(os.path.join(path, file), 'r') as file_data:
+                shaders[file.split('.')[0]] = file_data.read()
         return shaders
 
     def load_data(self):
@@ -260,30 +246,21 @@ class Assets:
             self.settings['menus']['choose_level']['Back'] = ['button', 'game_state', 'main_menu']
 
     def reset_sprite(self, name):
+        # update this for new image dict
         for state, frame_data in self.main.assets.images['sprites_data'][name]['frame_data'].items():
-            if state.endswith(' animated'):
+            if state.endswith('_animated'):
                 frame_data['frame_count'] = 0
                 frame_data['frame_index'] = 0
                 frame_data['loops'] = 0
 
     def update(self):
-        for image_data in self.images['other2']['data'].values():
-            if image_data['num_frames'] > 1:
-                image_data['frame_count'] += 1
-                if image_data['frame_count'] >= image_data['frame_counts'][image_data['frame_index']]:
-                    image_data['frame_count'] = 0
-                    image_data['frame_index'] += 1
-                    if image_data['frame_index'] >= image_data['num_frames']:
-                        image_data['frame_index'] = 0
-                        image_data['loops'] += 1
-        for sprite_name, sprite_data in self.images['sprites_data'].items():
-            for sprite_state, state_data in self.images['sprites_data'][sprite_name]['frame_data'].items():
-                if sprite_state not in ['states', 'num_states', 'sprite_type']:
-                    if state_data['num_frames'] > 1:
-                        state_data['frame_count'] += 1
-                        if state_data['frame_count'] >= state_data['frame_counts'][state_data['frame_index']]:
-                            state_data['frame_count'] = 0
-                            state_data['frame_index'] += 1
-                            if state_data['frame_index'] >= state_data['num_frames']:
-                                state_data['frame_index'] = 0
-                                state_data['loops'] += 1
+        for group_data in self.images.values():
+            for image_data in group_data.values():
+                if 'frame_counts' in image_data:
+                    image_data['frame_count'] += 1
+                    if image_data['frame_count'] >= image_data['frame_counts'][image_data['frame_index']]:
+                        image_data['frame_count'] = 0
+                        image_data['frame_index'] += 1
+                        if image_data['frame_index'] >= image_data['num_frames']:
+                            image_data['frame_index'] = 0
+                            image_data['loops'] += 1

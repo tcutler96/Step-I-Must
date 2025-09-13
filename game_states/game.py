@@ -39,9 +39,9 @@ class Game:
     def reset_animations(self, force_reset=False):
         for cell in self.level.get_cells():
             for element in cell.elements.values():
-                if element and element['state'].endswith(' animated') and not element['state'].startswith('portal'):
+                if element and element['state'].endswith('_animated') and not element['state'].startswith('portal'):
                     if self.main.assets.images['sprites_data'][element['name']]['frame_data'][element['state']]['loops'] or force_reset:
-                        element['state'] = element['state'].replace(' animated', '')
+                        element['state'] = element['state'].replace('_animated', '')
 
     def reset_objects_while(self):
         for cell in self.level.get_cells():
@@ -327,9 +327,9 @@ class Game:
                                         if portal.startswith(level['name']):
                                             level_cell = level['level'][tuple(self.main.assets.data['teleporters']['portals'][portal]['position'])]
                                             if level_cell.check_element(name='teleporter', state='portal'):
-                                                level_cell.elements['tile']['state'] += ' animated'
+                                                level_cell.elements['tile']['state'] += '_animated'
 
-                        if cell.check_element(name='teleporter', state=['reciever', 'sender', 'portal animated']):  # teleporters
+                        if cell.check_element(name='teleporter', state=['reciever', 'sender', 'portal_animated']):  # teleporters
                             self.teleporter_data['standing'].append({'state': cell.elements['tile']['state'].split(' ')[0], 'level_and_position': level_and_position})
 
             if self.teleporter_data['standing']:
@@ -582,8 +582,8 @@ class Game:
         self.resolve_state = 'end'
 
     def trigger_animation(self, cell, object_type):
-        if not cell.elements[object_type]['state'].endswith(' animated'):
-            cell.elements[object_type]['state'] += ' animated'
+        if not cell.elements[object_type]['state'].endswith('_animated'):
+            cell.elements[object_type]['state'] += '_animated'
         self.main.assets.reset_sprite(name=cell.elements[object_type]['name'])
 
     def remove_extra_players(self):

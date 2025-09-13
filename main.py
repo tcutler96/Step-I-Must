@@ -29,6 +29,8 @@ class Main:
         self.runtime_frames = 0
         self.runtime_seconds = 0
         self.sprite_size = 16
+        self.debug = False
+        self.testing = True
         self.assets_path = os.path.join(os.path.abspath(os.curdir), 'assets')
         self.assets = Assets(main=self)
         self.utilities = Utilities(main=self)
@@ -44,8 +46,6 @@ class Main:
         self.game_states = {'splash': Splash(main=self), 'main_menu': MainMenu(main=self), 'game': Game(main=self), 'level_editor': LevelEditor(main=self)}
         self.game_states[self.game_state].start_up()
         self.audio.start_music(game_state=self.game_state, fade=5)
-        self.debug = False
-        self.testing = True
         self.draw_gol = False
         self.clear_gol = False
 

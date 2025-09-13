@@ -66,4 +66,4 @@ class Tutorial:
             for key in tutorial_data['keys']:
                 self.main.text_handler.activate_text(text_group='tutorial', text_id=f'{self.level_name}_{key['text'][tutorial_data['active_keys']]}')
             for sprite in tutorial_data['sprites']:
-                displays[self.display_layer].blit(source=self.main.assets.images['other'][sprite['type']], dest=(sprite['position'][0], sprite['position'][1] + self.main.utilities.get_text_bounce(bounce=3)))
+                displays[self.display_layer].blit(source=self.main.utilities.get_image(group='other', name=sprite['type']), dest=(sprite['position'][0], sprite['position'][1] + self.main.utilities.get_text_bounce(bounce=3)))

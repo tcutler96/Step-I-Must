@@ -24,6 +24,12 @@
 - in assets, save copies of images that have had their alpha set, so that future calls just grab the image instead of having to re set it ({image: alpha[0-255]: surface})
 - changing order that elements are drawn does not seem to update in game, may need to draw barriers before objects/ players
 - align text handler bounce properly with asset animation timer
+- rename data map data to include '_', use backup data file, need to update all the wall elements in all the levels as well, loop over all levels, then all cells, then equals wall, change state name ('-' and ' ' to '_')
+- animate game icon itself, rather than pulling from player idle sprite
+- cant see collectable sprites in level editor toolbar, need to update names to include '_'
+- reverse toolbar marker animation?
+- add border to level editor toolbar, crude implementation in place but we need to clean up the corners and stop them from overlapping
+- update reset sprite function in assets to work with new image dict
 
 
 *** game bugs ***

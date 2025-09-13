@@ -29,7 +29,7 @@ class Level:
         self.active_level = 0
         self.max_cached_levels = 100
         self.cached_levels = []
-        self.undo_redo_delay = self.main.assets.settings['gameplay']['hold_to_undo']
+        self.undo_redo_delay = self.main.assets.settings['game']['hold_to_undo']
         self.undo_redo_timer = 0
         self.default_levels = ['empty', 'filled']
 

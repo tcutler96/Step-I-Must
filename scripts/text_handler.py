@@ -17,6 +17,7 @@ class TextHandler:
         self.add_text(text_group='main', text_id='restore_data', text='data restored', position='top')
         self.add_text(text_group='main', text_id='restore_settings', text='settings restored', position='top')
         self.add_text(text_group='main', text_id='resave_levels', text='levels resaved', position='top')
+        self.add_text(text_group='main', text_id='update_levels', text='levels updated', position='top')
         self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_up=8.5, alpha_down=8.5, size=24, shadow_offset='mouse')
         self.add_text(text_group='splash', text_id='hoolio', text='with hoolio audio', position='centre', alpha_up=8.5, alpha_down=8.5, size=28, shadow_offset='mouse')
         self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_up=8.5, alpha_down=8.5, colour='purple', size=28)
@@ -43,9 +44,9 @@ class TextHandler:
         self.add_text(text_group='map', text_id='redo', text='Redo: c | 6', position=(56, 136), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
         self.add_text(text_group='map', text_id='toggle_map', text='Toggle map: space', position=(56, 152), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
         self.add_text(text_group='map', text_id='100%', text='Well Done!', position=(424, 294), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.game_state_text_groups = {'game': ['tutorial', 'cutscene', 'game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'shaders', 'audio', 'gameplay', 'developer', 'quit_game'],
+        self.game_state_text_groups = {'game': ['tutorial', 'cutscene', 'game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'shaders', 'audio', 'game', 'developer', 'quit_game'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],
-                                       'main_menu': ['title_screen', 'options', 'video', 'shaders', 'audio', 'gameplay', 'developer', 'quit_game', 'new_game', 'are_you_sure', 'choose_level'],
+                                       'main_menu': ['title_screen', 'options', 'video', 'shaders', 'audio', 'game', 'developer', 'quit_game', 'new_game', 'are_you_sure', 'choose_level'],
                                        'splash': ['splash']}
 
     def add_text(self, text_group, text_id, text, position, bounce=3, alpha_up=25.5, alpha_down=25.5, alignment=('c', 'c'), colour='light_green', bg_colour=None, shadow_colour='dark_purple', shadow_offset='sway',

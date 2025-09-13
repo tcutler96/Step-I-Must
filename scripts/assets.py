@@ -33,13 +33,13 @@ class Assets:
                         'light_green': (142, 184, 158),
                         'bright_green': (127, 255, 127)}
         self.settings_changed = False
-        self.option_to_setting = {'video': {'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4}},
+        self.option_to_setting = {'game': {'movement_speed': {'slow': 0.125, 'fast': 0.25}, 'hold_to_move': {'disabled': -1, 'slow': 15, 'fast': 5},
+                                           'hold_to_undo': {'disabled': -1, 'slow': 15, 'fast': 5}, 'cutscene_speed': {'slow': 0, 'fast': 1}},
+                                  'video': {'resolution': {'(448,_320)': 1, '(896,_640)': 2, '(1344,_960)': 3, '(1792,_1280)': 4}},
                                   'shaders': {'background': {'game_of_life': 'gol'}},
                                   'audio': {'master_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1},
                                             'music_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1},
-                                            'sound_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1}},
-                                  'gameplay': {'cutscene_speed': {'slow': 0, 'fast': 1}, 'hold_to_move': {'disabled': -1, 'slow': 15, 'fast': 5},
-                                               'hold_to_undo': {'disabled': -1, 'slow': 15, 'fast': 5}, 'movement_speed': {'slow': 0.125, 'fast': 0.25}}}
+                                            'sound_volume': {'disabled': 0, '10%': 0.1, '20%': 0.2, '30%': 0.3, '40%': 0.4, '50%': 0.5, '60%': 0.6, '70%': 0.7, '80%': 0.8, '90%': 0.9, '100%': 1}}}
 
     def post_load(self):
         self.images = self.load_images()
@@ -198,16 +198,26 @@ class Assets:
         elif option == 'disabled':
             option = False
         self.settings[group][name] = option
-        if group == 'video':
-            if name == 'cursor_type':
-                self.main.display.cursor.cursor_type = option
+        if group == 'game':
+            if name == 'movement_speed':
+                self.main.game_states['game'].movement_speed = option
+            elif name == 'hold_to_move':
+                self.main.game_states['game'].move_delay = option
+            elif name == 'hold_to_undo':
+                self.main.game_states['game'].level.undo_redo_delay = option
+                self.main.game_states['level_editor'].level.undo_redo_delay = option
+            elif name == 'cutscene_speed':
+                self.main.game_states['game'].cutscene.bars_speed = self.main.game_states['game'].cutscene.bars_max_offset / (((1 - option) * 1 + option * 0.5) * self.main.fps)
+                self.main.game_states['game'].cutscene.text_speed = (1 - option) * 0.5 + option * 1
+                self.main.game_states['game'].cutscene.line_pause = (1 - option) * 1 + option * 0.25
             elif name == 'map_colour':
                 self.main.game_states['game'].map.map_colour = option
-            elif name == 'particles':  # reference main/ particle handler...
-                pass
-            elif name == 'resolution':
+        elif group == 'video':
+            if name == 'resolution':
                 return self.main.display.change_resolution(scale_factor=option)
-            elif name == 'screen_shake':  # reference game class
+            elif name == 'cursor_type':
+                self.main.display.cursor.cursor_type = option
+            elif name == 'particles':  # reference particle handler once added...
                 pass
         elif group == 'shaders':
             self.main.audio.change_volume(audio_type=name)
@@ -215,26 +225,32 @@ class Assets:
                 self.main.shaders.apply_shaders = option
             elif name == 'background':
                 self.main.shaders.background = option
-            elif name == 'chromatic_aberration':
-                self.main.shaders.chromatic_aberration = option
+            elif name == 'chromatic_ui':
+                self.main.shaders.chromatic_ui = option
             elif name == 'crt':
                 self.main.shaders.crt = option
             elif name == 'vignette':
                 self.main.shaders.vignette = option
         elif group == 'audio':
             self.main.audio.change_volume(audio_type=name)
-        elif group == 'gameplay':
-            if name == 'cutscene_speed':
-                self.main.game_states['game'].cutscene.bars_speed = self.main.game_states['game'].cutscene.bars_max_offset / (((1 - option) * 1 + option * 0.5) * self.main.fps)
-                self.main.game_states['game'].cutscene.text_speed = (1 - option) * 0.5 + option * 1
-                self.main.game_states['game'].cutscene.line_pause = (1 - option) * 1 + option * 0.25
-            elif name == 'hold_to_move':
-                self.main.game_states['game'].move_delay = option
-            elif name == 'hold_to_undo':
-                self.main.game_states['game'].level.undo_redo_delay = option
-                self.main.game_states['level_editor'].level.undo_redo_delay = option
-            elif name == 'movement_speed':
-                self.main.game_states['game'].movement_speed = option
+
+    def trigger_button(self, button):
+        if button == 'reset_game_data':
+            self.main.assets.reset_game_data(clear=True)
+            self.main.update_menu(menu='title_screen')
+            self.main.change_game_state(game_state='main_menu')
+        elif button == 'update_levels':
+            self.main.utilities.update_levels()
+        elif button == 'resave_levels':
+            self.main.utilities.resave_levels()
+        elif button == 'backup_data':
+            self.main.utilities.backup_file(file_name='data')
+        elif button == 'backup_settings':
+            self.main.utilities.backup_file(file_name='settings')
+        elif button == 'restore_data':
+            self.main.utilities.restore_file(file_name='data')
+        elif button == 'restore_settings':
+            self.main.utilities.restore_file(file_name='settings')
 
     def update_menu(self, menu=None):
         if menu == 'choose_level':

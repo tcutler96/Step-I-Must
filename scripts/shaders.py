@@ -17,7 +17,7 @@ class Shaders:
         self.frame_buffer = self.context.framebuffer(color_attachments=self.render_buffer)
         self.apply_shaders = self.main.assets.settings['shaders']['all']
         self.background = self.main.assets.settings['shaders']['background']
-        self.chromatic_aberration = self.main.assets.settings['shaders']['chromatic_aberration']
+        self.chromatic_ui = self.main.assets.settings['shaders']['chromatic_ui']
         self.crt = self.main.assets.settings['shaders']['crt']
         self.vignette = self.main.assets.settings['shaders']['vignette']
         self.effect_data_length = 10
@@ -137,13 +137,13 @@ class Shaders:
     def update(self, mouse_position):
         if self.main.testing and self.main.events.check_key('v', 'held'):
             self.apply_effect(display_layer=['level_background', 'level_main'], effect='invert', effect_data={'length': 1})
-        if self.chromatic_aberration:
+        if self.chromatic_ui:
             self.apply_effect(display_layer=['ui'], effect='chromatic', effect_data={'length': 0})
         if self.background:
             self.apply_effect(display_layer=['background'], effect=self.background, effect_data={'length': 0})
         self.update_effect_data()
         self.set_uniforms(uniforms={'time': self.main.runtime_seconds, 'mouse_active': self.main.events.mouse_active, 'mouse_position': mouse_position,
-                                    'chromatic_aberration': self.chromatic_aberration and self.apply_shaders, 'crt': self.crt and self.apply_shaders,
+                                    'chromatic_ui': self.chromatic_ui and self.apply_shaders, 'crt': self.crt and self.apply_shaders,
                                     'vignette': self.vignette and self.apply_shaders} | self.get_effect_data_uniforms())
 
     def reset_effects(self):

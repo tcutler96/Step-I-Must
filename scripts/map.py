@@ -5,7 +5,7 @@ class Map:
     def __init__(self, main):
         self.main = main
         self.show_map = False
-        self.map_colour = self.main.assets.settings['video']['map_colour']
+        self.map_colour = self.main.assets.settings['game']['map_colour']
         self.cell_size = self.main.sprite_size
         part_one_offset = (304.0, 128.0)
         part_two_offset = (240.0, 400.0)

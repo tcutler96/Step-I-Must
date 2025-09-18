@@ -21,29 +21,44 @@ class TextHandler:
         self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_up=8.5, alpha_down=8.5, size=24, shadow_offset='mouse')
         self.add_text(text_group='splash', text_id='hoolio', text='with hoolio audio', position='centre', alpha_up=8.5, alpha_down=8.5, size=28, shadow_offset='mouse')
         self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_up=8.5, alpha_down=8.5, colour='purple', size=28)
-        self.add_text(text_group='level_editor', text_id='controls', text='Controls', position=(426, 232), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, style='underline', display_layer='level_map')
-        self.add_text(text_group='level_editor', text_id='place', text='Place: LMB', position=(426, 248), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='level_editor', text_id='copy', text='Copy: MMB', position=(426, 264), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='level_editor', text_id='clear', text='Clear: RMB', position=(426, 280), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
+        self.add_text(text_group='level_editor', text_id='controls', text='Controls', position=(self.main.display.width - self.main.display.level_offset[0] // 2, self.main.display.height - self.main.display.level_offset[1] - 56),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, style='underline', display_layer='level_map')
+        self.add_text(text_group='level_editor', text_id='place', text='Place: LMB', position=(self.main.display.width - self.main.display.level_offset[0] // 2, self.main.display.height - self.main.display.level_offset[1] - 40),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
+        self.add_text(text_group='level_editor', text_id='copy', text='Copy: MMB', position=(self.main.display.width - self.main.display.level_offset[0] // 2, self.main.display.height - self.main.display.level_offset[1] - 24),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
+        self.add_text(text_group='level_editor', text_id='clear', text='Clear: RMB', position=(self.main.display.width - self.main.display.level_offset[0] // 2, self.main.display.height - self.main.display.level_offset[1] - 8),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
         self.add_text(text_group='level_editor', text_id='reset', text='level reset', position='bottom_right', bounce=-3, alignment=('r', 'c'))
         self.add_text(text_group='level_editor', text_id='saved', text='level saved', position='bottom_right', bounce=-3, alignment=('r', 'c'))
         self.add_text(text_group='game', text_id='reset', text='move to reset', position='centre', bounce=-3, display_layer='level_ui')
         self.add_text(text_group='game', text_id='warp', text=f"press 'e' to warp", position='top', bounce=-3, display_layer='level_main')
         self.add_text(text_group='game', text_id='set_warp', text=f"press 'e' to set warp", position='top', bounce=-3, display_layer='level_main')
         self.add_text(text_group='game', text_id='warp?', text=f"{{*<¡>*}} press 'e' to warp {{*<¡>*}}", position='top', bounce=-3, display_layer='level_main', style='itallic')
-        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(424, 40), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, style='underline', display_layer='level_map')
         for steps in range(-9, 10):
             self.add_text(text_group='steps', text_id=steps, text=str(steps), position='top_left', bounce=-3, alignment=('l', 'c'), display_layer='level_main')
+        self.add_text(text_group='map', text_id='controls', text='Controls', position=(self.main.display.level_offset[0] // 2, self.main.display.level_offset[1] + 8),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, style='underline', display_layer='level_map')
+        self.add_text(text_group='map', text_id='move', text='Move: wasd | arrows', position=(self.main.display.level_offset[0] // 2, self.main.display.level_offset[1] + 24),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
+        self.add_text(text_group='map', text_id='menu', text='Menu: escape | p', position=(self.main.display.level_offset[0] // 2, self.main.display.level_offset[1] + 40),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
+        self.add_text(text_group='map', text_id='map', text='Map: tab | m', position=(self.main.display.level_offset[0] // 2, self.main.display.level_offset[1] + 56),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
+        self.add_text(text_group='map', text_id='teleport', text='Teleport: LMB', position=(self.main.display.level_offset[0] // 2, self.main.display.level_offset[1] + 72),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
+        self.add_text(text_group='map', text_id='undo', text='Undo: z | 4', position=(self.main.display.level_offset[0] // 2, self.main.display.level_offset[1] + 88),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
+        self.add_text(text_group='map', text_id='redo', text='Redo: c | 6', position=(self.main.display.level_offset[0] // 2, self.main.display.level_offset[1] + 104),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
+        self.add_text(text_group='map', text_id='toggle_map', text='Toggle map: space', position=(self.main.display.level_offset[0] // 2, self.main.display.level_offset[1] + 120), alpha_up=8.5,
+                      alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
+        self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(self.main.display.width - self.main.display.level_offset[0] // 2, self.main.display.level_offset[1] + 8),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], style='underline', display_layer='level_map')
+        # level editor controls
+        self.add_text(text_group='map', text_id='100%', text='Well Done!', position=(self.main.display.width - self.main.display.level_offset[0] // 2, self.main.display.height - self.main.display.level_offset[1] + 8),
+                      alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
         self.add_sign_text()
-        self.add_text(text_group='map', text_id='controls', text='Controls', position=(56, 40), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, style='underline', display_layer='level_map')
-        self.add_text(text_group='map', text_id='move', text='Move: wasd | arrows', position=(56, 56), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='map', text_id='menu', text='Menu: escape | p', position=(56, 72), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='map', text_id='map', text='Map: tab | m', position=(56, 88), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='map', text_id='teleport', text='Teleport: LMB', position=(56, 104), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='map', text_id='undo', text='Undo: z | 4', position=(56, 120), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='map', text_id='redo', text='Redo: c | 6', position=(56, 136), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='map', text_id='toggle_map', text='Toggle map: space', position=(56, 152), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
-        self.add_text(text_group='map', text_id='100%', text='Well Done!', position=(424, 294), alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=104, display_layer='level_map')
         self.game_state_text_groups = {'game': ['tutorial', 'cutscene', 'game', 'map', 'steps', 'collectables', 'locks', 'signs', 'game_paused', 'options', 'video', 'shaders', 'audio', 'game', 'developer', 'quit_game'],
                                        'level_editor': ['title_screen', 'level_editor', 'toolbar', 'choose_level'],
                                        'main_menu': ['title_screen', 'options', 'video', 'shaders', 'audio', 'game', 'developer', 'quit_game', 'new_game', 'are_you_sure', 'choose_level'],

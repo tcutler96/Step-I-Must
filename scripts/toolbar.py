@@ -5,9 +5,6 @@ class Toolbar:
     def __init__(self, main):
         self.main = main
         self.display_layer = 'level_ui'
-        self.text_position = (288, 16)
-        self.text_size = 20
-        self.max_width = 174
         self.cell_marker_offset = (-3, -3)
         self.element_choices = {'objects': {'no object': ['no object'], 'player': ['idle', 'dead'], 'permanent flag': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
                                             'temporary flag': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], 'rock': ['rock'], 'statue': ['statue'],
@@ -16,6 +13,9 @@ class Toolbar:
                                           'player spawner': ['player spawner'], 'splitter': ['vertical', 'horizontal'], 'barrier': ['vertical', 'horizontal'],
                                           'teleporter': ['reciever', 'sender', 'portal'], 'lock': ['lock'], 'sign': ['sign'], 'star reseter': ['star reseter']}}
         self.button_choices = {'top': {'Reset Level': 'reset', 'Toggle Grid': 'grid', 'Play Level': 'play'}, 'right': {'Save Level': 'save', 'Load Level': 'load', 'Quit to Main Menu': 'quit'}}
+        self.text_size = 20
+        self.text_width = self.main.display.width - 24 * (len(self.element_choices['objects']) + len(self.button_choices['top']) + 2) - 16
+        self.text_position = (24 * (len(self.element_choices['objects']) + 1) + self.text_width // 2 + 8, 16)
         self.toolbar = self.get_toolbar()
         self.hovered_element = [None, None]
         self.last_hovered_element = [None, None]
@@ -23,9 +23,11 @@ class Toolbar:
         self.selected_tile = ['no tile', 0]
 
     def get_toolbar(self):
-        toolbar = {'background_rects': [pg.Rect(4, 4, 24 * (len(self.element_choices['objects']) + 1), 24), pg.Rect(4, 4, 24, 24 * (len(self.element_choices['tiles']) + 1)),
+        toolbar = {'background_rects': [pg.Rect(4, 4, 24 * (len(self.element_choices['objects']) + 1), 24),
+                                        pg.Rect(4, 4, 24, 24 * (len(self.element_choices['tiles']) + 1)),
                                         pg.Rect(self.main.display.width - 4, 4, -24 * (len(self.button_choices['top']) + 1), 24),
-                                        pg.Rect(self.main.display.width - 4, 4, -24, 24 * (len(self.button_choices['top']) + 1))]}
+                                        pg.Rect(self.main.display.width - 4, 4, -24, 24 * (len(self.button_choices['top']) + 1))],
+                   'background_rects_fix': [pg.Rect(24, 5, 4, 23), pg.Rect(self.main.display.width - 28, 5, 4, 23)]}
         buttons = {}
         for button_type in self.button_choices:
             for button_count, button_name in enumerate(self.button_choices[button_type]):
@@ -33,7 +35,7 @@ class Toolbar:
                 buttons[button_name] = {'position': button_position, 'sprite': self.main.utilities.get_image(group='toolbar', name=self.button_choices[button_type][button_name]),
                                         'rect': pg.Rect(button_position[0] - 4, button_position[1] - 4, 24, 24)}
                 self.main.text_handler.add_text(text_group='toolbar', text_id=button_name, text=button_name, position=self.text_position, bounce=-3,
-                                                alignment=('c', 'c'), size=self.text_size, max_width=self.max_width, display_layer=self.display_layer)
+                                                alignment=('c', 'c'), size=self.text_size, max_width=self.text_width, display_layer=self.display_layer)
         toolbar['buttons'] = buttons
         elements = {}
         for element_type in self.element_choices:
@@ -41,11 +43,11 @@ class Toolbar:
                 if element_name == 'no object':
                     element_data = {'position': [(32, 8)], 'rects': [pg.Rect(28, 4, 24, 24)], 'states': ['no object'], 'num_choices': 1, 'element_type': 'object'}
                     self.main.text_handler.add_text(text_group='toolbar', text_id='no object' + 'no object', text='no object', position=self.text_position, bounce=-3,
-                                                    alignment=('c', 'c'), size=self.text_size, max_width=self.max_width, display_layer=self.display_layer)
+                                                    alignment=('c', 'c'), size=self.text_size, max_width=self.text_width, display_layer=self.display_layer)
                 elif element_name == 'no tile':
                     element_data = {'position': [(8, 32)], 'rects': [pg.Rect(4, 28, 24, 24)], 'states': ['no tile'], 'num_choices': 1, 'element_type': 'tile'}
                     self.main.text_handler.add_text(text_group='toolbar', text_id='no tile' + 'no tile', text='no tile', position=self.text_position, bounce=-3,
-                                                    alignment=('c', 'c'), size=self.text_size, max_width=self.max_width, display_layer=self.display_layer)
+                                                    alignment=('c', 'c'), size=self.text_size, max_width=self.text_width, display_layer=self.display_layer)
                 else:
                     element_data = {'position': [], 'rects': [], 'states': []}
                     for state_count, element_state in enumerate(self.element_choices[element_type][element_name]):
@@ -55,7 +57,7 @@ class Toolbar:
                         element_data['rects'].append(pg.Rect(sprite_position[0] - 4, sprite_position[1] - 4, 24, 24))
                         element_data['states'].append(element_state)
                         self.main.text_handler.add_text(text_group='toolbar', text_id=element_name + element_state, text=element_name + (' - ' + element_state if element_state != element_name else ''),
-                                                        position=self.text_position, bounce=-3, alignment=('c', 'c'), size=self.text_size, max_width=self.max_width, display_layer=self.display_layer)
+                                                        position=self.text_position, bounce=-3, alignment=('c', 'c'), size=self.text_size, max_width=self.text_width, display_layer=self.display_layer)
                     element_data['num_choices'] = len(element_data['position'])
                     element_data['element_type'] = element_type[:-1]
                     if element_data['num_choices'] > 1:
@@ -115,10 +117,11 @@ class Toolbar:
         return selected_elememt
 
     def draw(self, displays):
-        # add smaller rects to cover up overlapping border...
         for background_rect in self.toolbar['background_rects']:
             pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['dark_purple'], rect=background_rect, border_radius=5)
             pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['purple'], rect=background_rect, width=1, border_radius=5)
+        for background_rect in self.toolbar['background_rects_fix']:
+            pg.draw.rect(surface=displays[self.display_layer], color=self.main.assets.colours['dark_purple'], rect=background_rect)
         for button_name, button_data in self.toolbar['buttons'].items():
             displays[self.display_layer].blit(source=button_data['sprite'], dest=button_data['position'])
             if button_name == self.hovered_element:

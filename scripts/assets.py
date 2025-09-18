@@ -262,12 +262,12 @@ class Assets:
             self.settings['menus']['choose_level']['Back'] = ['button', 'game_state', 'main_menu']
 
     def reset_sprite(self, name):
-        # update this for new image dict
-        for state, frame_data in self.main.assets.images['sprites_data'][name]['frame_data'].items():
-            if state.endswith('_animated'):
-                frame_data['frame_count'] = 0
-                frame_data['frame_index'] = 0
-                frame_data['loops'] = 0
+        if name in self.images:
+            for state, frame_data in self.images[name].items():
+                if state.endswith('_animated'):
+                    frame_data['frame_count'] = 0
+                    frame_data['frame_index'] = 0
+                    frame_data['loops'] = 0
 
     def update(self):
         for group_data in self.images.values():

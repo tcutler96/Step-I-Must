@@ -39,14 +39,13 @@ class Cutscene:
         self.collectable_sprite_position = None
         self.end_response = None
         self.end_trigger = False
-
-        self.cutscene_data = {'collectables': {'silver keys': [["A silver key, a hopeful chime.", "Yet all it give is more lost time."],
+        self.cutscene_data = {'collectables': {'silver_keys': [["A silver key, a hopeful chime.", "Yet all it give is more lost time."],
                                                                ["Each opened lock, a question grows.", "How deep this endless puzzle goes."]],
-                                               'silver gems': [["A silver gem, once left behind.", "Now claimed by me, no longer blind."],
+                                               'silver_gems': [["A silver gem, once left behind.", "Now claimed by me, no longer blind."],
                                                                ["It sat right there, just out of reach.", "Waiting till the game could teach."]],
-                                               'gold keys': [["A golden key, my fingers tight.", "Yet holding it gives no delight."],
+                                               'gold_keys': [["A golden key, my fingers tight.", "Yet holding it gives no delight."],
                                                              ["Each one I find just leads to more.", "Like some unending, thankless chore."]],
-                                               'gold gems': [["A golden gem, so far and bright.", "It hid beyond my skill and sight."],
+                                               'gold_gems': [["A golden gem, so far and bright.", "It hid beyond my skill and sight."],
                                                              ["Now I return with tricks in hand.", "To claim the prize, to understand."]],
                                                'cheeses': [["A holey cheese, forbidden prize.", "Hidden where the shadow lies."],
                                                            ["Through the cracks, I see between.", "To catch a glimpse of endless dream."]]},

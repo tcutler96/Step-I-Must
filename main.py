@@ -29,6 +29,7 @@ class Main:
         self.runtime_frames = 0
         self.runtime_seconds = 0
         self.sprite_size = 16
+        self.grid_size = (16, 16)
         self.debug = False
         self.testing = True
         self.assets_path = os.path.join(os.path.abspath(os.curdir), 'assets')

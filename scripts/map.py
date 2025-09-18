@@ -7,11 +7,11 @@ class Map:
         self.show_map = False
         self.map_colour = self.main.assets.settings['game']['map_colour']
         self.cell_size = self.main.sprite_size
-        part_one_offset = (304.0, 128.0)
-        part_two_offset = (240.0, 400.0)
+        part_one_offset = (self.main.display.level_offset[0] + 192.0, self.main.display.level_offset[1] + 96.0)
+        part_two_offset = (self.main.display.level_offset[0] + 128.0, self.main.display.level_offset[1] + 368.0)
         self.offset_dict = {1: part_one_offset, 2: part_two_offset, 'current': None, 'target': 1,
                             'step': (abs(part_one_offset[0] - part_two_offset[0]) / (2 * self.cell_size), abs(part_one_offset[1] - part_two_offset[1]) / (2 * self.cell_size))}
-        self.collectable_data = {'base_position': (384, 50), 'y_overlap': 0.35, '100%': False, 'types': list(self.main.assets.data['collectables']),
+        self.collectable_data = {'base_position': (self.main.display.width - self.main.display.level_offset[0] // 2 - 40, self.main.display.level_offset[1] + 18), 'y_overlap': 0.35, '100%': False, 'types': list(self.main.assets.data['collectables']),
                                  'max_counts': {collectable_type: len(collectable_amounts) for collectable_type, collectable_amounts in self.main.assets.data['collectables'].items()},
                                  'sprites': {'fraction_empty': self.main.utilities.get_image(group='map', name='fraction_empty'), 'fraction_filled': self.main.utilities.get_image(group='map', name='fraction_filled')} |
                                             {collectable_type[:-1]: None for collectable_type in list(self.main.assets.data['collectables'])} |
@@ -20,7 +20,9 @@ class Map:
                                         'part_one' if self.main.utilities.check_collectable(collectable_type='part_one', count=False) else None,
                              'part_one': {'parts': ['part_one'], 'text_ids': ['part_one_percent_1'], 'texts': ['World: '], 'positions': [(424, 280)]},
                              'part_two': {'parts': ['part_one', 'part_two', 'all'], 'text_ids': ['part_one_percent_2', 'part_two_percent', 'overall_percent'],
-                                          'texts': ['World 1: ', 'World 2: ', 'Overall: '], 'positions': [(424, 252), (424, 266), (424, 280)]}}
+                                          'texts': ['World 1: ', 'World 2: ', 'Overall: '], 'positions': [(self.main.display.width - self.main.display.level_offset[0] // 2, self.main.display.height - self.main.display.level_offset[1] - 40),
+                                                                                                          (self.main.display.width - self.main.display.level_offset[0] // 2, self.main.display.height - self.main.display.level_offset[1] - 24),
+                                                                                                          (self.main.display.width - self.main.display.level_offset[0] // 2, self.main.display.height - self.main.display.level_offset[1] - 8)]}}
         self.alpha = 0
         self.alpha_step = 8.5
         self.icons = {'alpha': {'alpha': 255, 'alpha_alt': 0, 'step': -4.25, 'timer': 120, 'delay': 120}, 'alpha_default': {'alpha': 255, 'alpha_alt': 0, 'step': -4.25, 'timer': 120, 'delay': 120},
@@ -70,7 +72,7 @@ class Map:
                     teleporter = True
             cryptid = False
             for warp in self.main.assets.data['teleporters']['cryptids'].values():
-                if level_name in warp['teleporters'][0] and warp['collectable'] not in self.main.assets.data['game']['collectables']['cheeses']:
+                if level_name in warp['teleporters'][0].split(' - ')[0] and warp['collectable'] not in self.main.assets.data['game']['collectables']['cheeses']:
                     cryptid = True
                     break
             for warp in self.main.assets.data['teleporters']['double_warps'].values():
@@ -110,7 +112,7 @@ class Map:
             self.offset_dict['target'] = target
             self.offset_dict['current'] = self.offset_dict[self.offset_dict['target']]
             for map_cell in self.map.values():
-                map_cell.update_rect(self.offset_dict['current'])
+                map_cell.update_rect(offset=self.offset_dict['current'])
 
     def transition_level(self, old_level, new_level):
         self.map[old_level].player = False

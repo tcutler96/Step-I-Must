@@ -8,16 +8,14 @@ import os
 class Level:
     def __init__(self, main):
         self.main = main
-        self.sprite_size = self.main.sprite_size
-        self.grid_size = 16
-        self.level_size = (self.sprite_size * self.grid_size, self.sprite_size * self.grid_size)
-        self.level_offset = ((self.main.display.width - self.level_size[0]) // 2, (self.main.display.height - self.level_size[1]) // 2)
+        self.main.display.level_offset = self.main.display.level_offset
         self.animated = True
         self.show_grid = False
         self.mouse_cell_alpha = 100
         self.cell_marker_offset = (-3, -3)
-        self.background_rect = pg.Rect(self.level_offset, self.level_size)
-        self.grid_rects = [pg.Rect(self.level_offset[0] + x * self.sprite_size, self.level_offset[1] + y * self.sprite_size, self.sprite_size, self.sprite_size) for x in range(self.sprite_size) for y in range(self.sprite_size)]
+        self.background_rect = pg.Rect(self.main.display.level_offset, self.main.display.level_size)
+        self.grid_rects = [pg.Rect(self.main.display.level_offset[0] + x * self.main.sprite_size, self.main.display.level_offset[1] + y * self.main.sprite_size,
+                                   self.main.sprite_size, self.main.sprite_size) for x in range(self.main.sprite_size) for y in range(self.main.sprite_size)]
         self.name = None
         self.tilemap = None
         self.level = None
@@ -55,10 +53,10 @@ class Level:
                         and ((not elements['object'] and not elements['player']) or (elements['object'] and elements['object']['name'] in ['permanent flag', 'temporary flag']))):
                         elements['player'] = {'name': 'player', 'state': 'sleeping'}
                 if elements['tile'] and elements['tile']['name'] == 'teleporter' and elements['tile']['state'] == 'portal' and self.name + ' - ' + str(position) in self.main.assets.data['game']['active_portals']:
-                    elements['tile']['state'] += ' animated'
+                    elements['tile']['state'] += '_animated'
             elif self.current_respawn and position in self.current_respawn[0]:
                 elements['player'] = {'name': 'player', 'state': 'idle'}
-            level_cell = LevelCell(main=self.main, position=position, level_offset=self.level_offset, elements=elements)
+            level_cell = LevelCell(main=self.main, position=position, level_offset=self.main.display.level_offset, elements=elements)
             if game and self.current_respawn and position in self.current_respawn[0] and level_cell.check_element(name='player', state='idle'):
                 level_cell.object_data['player']['facing_right'] = self.current_respawn[2][self.current_respawn[0].index(position)]
                 if bump_player:
@@ -235,7 +233,7 @@ class Level:
             for data in object_data.values():
                 if data:
                     data['blit_position'] = [data['blit_position'][-1]]
-            level_data_copy['level'][position] = LevelCell(main=self.main, position=position, level_offset=self.level_offset, elements=deepcopy(cell.elements), object_data=object_data)
+            level_data_copy['level'][position] = LevelCell(main=self.main, position=position, level_offset=self.main.display.level_offset, elements=deepcopy(cell.elements), object_data=object_data)
         return level_data_copy
 
     def compare_levels(self, level_data):
@@ -301,15 +299,15 @@ class Level:
             return True
 
     def position_on_grid(self, position):
-        if 0 <= position[0] < self.grid_size and 0 <= position[1] < self.grid_size:
+        if 0 <= position[0] < self.main.grid_size[0] and 0 <= position[1] < self.main.grid_size[1]:
             return True
 
     def display_to_grid(self, position):
-        return int(position[0] - self.level_offset[0]) // self.sprite_size, int(position[1] - self.level_offset[1]) // self.sprite_size
+        return int(position[0] - self.main.display.level_offset[0]) // self.main.sprite_size, int(position[1] - self.main.display.level_offset[1]) // self.main.sprite_size
 
     def grid_to_display(self, position, centre=False):
-        return (self.level_offset[0] + position[0] * self.sprite_size + (self.sprite_size // 2) if centre else 0,
-                self.level_offset[1] + position[1] * self.sprite_size + (self.sprite_size // 2) if centre else 0)
+        return (self.main.display.level_offset[0] + position[0] * self.main.sprite_size + (self.main.sprite_size // 2) if centre else 0,
+                self.main.display.level_offset[1] + position[1] * self.main.sprite_size + (self.main.sprite_size // 2) if centre else 0)
 
     def update(self):
         undo_redo = False
@@ -333,7 +331,7 @@ class Level:
             if self.current_respawn:
                 for position in self.current_respawn[1]:
                     displays['level_main'].blit(source=self.main.utilities.get_sprite(name='player respawn'),
-                                           dest=(self.level_offset[0] + position[0] * self.main.sprite_size, self.level_offset[1] + position[1] * self.main.sprite_size))
+                                           dest=(self.main.display.level_offset[0] + position[0] * self.main.sprite_size, self.main.display.level_offset[1] + position[1] * self.main.sprite_size))
             cells = self.get_cells()
             for cell in cells:
                 cell.draw(displays=displays, animated=self.animated, element_types=['tile'])
@@ -344,10 +342,10 @@ class Level:
             if mouse_cell:
                 if mouse_cell.check_element(name='player', state='idle'):
                     sprite = self.main.utilities.get_sprite(name='player respawn', state='player respawn', alpha=self.mouse_cell_alpha)
-                    displays['level_main'].blit(source=sprite, dest=(self.level_offset[0] + mouse_cell.position[0] * self.main.sprite_size, self.level_offset[1] + mouse_cell.position[1] * self.main.sprite_size))
+                    displays['level_main'].blit(source=sprite, dest=(self.main.display.level_offset[0] + mouse_cell.position[0] * self.main.sprite_size, self.main.display.level_offset[1] + mouse_cell.position[1] * self.main.sprite_size))
                 mouse_cell.draw(displays=displays, animated=self.animated, alpha=self.mouse_cell_alpha, element_types=['tile'])
                 mouse_cell.draw(displays=displays, animated=self.animated, alpha=self.mouse_cell_alpha,
                                 element_types=['object', 'player', 'vertical_barrier', 'horizontal_barrier'])
                 displays['level_main'].blit(source=self.main.utilities.get_image(group='toolbar', name='marker'),
-                                            dest=(self.level_offset[0] + mouse_cell.position[0] * self.main.sprite_size + self.cell_marker_offset[0],
-                                                  self.level_offset[1] + mouse_cell.position[1] * self.main.sprite_size + self.cell_marker_offset[1]))
+                                            dest=(self.main.display.level_offset[0] + mouse_cell.position[0] * self.main.sprite_size + self.cell_marker_offset[0],
+                                                  self.main.display.level_offset[1] + mouse_cell.position[1] * self.main.sprite_size + self.cell_marker_offset[1]))

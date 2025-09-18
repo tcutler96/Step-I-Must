@@ -9,7 +9,7 @@ class LevelEditor:
         self.main = main
         self.previous = None
         self.level = Level(main=self.main)
-        self.mouse_cell = LevelCell(main=self.main, position=(-1, -1), level_offset=self.level.level_offset)
+        self.mouse_cell = LevelCell(main=self.main, position=(-1, -1), level_offset=self.main.display.level_offset)
         self.toolbar = Toolbar(main=self.main)
 
     def reset_toolbar(self, hovered=False, selected=False):

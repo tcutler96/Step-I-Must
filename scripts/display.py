@@ -9,6 +9,8 @@ class Display:
         self.screen_size = self.screen_width, self.screen_height = pg.display.get_desktop_sizes()[0]
         self.screen_centre = self.screen_half_width, self.screen_half_height = self.screen_width // 2, self.screen_height // 2
         self.size = self.width, self.height = (480, 320)
+        self.level_size = (self.main.sprite_size * self.main.grid_size[0], self.main.sprite_size * self.main.grid_size[1])
+        self.level_offset = ((self.width - self.level_size[0]) // 2, (self.height - self.level_size[1]) // 2)
         self.aspect_ratio = (self.size[0] / max(self.size), self.size[1] / max(self.size))
         self.pixel_size = (1 / self.size[0], 1 / self.size[1])
         self.centre = self.half_width, self.half_height = self.width // 2, self.height // 2

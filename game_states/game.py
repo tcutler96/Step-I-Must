@@ -40,7 +40,7 @@ class Game:
         for cell in self.level.get_cells():
             for element in cell.elements.values():
                 if element and element['state'].endswith('_animated') and not element['state'].startswith('portal'):
-                    if self.main.assets.images['sprites_data'][element['name']]['frame_data'][element['state']]['loops'] or force_reset:
+                    if self.main.assets.images[element['name']][element['state']]['loops'] or force_reset:
                         element['state'] = element['state'].replace('_animated', '')
 
     def reset_objects_while(self):
@@ -76,8 +76,8 @@ class Game:
             self.main.assets.data['game']['collectables'][collectable_type].append(self.main.utilities.level_and_position(level=self.level.name, position=cell.object_data['object']['original_position']))
             self.map.update_collectables(collectable_type=collectable_type, level_name=self.level.name, position=cell.object_data['object']['original_position'])
             self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': collectable_type,
-                                                                                     'collectable_position': (self.level.level_offset[0] + self.level.sprite_size * (cell.position[0] + 0.5),
-                                                                                                              self.level.level_offset[1] + self.level.sprite_size * (cell.position[1] + 0.5)),
+                                                                                     'collectable_position': (self.main.display.level_offset[0] + self.main.sprite_size * (cell.position[0] + 0.5),
+                                                                                                              self.main.display.level_offset[1] + self.main.sprite_size * (cell.position[1] + 0.5)),
                                                                                      'end_response': 'map' if len(self.main.assets.data['game']['collectables'][collectable_type]) == 1 else None})
             self.main.assets.save_data()  # game (collectables)
         levels = self.level.cached_levels
@@ -97,9 +97,7 @@ class Game:
         for lock, lock_data in self.main.assets.data['locks'].items():
             if collectable_type == lock_data['collectable_type']:
                 difference = lock_data['collectable_amount'] - len(self.main.assets.data['game']['collectables'][collectable_type])
-                if difference > 0:
-                    self.main.text_handler.add_text(text_group='locks', text_id=lock, text=f'collect {difference} more {collectable_type[:-1] if difference == 1 else collectable_type}',
-                                                    position='top', bounce=-3, display_layer='level_main')
+                self.update_lock_text(lock=lock, collectable_type=collectable_type, difference=difference)
         cell.elements['object'] = None
         cell.object_data['object'] = None
         # we sometimes get stuck in moving animation when we collect something...
@@ -146,8 +144,8 @@ class Game:
         respawn = [[], [], []]
         for cell in self.players_exited:
             movement = cell.object_data['player']['last_moved']
-            position = (0 if movement[0] > 0 else self.level.grid_size - 1 if movement[0] < 0 else cell.position[0],
-                        0 if movement[1] > 0 else self.level.grid_size - 1 if movement[1] < 0 else cell.position[1])
+            position = (0 if movement[0] > 0 else self.main.grid_size[0] - 1 if movement[0] < 0 else cell.position[0],
+                        0 if movement[1] > 0 else self.main.grid_size[1] - 1 if movement[1] < 0 else cell.position[1])
             respawn[0].append(position)
             respawn[1].append(position)
             respawn[2].append(cell.object_data['player']['facing_right'])
@@ -598,7 +596,7 @@ class Game:
         if not_list:
             self.teleporter_data['standing'] = [self.teleporter_data['standing']]
         for teleporter_data in self.teleporter_data['standing']:
-            state = teleporter_data['state']
+            state = teleporter_data['state'].split('_animated')[0]
             level_and_position = teleporter_data['level_and_position']
             if level_and_position not in self.main.assets.data['teleporters'][state + 's']:
                 self.main.assets.data['teleporters'][state + 's'][level_and_position] = {'position': list(self.main.utilities.position_str_to_tuple(position=level_and_position.split(' - ')[1])),
@@ -741,7 +739,7 @@ class Game:
                             self.main.audio.play_sound(name='map_open')
                             self.map.show_map = True
                         else:
-                            teleporter_data = self.main.assets.data['teleporters'][self.teleporter_data['standing']['state'] + 's'][self.teleporter_data['standing']['level_and_position']]
+                            teleporter_data = self.main.assets.data['teleporters'][self.teleporter_data['standing']['state'].split('_animated')[0] + 's'][self.teleporter_data['standing']['level_and_position']]
                             if teleporter_data['destination']:
                                 self.main.audio.play_sound(name='teleport')
                                 # unique sound for portal teleport
@@ -782,8 +780,15 @@ class Game:
                 self.map.set_target(target=self.map.get_target(level=self.level.name))
                 self.map.show_map = True
         # what do we need to return here?
-        
         # return self.cutscene.active_cutscene or self.cutscene.active
+
+    def update_lock_text(self, lock, collectable_type, difference):
+        if difference > 0:
+            collectable_type = collectable_type.replace('_', ' ')
+            self.main.text_handler.add_text(text_group='locks', text_id=lock, text=f'collect {difference} more {collectable_type[:-1] 
+            if difference == 1 else collectable_type}', position='top', bounce=-3, display_layer='level_main')
+        else:
+            self.main.text_handler.remove_text(text_group='locks', text_id=lock)
 
     def interpolate_blit_position(self, blit_position):
         if blit_position[0][0] < blit_position[1][0]:
@@ -843,9 +848,7 @@ class Game:
         for lock, lock_data in self.main.assets.data['locks'].items():
             if lock_data['collectable_type'] and lock_data['collectable_amount']:
                 difference = lock_data['collectable_amount'] - len(self.main.assets.data['game']['collectables'][lock_data['collectable_type']])
-                if difference > 0:
-                    self.main.text_handler.add_text(text_group='locks', text_id=lock, text=f'collect {difference} more {lock_data['collectable_type'][:-1] 
-                    if difference == 1 else lock_data['collectable_type']}', position='top', bounce=-3, display_layer='level_main')
+                self.update_lock_text(lock=lock, collectable_type=lock_data['collectable_type'], difference=difference)
 
     def start_up(self, previous_game_state=None):
         self.main.change_menu_state()

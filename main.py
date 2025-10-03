@@ -6,6 +6,7 @@ from scripts.audio import Audio
 from scripts.events import Events
 from scripts.transition import Transition
 from scripts.text_handler import TextHandler
+from scripts.particle_handler import ParticleHandler
 from scripts.menu import Menu
 from game_states.splash import Splash
 from game_states.main_menu import MainMenu
@@ -41,6 +42,7 @@ class Main:
         self.events = Events(main=self)
         self.transition = Transition(main=self)
         self.text_handler = TextHandler(main=self)
+        self.particle_handler = ParticleHandler(main=self)
         self.menu_state = 'title_screen'
         self.menu_states = {menu_name: Menu(main=self, menu_name=menu_name, menu_data=menu_data) for menu_name, menu_data in self.assets.settings['menus'].items()}
         self.game_state = 'splash'
@@ -102,6 +104,10 @@ class Main:
                 self.low_fps = True
         self.events.update()
         mouse_position = self.events.mouse_display_position
+        if self.events.check_key(key='mouse_1', action='held'):
+            self.particle_handler.add_particle(display_layer='level_background', amount=[2, 10], position=([self.events.mouse_display_position[0] - 20, self.events.mouse_display_position[0] + 20],
+                                                                    [self.events.mouse_display_position[1] - 20, self.events.mouse_display_position[1] + 20]),
+                                               velocity=([-0.5, 0.5], [-0.5, 0.5]), acceleration=(0, [0, 0.5]), size=[2, 10], size_max=15, size_step=[-0.1, -0.2], colour='dark_purple', alpha_step=[-1, -10])
         if self.testing:
             if self.events.check_key(key='w', modifier='ctrl'):
                 self.quit()
@@ -113,6 +119,7 @@ class Main:
         self.assets.update()
         self.game_states[self.game_state].update(mouse_position=mouse_position)
         self.update_game_of_life()
+        self.particle_handler.update()
         self.audio.update()
         self.display.update()
         self.transition.update()
@@ -136,6 +143,7 @@ class Main:
             self.menu_states[self.menu_state].draw(displays=self.display.displays)
         self.text_handler.draw(displays=self.display.displays)
         self.draw_game_of_life()
+        self.particle_handler.draw(displays=self.display.displays)
         self.display.draw()
         self.transition.draw(displays=self.display.displays)
         self.shaders.draw(displays=self.display.displays)

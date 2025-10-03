@@ -4,6 +4,7 @@ import pygame.freetype
 import pygame as pg
 import json
 import os
+from random import betavariate
 
 
 class Utilities:
@@ -21,6 +22,7 @@ class Utilities:
         self.missing_images = []
         self.empty_image = pg.Surface((1, 1))
         self.empty_image.set_colorkey((0, 0, 0))
+        self.distribution_dict = {'uniform': (1, 1), 'centre': (7, 7), 'left': (1, 3), 'right': (3, 1), 'sides': (0.5, 0.5)}
 
     def s_to_ms(self, s):
         return int(s * 1000)
@@ -204,6 +206,40 @@ class Utilities:
                 return surface, font_object.render(text=text, fgcolor=shadow_colour, size=size)[0]
             else:
                 return surface
+
+    def get_value(self, input):
+        if isinstance(input, list):
+            value = self.get_random_number(input)
+        elif isinstance(input, tuple):
+            value = []
+            for element in input:
+                if isinstance(element, list):
+                    value.append(self.get_random_number(element))
+                else:
+                    value.append(element)
+        else:
+            value = input
+        return value
+
+    def get_random_number(self, input):  # [min, max, distribution type, rounding type]
+        # add option to only choose numbers from given list...
+        if len(input) > 1:
+            min_value = input[0] if input[0] <= input[1] else input[1]
+            max_value = input[0] if input[0] > input[1] else input[1]
+            if len(input) > 2 and input[2] in self.distribution_dict:
+                alpha_beta = self.distribution_dict[input[2]]
+            else:
+                alpha_beta = self.distribution_dict['uniform']
+            number = (betavariate(*alpha_beta) * (max_value - min_value)) + min_value
+            if len(input) > 3:
+                decimals = input[3]
+                if 0 < decimals < 1:
+                    number = round(number, int(str(decimals).split('.')[-1]))
+                elif decimals == 1:
+                    number = round(number)
+        else:
+            number = input[0]
+        return number
 
     def backup_file(self, file_name=None):
         if file_name in ['data', 'settings']:

@@ -221,8 +221,7 @@ class Utilities:
             value = input
         return value
 
-    def get_random_number(self, input):  # [min, max, distribution type, rounding type]
-        # add option to only choose numbers from given list...
+    def get_random_number(self, input):  # [min, max, distribution type, rounding style]
         if len(input) > 1:
             min_value = input[0] if input[0] <= input[1] else input[1]
             max_value = input[0] if input[0] > input[1] else input[1]

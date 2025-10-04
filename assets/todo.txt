@@ -19,7 +19,7 @@
 *** utility ***
 - need to do a full game run through to test all the levels work as intended
 - separate game back into more distinct display layers again that can be controlled individually, only add this as needed
-- add particle system, just port from old game and have particles for movement (player and objects), stepping on a flag, collectables (idle and on collection)
+- add have particles for movement (player and objects), stepping on a flag, collectables (idle and on collection)
 - clicking window 'x' does not close window while mid transition, we can't start a new transition mid transition
 - in assets, save copies of images that have had their alpha set, so that future calls just grab the image instead of having to re set it ({image: alpha[0-255]: surface})
 - changing order that elements are drawn does not seem to update in game, may need to draw barriers before objects/ players

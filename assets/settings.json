@@ -19,7 +19,7 @@
     "vignette": true
   },
   "audio": {
-    "master_volume": 0.3,
+    "master_volume": 0.2,
     "music_volume": 0.2,
     "sound_volume": 0.5
   },
@@ -227,6 +227,7 @@
         "button",
         "option",
         [
+          "20%",
           "30%",
           "40%",
           "50%",
@@ -236,8 +237,7 @@
           "90%",
           "100%",
           "Disabled",
-          "10%",
-          "20%"
+          "10%"
         ]
       ],
       "Music Volume": [

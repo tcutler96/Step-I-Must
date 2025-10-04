@@ -104,10 +104,8 @@ class Main:
                 self.low_fps = True
         self.events.update()
         mouse_position = self.events.mouse_display_position
-        if self.events.check_key(key='mouse_1', action='held'):
-            self.particle_handler.add_particle(display_layer='level_background', amount=[2, 10], position=([self.events.mouse_display_position[0] - 20, self.events.mouse_display_position[0] + 20],
-                                                                    [self.events.mouse_display_position[1] - 20, self.events.mouse_display_position[1] + 20]),
-                                               velocity=([-0.5, 0.5], [-0.5, 0.5]), acceleration=(0, [0, 0.5]), size=[2, 10], size_max=15, size_step=[-0.1, -0.2], colour='dark_purple', alpha_step=[-1, -10])
+        # if self.events.check_key(key='mouse_1', action='pressed'):
+        #     self.particle_handler.add_particle(display_layer='ui', amount=1, position=self.events.mouse_display_position, size=10, size_max=10, colour='dark_purple', remove_age=5)
         if self.testing:
             if self.events.check_key(key='w', modifier='ctrl'):
                 self.quit()
@@ -139,11 +137,11 @@ class Main:
         if self.debug:
             self.text_handler.activate_text(text_group='main', text_id='debug')
         self.game_states[self.game_state].draw(displays=self.display.displays)
+        self.particle_handler.draw(displays=self.display.displays)
         if self.menu_state:
             self.menu_states[self.menu_state].draw(displays=self.display.displays)
         self.text_handler.draw(displays=self.display.displays)
         self.draw_game_of_life()
-        self.particle_handler.draw(displays=self.display.displays)
         self.display.draw()
         self.transition.draw(displays=self.display.displays)
         self.shaders.draw(displays=self.display.displays)

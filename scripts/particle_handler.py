@@ -7,13 +7,11 @@ class ParticleHandler:
         self.main = main
         self.particles = []
         self.glow_types = {'default': pg.BLEND_ALPHA_SDL2, 'add': pg.BLEND_RGB_ADD, 'sub': pg.BLEND_RGB_SUB}
-        # add way to clear all particles
-        # add way to clear particles from particulat display layer (loop over all particles and check which display layer they are on)
 
-    def add_particle(self, display_layer='ui', amount=1, position=(0, 0), velocity=(0, 0), velocity_min=(-1, -1), velocity_max=(1, 1), velocity_loop=(False, False), acceleration=(0, 0),
+    def add_particle(self, amount=1, display_layer='ui', position=(0, 0), velocity=(0, 0), velocity_min=(-1, -1), velocity_max=(1, 1), velocity_loop=(False, False), acceleration=(0, 0),
                      size=1, size_min=0, size_max=1, size_step=0, size_loop=False, colour=(0, 0, 0), alpha=255, alpha_min=0, alpha_max=255, alpha_step=0, alpha_loop=False,
-                     remove_age=60, remove_age_shrink=0.1, remove_age_fade=5, remove_size=True, remove_alpha=True,
-                     glow_size=1, glow_size_min=0, glow_size_max=1, glow_size_step=0, glow_size_loop=True, glow_colour=(255, 255, 255), glow_type=None):
+                     remove_age=60, remove_age_shrink=0.1, remove_age_fade=5, remove_size=True, remove_alpha=True):
+        # add any additional input checks here
         if display_layer not in self.main.display.display_layers:
             display_layer = 'ui'
         if isinstance(colour, str):
@@ -27,10 +25,15 @@ class ParticleHandler:
                                            size_max=self.main.utilities.get_value(size_max), size_step=self.main.utilities.get_value(size_step), size_loop=size_loop, colour=self.main.utilities.get_value(colour),
                                            alpha=self.main.utilities.get_value(alpha), alpha_min=self.main.utilities.get_value(alpha_min), alpha_max=self.main.utilities.get_value(alpha_max),
                                            alpha_step=self.main.utilities.get_value(alpha_step), alpha_loop=alpha_loop, remove_age=self.main.utilities.get_value(remove_age),
-                                           remove_age_shrink=self.main.utilities.get_value(remove_age_shrink), remove_age_fade=self.main.utilities.get_value(remove_age_fade), remove_size=remove_size, remove_alpha=remove_alpha,
-                                           glow_size=self.main.utilities.get_value(glow_size), glow_size_min=self.main.utilities.get_value(glow_size_min), glow_size_max=self.main.utilities.get_value(glow_size_max),
-                                           glow_size_step=self.main.utilities.get_value(glow_size_step), glow_size_loop=glow_size_loop, glow_colour=self.main.utilities.get_value(glow_colour),
-                                           glow_type=self.glow_types.get(glow_type, self.glow_types['default'])))
+                                           remove_age_shrink=self.main.utilities.get_value(remove_age_shrink), remove_age_fade=self.main.utilities.get_value(remove_age_fade), remove_size=remove_size, remove_alpha=remove_alpha))
+
+    def remove_particles(self, display_layer):
+        if display_layer == 'all':
+            self.particles = []
+        else:
+            for _, particle in sorted(enumerate(self.particles), reverse=True):
+                if particle.display_layer == display_layer:
+                    self.particles.remove(particle)
 
     def update(self):
         for _, particle in sorted(enumerate(self.particles), reverse=True):

@@ -46,6 +46,17 @@ class MenuElement:
             self.option_centres.insert(0, self.option_centres.pop())
             self.main.events.remove_key(key='mouse_3')
 
+    def trigger_particles(self):
+        rect = self.main.text_handler.text_elements[self.menu_name][self.name + (self.button_response[0] if self.button_type == 'option' else '')].rect
+        self.main.particle_handler.add_particle(amount=rect.width * 0.5, position=([rect.left, rect.right], rect.top), display_layer='ui',
+                                                velocity=([-0.5, 0.5], [-1, -0.25]), size=[2, 5], size_max=5, size_step=[-0.05, -0.1], colour='cream', alpha_step=[-1, -5])
+        self.main.particle_handler.add_particle(amount=rect.width * 0.5, position=([rect.left, rect.right], rect.bottom), display_layer='ui',
+                                                velocity=([-0.5, 0.5], [0.25, 1]), size=[2, 5], size_max=5, size_step=[-0.05, -0.1], colour='cream', alpha_step=[-1, -5])
+        self.main.particle_handler.add_particle(amount=rect.height * 0.5, position=(rect.left, [rect.top, rect.bottom]), display_layer='ui',
+                                                velocity=([-1, -0.25], [-0.5, 0.5]), size=[2, 5], size_max=5, size_step=[-0.05, -0.1], colour='cream', alpha_step=[-1, -5])
+        self.main.particle_handler.add_particle(amount=rect.height * 0.5, position=(rect.right, [rect.top, rect.bottom]), display_layer='ui',
+                                                velocity=([0.25, 1], [-0.5, 0.5]), size=[2, 5], size_max=5, size_step=[-0.05, -0.1], colour='cream', alpha_step=[-1, -5])
+
     def update(self, offset, scroll):
         if self.offset[0] < 0:
             self.offset[0] += self.offset_step
@@ -58,10 +69,12 @@ class MenuElement:
                     selected = self.main.text_handler.text_elements[self.menu_name][self.name + (self.button_response[0] if self.button_type == 'option' else '')].selected
                     if selected:
                         if self.button_type == 'option':
+                            self.trigger_particles()
                             self.offset = self.offset_start.copy()
                             self.cycle_option(selected=selected)
                             return self.button_type, self.button_response, selected
                         elif selected == 'left' or selected == 'right' and self.name in ['Back', 'Resume', 'No']:
+                            self.trigger_particles()
                             return self.button_type, self.button_response, self.name
                     elif self.name in ['Back', 'Resume', 'No']:
                         if self.main.events.check_key(key=['mouse_3', 'escape'], remove=True):

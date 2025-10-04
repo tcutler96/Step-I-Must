@@ -90,6 +90,8 @@ class TextElement:
                     self.hovered = True
                     if not self.last_hovered:
                         self.main.audio.play_sound(name='menu_highlight')
+                        self.main.particle_handler.add_particle(amount=self.rect.width * self.rect.height * 0.015, position=([self.rect.left, self.rect.right], [self.rect.top, self.rect.bottom]), display_layer='ui',
+                                                                velocity=([-0.75, 0.75], [-0.75, 0.75]), size=[5, 10], size_max=10, size_step=[-0.1, -0.5], colour='dark_purple', alpha_step=[-1, -10])
                     self.main.display.set_cursor(cursor='hand')
                     if self.main.events.check_key(key='mouse_1'):
                         self.selected = 'left'

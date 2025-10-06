@@ -217,8 +217,8 @@ class Assets:
                 return self.main.display.change_resolution(scale_factor=option)
             elif name == 'cursor_type':
                 self.main.display.cursor.cursor_type = option
-            elif name == 'particles':  # reference particle handler once added...
-                pass
+            elif name == 'particles':
+                self.main.particle_handler.enabled = option
         elif group == 'shaders':
             self.main.audio.change_volume(audio_type=name)
             if name == 'all':

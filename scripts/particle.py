@@ -16,8 +16,8 @@ class Particle:
         self.velocity_loop = velocity_loop
         self.acceleration = acceleration
         self.size = size
-        self.size_min = size_min
-        self.size_max = size_max
+        self.size_min = min(size, size_min)
+        self.size_max = max(size, size_max)
         self.size_step = size_step
         self.size_loop = size_loop
         self.colour = colour

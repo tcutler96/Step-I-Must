@@ -96,10 +96,7 @@ class Utilities:
         return self.get_image(group=name, name=state, animated=animated, alpha=alpha)
 
     def get_colour(self, colour, alpha=0):
-        if colour in self.main.assets.colours:
-            colour = self.main.assets.colours[colour]
-        else:
-            colour = self.main.assets.colours['white']
+        colour = self.main.assets.colours.get(colour, self.main.assets.colours['white'])
         if alpha:
             colour = (*colour, alpha)
         return colour

@@ -15,6 +15,7 @@ class Game:
         self.movement_dict = {'w': 'up', 'a': 'left', 's': 'down', 'd': 'right'}
         self.movement_held = {'up': 0, 'left': 0, 'down': 0, 'right': 0}
         self.movement_directions = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0), 'up': (0, -1), 'left': (-1, 0), 'down': (0, 1), 'right': (1, 0)}
+        self.movement_velocity = {0: [-0.1, 0.1], 1: [-0.5, -0.1], -1: [0.1, 0.5]}
         self.move_delay = self.main.assets.settings['game']['hold_to_move']
         self.move_timer = 0
         self.hold_move_delay = 30
@@ -263,6 +264,7 @@ class Game:
 
                     if cell.check_element(name='sign'):  # signs
                         self.main.audio.play_sound(name='scroll_open')
+                        self.trigger_particles(position=cell.position, movement=(0, 0), colour='r')
                         sign_position = self.level.name + ' - ' + str(cell.position)
                         if sign_position in self.main.assets.data['signs']:
                             self.sign_data.append(sign_position)
@@ -300,6 +302,7 @@ class Game:
                                 if new_level_and_position in self.main.text_handler.text_elements['locks']:
                                     self.main.audio.play_sound(name='lock')
                                     self.lock_data = new_level_and_position
+                                    self.trigger_particles(position=new_cell.position, movement=(0, 0), colour='g')
 
                         if level_and_position in self.main.assets.data['teleporters']['activations']:  # activations
                             activation = self.main.assets.data['teleporters']['activations'][level_and_position]
@@ -317,6 +320,7 @@ class Game:
                             for portal in activation['portals']:
                                 if portal not in self.main.assets.data['game']['active_portals']:
                                     self.main.audio.play_sound(name='portal_activate')
+                                    self.trigger_particles(position=cell.position, movement=(0, 0), colour='b')
                                     self.main.assets.data['game']['active_portals'].append(portal)
                                     self.main.assets.save_data()  # game (active_portals)
                                     levels = self.level.cached_levels
@@ -350,6 +354,16 @@ class Game:
                 if respawn_updated:
                     self.level.current_respawn = respawn
 
+    def trigger_particles(self, position, movement, colour='cream'):
+        # trigger particles when interacting with signs, locks etc.
+        # constant particles from collectables and portals
+        position = self.level.grid_to_display(position=position)
+        self.main.particle_handler.add_particle(amount=5, display_layer='level_main',
+                                                position=([position[0], position[0] + self.main.sprite_size],
+                                                          [position[1], position[1] + self.main.sprite_size]),
+                                                velocity=(self.movement_velocity[movement[0]], self.movement_velocity[movement[1]]),
+                                                size=[2, 5], size_step=[-0.05, -0.2], colour=colour)
+
     def move_object(self, cell, object_type, movement, push_allowed=True, bump_allowed=True):
         new_cell = self.level.get_new_cell(position=cell.position, movement=movement)
         check_movement = cell.check_movement(object_type=object_type, movement=movement, new_cell=new_cell, push_allowed=push_allowed)
@@ -375,15 +389,18 @@ class Game:
                     new_cell.object_data[object_type]['facing_right'] = False
                 if new_cell.elements['player']['state'] in ['idle', 'sleeping']:
                     new_cell.elements['player']['state'] = 'moving'
+            self.trigger_particles(position=cell.position, movement=movement)
             return True
         else:
             if object_type == 'player' and check_movement[1] == 'edge':
                 cell.object_data['player']['moved'] = True
                 cell.object_data['player']['last_moved'] = movement
                 self.players_exited.append(cell)
+                self.trigger_particles(position=cell.position, movement=movement)
                 return True
             elif bump_allowed:
                 self.bump_object(cell=cell, object_type=object_type, movement=movement)
+                # self.trigger_particles(position=cell.position, movement=movement)
 
     def move_players(self, movement):
         if movement == self.last_movement and self.no_movement:
@@ -397,6 +414,7 @@ class Game:
                 if cell.check_element(name='player', state=['idle', 'sleeping']) and not cell.object_data['player']['moved']:
                     if self.move_object(cell=cell, object_type='player', movement=movement):
                         player_moved = True
+                        # self.trigger_particles(position=cell.position, movement=movement)
             if self.players_exited:
                 self.main.audio.play_sound(name='player_move')
                 self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
@@ -712,7 +730,7 @@ class Game:
                         else:
                             self.teleporter_data['setting'] = self.teleporter_data['standing'].copy()
                             self.teleporter_data['setting']['new_level'] = self.level.name
-                            self.teleporter_data['setting']['new_position'] = tuple(self.main.assets.data['teleporters'][self.teleporter_data['setting']['state'] + 's']
+                            self.teleporter_data['setting']['new_position'] = tuple(self.main.assets.data['teleporters'][self.teleporter_data['setting']['state']]
                                                                                     [self.teleporter_data['setting']['level_and_position']]['position'])
                             if self.main.events.check_key(key='e', modifier='ctrl'):
                                 self.teleporter_data['setting']['stage'] = 'cryptid pair'

@@ -14,7 +14,7 @@
   "shaders": {
     "all": true,
     "background": "galaxy",
-    "chromatic_ui": true,
+    "chromatic_ui": false,
     "crt": true,
     "vignette": true
   },
@@ -195,8 +195,8 @@
         "button",
         "option",
         [
-          "Enabled",
-          "Disabled"
+          "Disabled",
+          "Enabled"
         ]
       ],
       "CRT": [

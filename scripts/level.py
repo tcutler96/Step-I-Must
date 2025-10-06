@@ -92,11 +92,6 @@ class Level:
             level_and_position = self.main.utilities.level_and_position(level=self.name, position=position)
             if cell.check_element(name='player', state='idle'):
                 elements['player'] = None
-            # if cell.check_element(name='collectable'):
-            #     collectable_type = cell.elements['object']['state'] + 's'
-            #     if collectable_type in self.collectables:
-            #         elements['object'] = None
-            #         self.collectables[collectable_type].append(position)
             if self.name.startswith('(') and self.name.endswith(')'):
                 if cell.check_element(name='sign'):  # signs
                     if level_and_position not in self.main.assets.data['signs']:
@@ -306,8 +301,8 @@ class Level:
         return int(position[0] - self.main.display.level_offset[0]) // self.main.sprite_size, int(position[1] - self.main.display.level_offset[1]) // self.main.sprite_size
 
     def grid_to_display(self, position, centre=False):
-        return (self.main.display.level_offset[0] + position[0] * self.main.sprite_size + (self.main.sprite_size // 2) if centre else 0,
-                self.main.display.level_offset[1] + position[1] * self.main.sprite_size + (self.main.sprite_size // 2) if centre else 0)
+        return (self.main.display.level_offset[0] + position[0] * self.main.sprite_size + ((self.main.sprite_size // 2) if centre else 0),
+                self.main.display.level_offset[1] + position[1] * self.main.sprite_size + ((self.main.sprite_size // 2) if centre else 0))
 
     def update(self):
         undo_redo = False

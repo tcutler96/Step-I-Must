@@ -6,7 +6,7 @@ class Audio:
         self.main = main
         self.mixer = pg.mixer
         self.mixer.set_num_channels(16)
-        self.volume_adjustments = {'name of sound file': 'volume adjustment in the range 0-1', 'conveyor': 0.25, 'cutscene_dialogue': 2}
+        self.volume_adjustments = {'name of sound file': 'volume adjustment in the range 0-1', 'conveyor': 0.25, 'cutscene_dialogue': 2, 'statue':2, 'redo':1.5, 'map_open':1.5, 'map_close':1.5}
         self.audio, self.music = self.load_audio()
         self.music_themes = {'main_menu': ['edgy_demo'], 'splash': ['edgy_demo'], 'level_editor': ['edgy_demo'], 'game': ['chill_idea'], 'current': None, 'index': 0}
         self.music_switching = False

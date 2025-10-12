@@ -132,7 +132,7 @@ class Cutscene:
         if self.show_bars:
             self.main.shaders.apply_effect(display_layer=['level_background', 'level_main', 'level_player', 'level_ui'], effect='pixelate', effect_data={'length': 1})
             if not self.bars_offset:
-                self.main.audio.play_sound(name='cutscene_start')
+                self.main.audio.play_sound(name='cutscene')
             if self.bars_offset < self.bars_max_offset:
                 if skip:
                     self.main.audio.play_sound(name='cutscene_skip')
@@ -205,7 +205,7 @@ class Cutscene:
                 self.main.audio.play_sound(name='cutscene_skip')
                 self.show_button = False
                 if self.page_index == len(self.text) - 1:
-                    self.main.audio.play_sound(name='cutscene_end')
+                    self.main.audio.play_sound(name='cutscene')
                     self.show_bars = False
                     self.show_text = False
                 else:

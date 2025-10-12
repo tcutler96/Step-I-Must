@@ -18,6 +18,7 @@ class Splash:
                 self.timers['text_id'] = self.timers[self.timers['timer']]
                 self.main.audio.play_sound(name='splash')
             if self.main.events.check_key(key=['mouse_1', 'space']):
+                self.main.audio.play_sound(name='splash')
                 self.timers['text_id'] = 'end'
             if self.timers['text_id'] == 'end':
                 self.main.change_game_state(game_state='main_menu')

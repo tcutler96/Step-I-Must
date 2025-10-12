@@ -424,6 +424,7 @@ class Game:
         if movement == self.last_movement and self.no_movement:
             return
         if not self.move_timer:
+            self.main.audio.stop_sound(name='player_sleep', fade=0.5)
             self.last_movement = movement
             self.no_movement = True
             self.players_exited = []
@@ -432,7 +433,8 @@ class Game:
                 if cell.check_element(name='player', state=['idle', 'sleeping']) and not cell.object_data['player']['moved']:
                     if self.move_object(cell=cell, object_type='player', movement=movement):
                         player_moved = True
-                        # self.trigger_particles(position=cell.position, movement=movement)
+                    elif cell.check_element(name='player', state='sleeping'):
+                        cell.elements['player']['state'] = 'idle'
             if self.players_exited:
                 self.main.audio.play_sound(name='player_move')
                 self.movement_held = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
@@ -853,6 +855,8 @@ class Game:
                         self.interpolating = True
 
     def update_undo_redo(self):
+        self.player_afk_timer = 0
+        self.main.audio.stop_sound(name='player_sleep', fade=0.25)
         self.check_standing = True
         self.resolve_standing()
         self.tutorials.update_level(level_name=self.level.name)
@@ -968,11 +972,11 @@ class Game:
                         else:
                             if self.player_afk_timer < self.player_afk:
                                 self.player_afk_timer += 1
-                                if self.player_afk_timer == self.player_afk:
-                                    for player_cell in self.player_cells.values():
-                                        if player_cell.check_element(name='player', state='idle'):
-                                            self.main.audio.play_sound(name='player_sleep')
-                                            player_cell.elements['player']['state'] = 'sleeping'
+                            if self.player_afk_timer == self.player_afk:
+                                for player_cell in self.player_cells.values():
+                                    if player_cell.check_element(name='player', state=['idle', 'sleeping']):
+                                        self.main.audio.play_sound(name='player_sleep', existing=None)
+                                        player_cell.elements['player']['state'] = 'sleeping'
                             if not self.map.show_map:
                                 if self.main.debug or (not self.main.debug and not self.no_steps):
                                     if self.stored_movement:

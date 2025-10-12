@@ -53,7 +53,7 @@ class Transition:
             if self.response and self.response[0] == 'game_state':
                 self.main.audio.stop_music(game_state=self.response[1], fade=length)
                 if self.response[1] == 'quit':
-                    self.main.audio.play_sound(name='splash')
+                    self.main.audio.play_sound(name='quit')
             self.queue = queue
 
     def update(self):

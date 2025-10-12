@@ -118,7 +118,6 @@ class Menu:
                     if self.main.menu_state == 'developer' and not self.main.debug:
                         self.main.text_handler.activate_text(text_group='main', text_id='debug_required', duration=2)
                     else:
-                        print(selected_element)
                         self.main.text_handler.deactivate_text_group(text_group='main')
                         self.main.text_handler.activate_text(text_group='main', text_id=selected_element[1], duration=2)
                         self.main.assets.trigger_button(button=selected_element[1])

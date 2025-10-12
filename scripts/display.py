@@ -19,8 +19,7 @@ class Display:
         self.window_centre = self.window_half_width, self.window_half_height = self.window_width // 2, self.window_height // 2
         self.display_layers = ['background', 'level_background', 'level_main', 'level_dead_player', 'level_player', 'level_ui', 'level_map', 'ui', 'transition']
         self.displays = self.load_displays()
-        self.system = platform.system()
-        if self.system == 'Darwin':
+        if self.main.system == 'darwin':
             pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
             pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
             pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)

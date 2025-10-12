@@ -27,7 +27,6 @@ class Shaders:
         self.shaders = self.load_shaders()
         self.missing_display_layers = []
         self.missing_effects = []
-        # print("Max fragment uniform components:", self.context.info['GL_MAX_FRAGMENT_UNIFORM_COMPONENTS'])
 
     def change_resolution(self):
         self.context.viewport = (0, 0, *self.main.display.window_size)

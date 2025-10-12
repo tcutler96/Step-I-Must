@@ -24,6 +24,7 @@
 - in assets, save copies of images that have had their alpha set, so that future calls just grab the image instead of having to re set it ({image: alpha[0-255]: surface})
 - changing order that elements are drawn does not seem to update in game, may need to draw barriers before objects/ players
 - align text handler bounce properly with asset animation timer (use same in game timer?)
+- add demo gifs to game files and push to github to try and get around size limit
 
 
 *** game bugs ***

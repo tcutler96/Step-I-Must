@@ -10,7 +10,7 @@ class ParticleHandler:
         self.glow_types = {'default': pg.BLEND_ALPHA_SDL2, 'add': pg.BLEND_RGB_ADD, 'sub': pg.BLEND_RGB_SUB}
 
     def add_particle(self, amount=1, display_layer='ui', position=(0, 0), velocity=(0, 0), velocity_min=(-1, -1), velocity_max=(1, 1), velocity_loop=(False, False), acceleration=(0, 0),
-                     size=1, size_min=0, size_max=1, size_step=0, size_loop=False, colour=(0, 0, 0), alpha=255, alpha_min=0, alpha_max=255, alpha_step=0, alpha_loop=False,
+                     size=1, size_min=0, size_max=1, size_step=0, size_loop=False, colour=(255, 255, 255), alpha=255, alpha_min=0, alpha_max=255, alpha_step=0, alpha_loop=False,
                      remove_age=60, remove_age_shrink=0.1, remove_age_fade=5, remove_size=True, remove_alpha=True):
         if self.enabled:
             # add any additional input checks here

@@ -32,7 +32,7 @@ class Main:
         self.sprite_size = 16
         self.grid_size = (16, 16)
         self.debug = False
-        self.testing = True
+        self.testing = False
         self.assets_path = os.path.join(os.path.abspath(os.curdir), 'assets')
         self.assets = Assets(main=self)
         self.utilities = Utilities(main=self)

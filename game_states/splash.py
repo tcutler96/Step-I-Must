@@ -16,8 +16,7 @@ class Splash:
             self.main.display.set_cursor(cursor='arrow')
             if self.timers['timer'] in self.timers:
                 self.timers['text_id'] = self.timers[self.timers['timer']]
-                if self.timers['text_id'] and self.timers['text_id'] != 'end':
-                    self.main.audio.play_sound(name='splash')
+                self.main.audio.play_sound(name='splash')
             if self.main.events.check_key(key=['mouse_1', 'space']):
                 self.timers['text_id'] = 'end'
             if self.timers['text_id'] == 'end':

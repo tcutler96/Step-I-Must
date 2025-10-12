@@ -35,9 +35,10 @@ class Menu:
                     max_scroll = (rows - self.max_rows) * self.data['button_size']
                 position = (self.menu_centre[0], int(self.menu_centre[1] - self.data['title_size'] // 1.25))
             elif element_name == 'Back':
-                position = (self.menu_centre[0], self.menu_centre[1] + self.data['button_size'] * rows)
+                position = (self.menu_centre[0], self.menu_centre[1] + self.data['button_size'] * (rows if self.menu_name == 'choose_level' else row))
             else:
-                if self.menu_name == 'title_screen' and element_name == 'New Game' and not self.main.assets.data['game']['level']:
+                if ((self.menu_name == 'title_screen' and element_name == 'New Game' and not self.main.assets.data['game']['level']) or
+                        (self.menu_name == 'options' and element_name == 'Developer' and not self.main.testing)):
                     continue
                 position = (self.menu_centre[0] + self.column_positions[columns][column], self.menu_centre[1] + self.data['button_size'] * row)
                 column += 1
@@ -117,6 +118,7 @@ class Menu:
                     if self.main.menu_state == 'developer' and not self.main.debug:
                         self.main.text_handler.activate_text(text_group='main', text_id='debug_required', duration=2)
                     else:
+                        print(selected_element)
                         self.main.text_handler.deactivate_text_group(text_group='main')
                         self.main.text_handler.activate_text(text_group='main', text_id=selected_element[1], duration=2)
                         self.main.assets.trigger_button(button=selected_element[1])

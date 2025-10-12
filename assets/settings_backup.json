@@ -1,13 +1,13 @@
 {
   "game": {
-    "movement_speed": 0.25,
-    "hold_to_move": 5,
-    "hold_to_undo": 5,
-    "cutscene_speed": 1,
+    "movement_speed": 0.125,
+    "hold_to_move": 15,
+    "hold_to_undo": 15,
+    "cutscene_speed": 0,
     "map_colour": "green"
   },
   "video": {
-    "resolution": 1,
+    "resolution": 2,
     "cursor_type": "sprite",
     "particles": true
   },
@@ -19,7 +19,7 @@
     "vignette": true
   },
   "audio": {
-    "master_volume": 0.3,
+    "master_volume": 0.2,
     "music_volume": 0.2,
     "sound_volume": 0.5
   },
@@ -86,34 +86,34 @@
         "button",
         "option",
         [
-          "Fast",
-          "Slow"
+          "Slow",
+          "Fast"
         ]
       ],
       "Hold to Move": [
         "button",
         "option",
         [
+          "Slow",
           "Fast",
-          "Disabled",
-          "Slow"
+          "Disabled"
         ]
       ],
       "Hold to Undo": [
         "button",
         "option",
         [
+          "Slow",
           "Fast",
-          "Disabled",
-          "Slow"
+          "Disabled"
         ]
       ],
       "Cutscene Speed": [
         "button",
         "option",
         [
-          "Fast",
-          "Slow"
+          "Slow",
+          "Fast"
         ]
       ],
       "Map Colour": [
@@ -138,10 +138,10 @@
         "button",
         "option",
         [
-          "(448, 320)",
           "(896, 640)",
           "(1344, 960)",
-          "(1792, 1280)"
+          "(1792, 1280)",
+          "(448, 320)"
         ]
       ],
       "Cursor Type": [
@@ -227,6 +227,7 @@
         "button",
         "option",
         [
+          "20%",
           "30%",
           "40%",
           "50%",
@@ -236,8 +237,7 @@
           "90%",
           "100%",
           "Disabled",
-          "10%",
-          "20%"
+          "10%"
         ]
       ],
       "Music Volume": [

@@ -1,9 +1,9 @@
 {
   "game": {
-    "movement_speed": 0.25,
-    "hold_to_move": 5,
-    "hold_to_undo": 5,
-    "cutscene_speed": 1,
+    "movement_speed": 0.125,
+    "hold_to_move": 15,
+    "hold_to_undo": 15,
+    "cutscene_speed": 0,
     "map_colour": "green"
   },
   "video": {
@@ -14,7 +14,7 @@
   "shaders": {
     "all": true,
     "background": "galaxy",
-    "chromatic_ui": false,
+    "chromatic_ui": true,
     "crt": true,
     "vignette": true
   },
@@ -86,34 +86,34 @@
         "button",
         "option",
         [
-          "Fast",
-          "Slow"
+          "Slow",
+          "Fast"
         ]
       ],
       "Hold to Move": [
         "button",
         "option",
         [
+          "Slow",
           "Fast",
-          "Disabled",
-          "Slow"
+          "Disabled"
         ]
       ],
       "Hold to Undo": [
         "button",
         "option",
         [
+          "Slow",
           "Fast",
-          "Disabled",
-          "Slow"
+          "Disabled"
         ]
       ],
       "Cutscene Speed": [
         "button",
         "option",
         [
-          "Fast",
-          "Slow"
+          "Slow",
+          "Fast"
         ]
       ],
       "Map Colour": [
@@ -195,8 +195,8 @@
         "button",
         "option",
         [
-          "Disabled",
-          "Enabled"
+          "Enabled",
+          "Disabled"
         ]
       ],
       "CRT": [

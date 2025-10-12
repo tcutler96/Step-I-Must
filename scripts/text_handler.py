@@ -11,13 +11,13 @@ class TextHandler:
         self.text_elements = {}
         self.add_text(text_group='main', text_id='debug', text='debug mode', position='bottom', colour='purple', size=16)
         self.add_text(text_group='main', text_id='debug_required', text='debug mode required', position='top')
+        self.add_text(text_group='main', text_id='reset_game_data', text='game data reset', position='top')
+        self.add_text(text_group='main', text_id='update_levels', text='levels updated', position='top')
+        self.add_text(text_group='main', text_id='resave_levels', text='levels resaved', position='top')
         self.add_text(text_group='main', text_id='backup_data', text='data backed up', position='top')
         self.add_text(text_group='main', text_id='backup_settings', text='settings backed up', position='top')
-        self.add_text(text_group='main', text_id='clear_game_data', text='game data cleared', position='top')
         self.add_text(text_group='main', text_id='restore_data', text='data restored', position='top')
         self.add_text(text_group='main', text_id='restore_settings', text='settings restored', position='top')
-        self.add_text(text_group='main', text_id='resave_levels', text='levels resaved', position='top')
-        self.add_text(text_group='main', text_id='update_levels', text='levels updated', position='top')
         self.add_text(text_group='splash', text_id='tcgame', text='a tc game', position='centre', alpha_up=8.5, alpha_down=8.5, size=24, shadow_offset='mouse')
         self.add_text(text_group='splash', text_id='hoolio', text='with hoolio audio', position='centre', alpha_up=8.5, alpha_down=8.5, size=28, shadow_offset='mouse')
         self.add_text(text_group='splash', text_id='...', text='...', position='centre', alpha_up=8.5, alpha_down=8.5, colour='purple', size=28)
@@ -55,7 +55,6 @@ class TextHandler:
                       alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
         self.add_text(text_group='map', text_id='collectables', text='Collectables', position=(self.main.display.width - self.main.display.level_offset[0] // 2, self.main.display.level_offset[1] + 8),
                       alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], style='underline', display_layer='level_map')
-        # level editor controls
         self.add_text(text_group='map', text_id='100%', text='Well Done!', position=(self.main.display.width - self.main.display.level_offset[0] // 2, self.main.display.height - self.main.display.level_offset[1] + 8),
                       alpha_up=8.5, alpha_down=8.5, bounce=-3, alignment=('c', 'c'), size=14, max_width=self.main.display.level_offset[0], display_layer='level_map')
         self.add_sign_text()

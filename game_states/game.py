@@ -15,7 +15,7 @@ class Game:
         self.movement_dict = {'w': 'up', 'a': 'left', 's': 'down', 'd': 'right'}
         self.movement_held = {'up': 0, 'left': 0, 'down': 0, 'right': 0}
         self.movement_directions = {'w': (0, -1), 'a': (-1, 0), 's': (0, 1), 'd': (1, 0), 'up': (0, -1), 'left': (-1, 0), 'down': (0, 1), 'right': (1, 0)}
-        self.movement_velocity = {0: [-0.1, 0.1], 1: [-0.5, -0.1], -1: [0.1, 0.5]}
+        self.movement_velocity = {0: [-0.1, 0.1], 1: [-0.5, -0.25], -1: [0.25, 0.5]}
         self.move_delay = self.main.assets.settings['game']['hold_to_move']
         self.move_timer = 0
         self.hold_move_delay = 30
@@ -73,6 +73,7 @@ class Game:
         self.main.audio.play_sound(name='collectable')
         # self.main.audio.play_sound(name=f'collectable_{cell.elements['object']['state'].replace(' ', '_')}')
         collectable_type = cell.elements['object']['state'] + 's'
+        self.trigger_particles(particle_type='interact', colour=(166, 153, 152) if 'silver' in collectable_type else (239, 158, 78), position=cell.position)
         if self.level.name != 'custom':
             self.main.assets.data['game']['collectables'][collectable_type].append(self.main.utilities.level_and_position(level=self.level.name, position=cell.object_data['object']['original_position']))
             self.map.update_collectables(collectable_type=collectable_type, level_name=self.level.name, position=cell.object_data['object']['original_position'])
@@ -264,7 +265,7 @@ class Game:
 
                     if cell.check_element(name='sign'):  # signs
                         self.main.audio.play_sound(name='scroll_open')
-                        self.trigger_particles(position=cell.position, movement=(0, 0), colour='r')
+                        self.trigger_particles(particle_type='interact', colour=(209, 147, 95), position=cell.position)
                         sign_position = self.level.name + ' - ' + str(cell.position)
                         if sign_position in self.main.assets.data['signs']:
                             self.sign_data.append(sign_position)
@@ -279,12 +280,14 @@ class Game:
                             steps = max(steps, int(cell.elements['object']['state']))
                             if cell.check_element(name='permanent flag'):
                                 self.main.audio.play_sound(name='permanent_flag')
+                                self.trigger_particles(particle_type='interact', colour='light_green', position=cell.position)
                                 respawn_updated = True
                                 respawn[0].append(cell.object_data['object']['original_position'])
                                 respawn[1].append(cell.position)
                                 respawn[2].append(True)
                             else:
                                 self.main.audio.play_sound(name='temporary_flag')
+                                self.trigger_particles(particle_type='interact', colour=(113, 71, 97), position=cell.position)
                             if cell.check_element(name='player', state='dead') and not cell.check_element(name=['permanent flag', 'temporary flag'], state='0'):
                                 cell.elements['player']['state'] = 'idle'
 
@@ -302,7 +305,7 @@ class Game:
                                 if new_level_and_position in self.main.text_handler.text_elements['locks']:
                                     self.main.audio.play_sound(name='lock')
                                     self.lock_data = new_level_and_position
-                                    self.trigger_particles(position=new_cell.position, movement=(0, 0), colour='g')
+                                    self.trigger_particles(particle_type='interact', colour=(239, 158, 78), position=new_cell.position)
 
                         if level_and_position in self.main.assets.data['teleporters']['activations']:  # activations
                             activation = self.main.assets.data['teleporters']['activations'][level_and_position]
@@ -320,7 +323,7 @@ class Game:
                             for portal in activation['portals']:
                                 if portal not in self.main.assets.data['game']['active_portals']:
                                     self.main.audio.play_sound(name='portal_activate')
-                                    self.trigger_particles(position=cell.position, movement=(0, 0), colour='b')
+                                    self.trigger_particles(particle_type='interact', colour=(138, 33, 227), position=cell.position, movement=(0, 0))
                                     self.main.assets.data['game']['active_portals'].append(portal)
                                     self.main.assets.save_data()  # game (active_portals)
                                     levels = self.level.cached_levels
@@ -332,7 +335,10 @@ class Game:
                                                 level_cell.elements['tile']['state'] += '_animated'
 
                         if cell.check_element(name='teleporter', state=['reciever', 'sender', 'portal_animated']):  # teleporters
-                            self.teleporter_data['standing'].append({'state': cell.elements['tile']['state'].split(' ')[0], 'level_and_position': level_and_position})
+                            state = cell.elements['tile']['state'].split(' ')[0]
+                            self.teleporter_data['standing'].append({'state': state, 'level_and_position': level_and_position})
+                            if state == 'portal_animated':
+                                self.trigger_particles(particle_type='interact', colour=(138, 33, 227), position=cell.position)
 
             if self.teleporter_data['standing']:
                 if len(self.teleporter_data['standing']) == 1:
@@ -354,15 +360,27 @@ class Game:
                 if respawn_updated:
                     self.level.current_respawn = respawn
 
-    def trigger_particles(self, position, movement, colour='cream'):
-        # trigger particles when interacting with signs, locks etc.
-        # constant particles from collectables and portals
+    def trigger_particles(self, particle_type, colour, position, movement=(0, 0)):
         position = self.level.grid_to_display(position=position)
-        self.main.particle_handler.add_particle(amount=5, display_layer='level_main',
-                                                position=([position[0], position[0] + self.main.sprite_size],
-                                                          [position[1], position[1] + self.main.sprite_size]),
-                                                velocity=(self.movement_velocity[movement[0]], self.movement_velocity[movement[1]]),
-                                                size=[2, 5], size_step=[-0.05, -0.2], colour=colour)
+        if particle_type == 'movement':
+            amount = [5, 10]
+            position = ([position[0] + self.main.sprite_size * 0.25, position[0] + self.main.sprite_size * 0.75],
+                        [position[1] + self.main.sprite_size * 0.25, position[1] + self.main.sprite_size * 0.75])
+            velocity = (self.movement_velocity[movement[0]], self.movement_velocity[movement[1]])
+            size = [2, 4]
+            size_step = [-0.05, -0.25]
+            alpha_step = [-1, -5]
+        elif particle_type == 'interact':
+            amount = [5, 10]
+            position = ([position[0] - self.main.sprite_size * 0.25, position[0] + self.main.sprite_size * 1.25],
+                        [position[1] - self.main.sprite_size * 0.25, position[1] + self.main.sprite_size * 1.25])
+            velocity = ([-0.25, 0.25], [-0.25, 0.25])
+            size = [3, 6]
+            size_step = [-0.05, -0.2]
+            alpha_step = [-1, -3]
+        else:
+            return
+        self.main.particle_handler.add_particle(amount=amount, display_layer='level_main', position=position, velocity=velocity, size=size, size_step=size_step, alpha_step=alpha_step, colour=colour)
 
     def move_object(self, cell, object_type, movement, push_allowed=True, bump_allowed=True):
         new_cell = self.level.get_new_cell(position=cell.position, movement=movement)
@@ -389,18 +407,18 @@ class Game:
                     new_cell.object_data[object_type]['facing_right'] = False
                 if new_cell.elements['player']['state'] in ['idle', 'sleeping']:
                     new_cell.elements['player']['state'] = 'moving'
-            self.trigger_particles(position=cell.position, movement=movement)
+            self.trigger_particles(particle_type='movement', colour='cream', position=cell.position, movement=movement)
             return True
         else:
             if object_type == 'player' and check_movement[1] == 'edge':
                 cell.object_data['player']['moved'] = True
                 cell.object_data['player']['last_moved'] = movement
                 self.players_exited.append(cell)
-                self.trigger_particles(position=cell.position, movement=movement)
+                self.trigger_particles(particle_type='movement', colour='cream', position=cell.position, movement=movement)
                 return True
             elif bump_allowed:
                 self.bump_object(cell=cell, object_type=object_type, movement=movement)
-                # self.trigger_particles(position=cell.position, movement=movement)
+                self.trigger_particles(particle_type='movement', colour='cream', position=cell.position, movement=movement)
 
     def move_players(self, movement):
         if movement == self.last_movement and self.no_movement:
@@ -875,14 +893,10 @@ class Game:
         self.tutorials.update_level(level_name=self.level.name)
         self.load_level(name=self.level.name, load_respawn='setting' if previous_game_state == 'main_menu' and self.main.assets.data['game']['respawn'] else 'level')
 
-    def update(self, mouse_position):  # refactor this, draw everything all the time now that we have display layers in game and can see them all while menu is open etc...
+    def update(self, mouse_position):
+        # refactor this, draw everything all the time now that we have display layers in game and can see them all while menu is open etc...
         # separate into general updates, player updates (which only happen when we have control of the player), etc...
         self.tutorials.update()  # where should this go?
-        if self.main.events.check_key(key='1'):
-            self.cutscene.start_cutscene(cutscene_type='level', cutscene_data={'level_name': '(-1, -5)', 'force': True})
-        if self.main.events.check_key(key='2'):
-            self.cutscene.start_cutscene(cutscene_type='collectable', cutscene_data={'collectable_type': 'cheeses', 'collectable_position': self.main.display.centre, 'end_response': 'map'})
-
         if self.main.menu_state:  # we need to update all game aspects (tutorial, map etc) even when the menu is open
             self.main.display.set_cursor(cursor='arrow')
             self.update_map(mouse_position=None)

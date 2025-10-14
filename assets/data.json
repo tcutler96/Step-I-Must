@@ -1,6 +1,6 @@
 {
   "game": {
-    "level": null,
+    "level": "(0, 0)",
     "respawn": [
       [
         [
@@ -28,7 +28,10 @@
     "discovered_levels": [
       "(0, 0)"
     ],
-    "active_portals": []
+    "active_portals": [
+      "(0, 0) - (12, 2)",
+      "(-1, 0) - (2, 2)"
+    ]
   },
   "signs": {
     "(-1, 2) - (14, 9)": "Gems are optional rewards, and can be very hard! If you can't get one, consider moving on and coming back later.",

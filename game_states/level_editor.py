@@ -144,7 +144,7 @@ class LevelEditor:
                         self.main.text_handler.activate_text(text_group='level_editor', text_id='reset', duration=2)
                         self.level.load_level(name='filled' if self.level.name == 'empty' else 'empty', load_respawn='level')
                     elif selected_element[1] == 'Save Level':
-                        self.level.save_level(name=None if self.main.events.check_key(key='mouse_1', modifier='ctrl') else 'saved')
+                        self.level.save_level(name=None if self.testing and self.main.events.check_key(key='mouse_1', modifier='ctrl') else 'saved')
                     elif selected_element[1] == 'Load Level':
                         self.reset_toolbar(hovered=True, selected=True)
                         self.main.menu_states['choose_level'].menu['Back'].button_type = 'menu_state'

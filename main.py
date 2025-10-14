@@ -13,7 +13,6 @@ from game_states.main_menu import MainMenu
 from game_states.game import Game
 from game_states.level_editor import LevelEditor
 import pygame as pg
-import asyncio
 import sys
 import os
 
@@ -31,7 +30,7 @@ class Main:
         self.sprite_size = 16
         self.grid_size = (16, 16)
         self.debug = False
-        self.testing = True
+        self.testing = False
         self.system = sys.platform
         self.assets_path = os.path.join(os.path.abspath(os.curdir), 'assets')
         self.assets = Assets(main=self)
@@ -76,18 +75,11 @@ class Main:
             self.assets.update_menu(menu=menu)
             self.menu_states[menu] = Menu(main=self, menu_name=menu, menu_data=self.assets.settings['menus'][menu])
 
-    # def main(self):
-    #     while True:
-    #         self.update()
-    #         self.draw()
-    #         self.clock.tick(self.fps)
-
-    async def main(self):
+    def main(self):
         while True:
             self.update()
             self.draw()
             self.clock.tick(self.fps)
-            await asyncio.sleep(0)
 
     def update_game_of_life(self):
         if self.shaders.background == 'gol':
@@ -155,5 +147,4 @@ class Main:
 if __name__ == '__main__':
     if sys.version_info[0:3] != (3, 13, 5):
         raise Exception('Python version 3.13.5 required')
-    asyncio.run(Main().main())
-    # Main().main()
+    Main().main()

@@ -22,7 +22,7 @@ class Audio:
             for audio_name, audio_file in audio_data.items():
                 sound_volume = self.get_volume(audio_type='sound')
                 if audio_type == 'sound':
-                    audio_file.set_volume(sound_volume * (self.volume_adjustments[audio_name] if audio_name in self.volume_adjustments else 1))
+                    audio_file.set_volume(sound_volume * self.volume_adjustments.get(audio_name, 1))
         music = self.mixer.music
         music.set_volume(self.get_volume(audio_type='music'))
         return audio, music

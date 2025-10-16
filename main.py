@@ -18,38 +18,39 @@ import os
 
 
 class Main:
-    def __init__(self):
-        pg.init()
-        self.game_name = 'Step I Must'
-        self.fps = 60
-        self.true_fps = self.fps
-        self.low_fps = False
-        self.clock = pg.time.Clock()
-        self.runtime_frames = 0
-        self.runtime_seconds = 0
-        self.sprite_size = 16
-        self.grid_size = (16, 16)
-        self.debug = False
+    def __init__(self, main=True):
         self.testing = False
-        self.system = sys.platform
-        self.assets_path = os.path.join(os.path.abspath(os.curdir), 'assets')
-        self.assets = Assets(main=self)
-        self.utilities = Utilities(main=self)
-        self.display = Display(main=self)
-        self.shaders = Shaders(main=self)
-        self.audio = Audio(main=self)
-        self.events = Events(main=self)
-        self.transition = Transition(main=self)
-        self.text_handler = TextHandler(main=self)
-        self.particle_handler = ParticleHandler(main=self)
-        self.menu_state = 'title_screen'
-        self.menu_states = {menu_name: Menu(main=self, menu_name=menu_name, menu_data=menu_data) for menu_name, menu_data in self.assets.settings['menus'].items()}
-        self.game_state = 'splash'
-        self.game_states = {'splash': Splash(main=self), 'main_menu': MainMenu(main=self), 'game': Game(main=self), 'level_editor': LevelEditor(main=self)}
-        self.game_states[self.game_state].start_up()
-        self.audio.start_music(game_state=self.game_state, fade=5)
-        self.draw_gol = False
-        self.clear_gol = False
+        if main:
+            pg.init()
+            self.game_name = 'Step I Must'
+            self.fps = 60
+            self.true_fps = self.fps
+            self.low_fps = False
+            self.clock = pg.time.Clock()
+            self.runtime_frames = 0
+            self.runtime_seconds = 0
+            self.sprite_size = 16
+            self.grid_size = (16, 16)
+            self.debug = False
+            self.system = sys.platform
+            self.assets_path = os.path.join(os.path.abspath(os.curdir), 'assets')
+            self.assets = Assets(main=self)
+            self.utilities = Utilities(main=self)
+            self.display = Display(main=self)
+            self.shaders = Shaders(main=self)
+            self.audio = Audio(main=self)
+            self.events = Events(main=self)
+            self.transition = Transition(main=self)
+            self.text_handler = TextHandler(main=self)
+            self.particle_handler = ParticleHandler(main=self)
+            self.menu_state = 'title_screen'
+            self.menu_states = {menu_name: Menu(main=self, menu_name=menu_name, menu_data=menu_data) for menu_name, menu_data in self.assets.settings['menus'].items()}
+            self.game_state = 'splash'
+            self.game_states = {'splash': Splash(main=self), 'main_menu': MainMenu(main=self), 'game': Game(main=self), 'level_editor': LevelEditor(main=self)}
+            self.game_states[self.game_state].start_up()
+            self.audio.start_music(game_state=self.game_state, fade=5)
+            self.draw_gol = False
+            self.clear_gol = False
 
     def change_game_state(self, game_state):
         if game_state != self.game_state:
@@ -145,6 +146,7 @@ class Main:
 
 
 if __name__ == '__main__':
+    print(1)
     if sys.version_info[0:3] != (3, 13, 5):
         raise Exception('Python version 3.13.5 required')
     Main().main()

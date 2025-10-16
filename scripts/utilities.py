@@ -1,10 +1,10 @@
 from scripts.level import Level
+from random import betavariate
 from copy import deepcopy
 import pygame.freetype
 import pygame as pg
 import json
 import os
-from random import betavariate
 
 
 class Utilities:

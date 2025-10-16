@@ -1,4 +1,7 @@
 # Default ignored files
+/__pycache__/
 /build/
 /dist/
+/create_executable.py
 /Step I Must.spec
+/main.spec

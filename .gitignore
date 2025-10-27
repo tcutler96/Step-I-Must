@@ -2,6 +2,4 @@
 /__pycache__/
 /build/
 /dist/
-/create_executable.py
 /Step I Must.spec
-/main.spec

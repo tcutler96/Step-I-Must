@@ -19,10 +19,10 @@ import os
 
 class Main:
     def __init__(self, main=True):
-        self.testing = False
+        self.game_name = 'Step I Must'
+        self.testing = True
         if main:
             pg.init()
-            self.game_name = 'Step I Must'
             self.fps = 60
             self.true_fps = self.fps
             self.low_fps = False
@@ -146,7 +146,6 @@ class Main:
 
 
 if __name__ == '__main__':
-    print(1)
     if sys.version_info[0:3] != (3, 13, 5):
         raise Exception('Python version 3.13.5 required')
-    Main().main()
+    Main(main=True).main()

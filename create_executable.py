@@ -8,7 +8,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'True'
 
 def create_project_summary():
     print('creating project summary...')
-    os.system('pygount --format=summary --suffix=json,py,txt,glsl,mp3,wav --folders-to-skip=temp,.* --duplicates --out=summary.txt')
+    os.system('pygount --format=summary --suffix=py,json,mp3,wav --duplicates --folders-to-skip=temp,.* --names-to-skip=summary.txt --out=summary.txt')
     with open('summary.txt', 'r', encoding='utf8') as file:
         data = file.read()
     print(data)

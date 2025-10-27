@@ -1,4 +1,5 @@
 # Default ignored files
+/assets/temp/
 /__pycache__/
 /build/
 /dist/

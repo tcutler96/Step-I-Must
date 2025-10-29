@@ -9,7 +9,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'True'
 def create_project_summary():
     print('creating project summary...')
     os.system('pygount --format=summary --suffix=py,json,mp3,wav --duplicates --folders-to-skip=temp,.* --names-to-skip=project_summary.txt --out=project_summary.txt')
-    with open('summary.txt', 'r', encoding='utf8') as file:
+    with open('project_summary.txt', 'r', encoding='utf8') as file:
         data = file.read()
     print(data)
 
@@ -45,4 +45,4 @@ def clean_directory(game_name):
 
 if __name__ == '__main__':
     create_project_summary()
-    # create_executable()
+    create_executable()

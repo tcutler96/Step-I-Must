@@ -1,4 +1,4 @@
-from scripts.text_element import TextElement
+from data.scripts.text_element import TextElement
 from math import sin, cos
 
 

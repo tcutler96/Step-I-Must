@@ -1,4 +1,6 @@
 /__pycache__/
+/*.pyc
+/data/assets/temp/
 /build/
 /dist/
 /Step I Must.spec

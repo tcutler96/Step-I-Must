@@ -1,4 +1,4 @@
-from scripts.level_cell import LevelCell
+from data.scripts.level_cell import LevelCell
 from copy import deepcopy
 import pygame as pg
 import json

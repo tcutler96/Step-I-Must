@@ -1,17 +1,17 @@
-from scripts.assets import Assets
-from scripts.utilities import Utilities
-from scripts.display import Display
-from scripts.shaders import Shaders
-from scripts.audio import Audio
-from scripts.events import Events
-from scripts.transition import Transition
-from scripts.text_handler import TextHandler
-from scripts.particle_handler import ParticleHandler
-from scripts.menu import Menu
-from game_states.splash import Splash
-from game_states.main_menu import MainMenu
-from game_states.game import Game
-from game_states.level_editor import LevelEditor
+from data.scripts.assets import Assets
+from data.scripts.utilities import Utilities
+from data.scripts.display import Display
+from data.scripts.shaders import Shaders
+from data.scripts.audio import Audio
+from data.scripts.events import Events
+from data.scripts.transition import Transition
+from data.scripts.text_handler import TextHandler
+from data.scripts.particle_handler import ParticleHandler
+from data.scripts.menu import Menu
+from data.game_states.splash import Splash
+from data.game_states.main_menu import MainMenu
+from data.game_states.game import Game
+from data.game_states.level_editor import LevelEditor
 import pygame as pg
 import sys
 import os
@@ -33,7 +33,7 @@ class Main:
             self.grid_size = (16, 16)
             self.debug = False
             self.system = sys.platform
-            self.assets_path = os.path.join(os.path.abspath(os.curdir), 'assets')
+            self.assets_path = os.path.join(os.path.abspath(os.curdir), 'data', 'assets')
             self.assets = Assets(main=self)
             self.utilities = Utilities(main=self)
             self.display = Display(main=self)

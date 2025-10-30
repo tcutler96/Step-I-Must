@@ -1,4 +1,4 @@
-from scripts.map_cell import MapCell
+from data.scripts.map_cell import MapCell
 
 
 class Map:

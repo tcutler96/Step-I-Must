@@ -1,7 +1,7 @@
-from scripts.tutorial import Tutorial
-from scripts.cutscene import Cutscene
-from scripts.level import Level
-from scripts.map import Map
+from data.scripts.tutorial import Tutorial
+from data.scripts.cutscene import Cutscene
+from data.scripts.level import Level
+from data.scripts.map import Map
 from copy import deepcopy
 
 

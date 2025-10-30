@@ -1,5 +1,5 @@
-from scripts.menu_element import MenuElement
-from scripts.menu_scrollbar import MenuScrollbar
+from data.scripts.menu_element import MenuElement
+from data.scripts.menu_scrollbar import MenuScrollbar
 from math import ceil
 
 

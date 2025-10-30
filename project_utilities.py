@@ -17,7 +17,7 @@ def create_executable():
     main = Main(main=False)
     game_name = main.game_name
     print('creating executable...' + (' (warning: testing mode enabled)' if main.testing else ''))
-    PyInstaller.__main__.run(['main.py', '--onefile', '--noconsole', f'--name={game_name}', '--icon=assets/images/other/icon.ico', '--log-level=WARN'])
+    PyInstaller.__main__.run(['main.py', '--onefile', '--noconsole', f'--name={game_name}', '--icon=data/assets/images/other/icon.ico', '--log-level=WARN'])
     clean_directory(game_name=game_name)
 
 def clean_directory(game_name):

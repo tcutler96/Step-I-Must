@@ -1,4 +1,4 @@
-from scripts.particle import Particle
+from data.scripts.particle import Particle
 import pygame as pg
 
 

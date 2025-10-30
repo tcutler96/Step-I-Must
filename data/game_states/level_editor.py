@@ -1,6 +1,6 @@
-from scripts.toolbar import Toolbar
-from scripts.level import Level
-from scripts.level_cell import LevelCell
+from data.scripts.toolbar import Toolbar
+from data.scripts.level import Level
+from data.scripts.level_cell import LevelCell
 from copy import deepcopy
 
 

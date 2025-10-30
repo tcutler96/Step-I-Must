@@ -1,4 +1,4 @@
-from scripts.cursor import Cursor
+from data.scripts.cursor import Cursor
 import pygame as pg
 import platform
 

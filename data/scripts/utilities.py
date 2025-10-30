@@ -1,4 +1,4 @@
-from scripts.level import Level
+from data.scripts.level import Level
 from random import betavariate
 from copy import deepcopy
 import pygame.freetype

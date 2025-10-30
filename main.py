@@ -20,7 +20,7 @@ import os
 class Main:
     def __init__(self, main=True):
         self.game_name = 'Step I Must'
-        self.testing = False
+        self.testing = True
         if main:
             pg.init()
             self.fps = 60

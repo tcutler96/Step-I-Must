@@ -1,7 +1,25 @@
-This game is a Python-based fan recreation of an excellent 2D Sokoban-style puzzle game called N Step Steve (found [here](https://epicpikaguy.itch.io/n-step-steve-part-1) and [here](https://epicpikaguy.itch.io/n-step-steve-part-2)). It was built from scratch in Python for personal learning and appreciation.
+# Step I Must
 
-You control one - or more - slimes that must collect keys, gems, and cheeses to unlock the way forward — one step at a time.
+This game is a Python-based fan recreation of an excellent puzzle game called N Step Steve (found [here](https://epicpikaguy.itch.io/n-step-steve-part-1) and [here](https://epicpikaguy.itch.io/n-step-steve-part-2)). It was built entirely from scratch in Python for educational and personsal use only.
 
-The game features 
+---
 
-Built with Python 3.13.5, PyGame (for window, input, and audio control), and OpenGL (GLSL shaders for rendering effects)
+## 🎮 About the Game
+
+**Step I Must** is a 2D Sokoban-style puzzle game where each move counts.  
+You control one (or more) slimes who can only take a limited number of steps.  
+Each level challenges you to plan your moves carefully to reach the goal.
+
+The game features:
+- Fully custom Python engine (no game frameworks)
+- Tile-based movement and object interaction
+- Animated sprites and fragment shaders
+- Built in custom level editor
+
+## 🧱 Built With
+- Python 3.13.5
+- PyGame (for window, input, and audio control)
+- OpenGL (GLSL shaders for rendering effects)
+
+## Demo
+![Demo](data/demo/demo.gif)

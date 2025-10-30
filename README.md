@@ -22,5 +22,5 @@ The game features:
 - OpenGL (GLSL shaders for rendering effects)
 
 ## Demo
-![Main Menu](data/assets/demo/main_menu.gif)
+![Main Menu](data/assets/demo/main_menu.png)
 ![Demo](data/assets/demo/demo.gif)

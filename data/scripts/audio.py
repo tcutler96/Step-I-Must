@@ -8,7 +8,7 @@ class Audio:
         self.mixer.set_num_channels(16)
         self.volume_adjustments = {'conveyor': 0.25, 'cutscene_dialogue': 2, 'statue':2, 'redo':1.5, 'map_open':1.5, 'map_close':1.5}
         self.audio, self.music = self.load_audio()
-        self.music_themes = {'main_menu': ['edgy_demo'], 'splash': ['edgy_demo'], 'level_editor': ['edgy_demo'], 'game': ['chill_idea'], 'current': None, 'index': 0}
+        self.music_themes = {'main_menu': ['menu'], 'splash': ['menu'], 'level_editor': ['menu'], 'game': ['game'], 'current': None, 'index': 0}
         self.music_switching = False
         self.music_switch_fade = 2.5
         self.music_volume = self.get_volume(audio_type='music')

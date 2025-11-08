@@ -21,6 +21,6 @@ The game features:
 - PyGame (for window, input, and audio control)
 - OpenGL (GLSL shaders for rendering effects)
 
-## Demo
 ![Main Menu](data/assets/demo/main_menu.png)
+
 ![Demo](data/assets/demo/demo.gif)

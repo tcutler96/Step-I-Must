@@ -22,10 +22,6 @@ The game features:
 - OpenGL (GLSL shaders for rendering effects)
 
 ## Demo
-![Levels](data/assets/demo/animation.gif)
+![1](data/assets/demo/animation.gif)
 
-![Levels](data/assets/demo/animation2.gif)
-
-![Map](data/assets/demo/map.gif)
-
-![Level Editor](data/assets/demo/level_editor.gif)
+![2](data/assets/demo/animation2.gif)

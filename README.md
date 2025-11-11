@@ -1,6 +1,6 @@
 # Step I Must
 
-This game is a Python-based fan recreation of an excellent puzzle game called N Step Steve (found [here](https://epicpikaguy.itch.io/n-step-steve-part-1) and [here](https://epicpikaguy.itch.io/n-step-steve-part-2)). It was built entirely from scratch in Python for educational and personsal use only.
+This game is a Python-based fan recreation of an excellent puzzle game called N Step Steve (found [here](https://epicpikaguy.itch.io/n-step-steve-part-1) and [here](https://epicpikaguy.itch.io/n-step-steve-part-2)). It was built entirely from scratch in Python for educational and personal use only.
 
 ---
 
@@ -22,5 +22,9 @@ The game features:
 - OpenGL (GLSL shaders for rendering effects)
 
 ## Demo
-![Main Menu](data/assets/demo/main_menu.png)
-![Demo](data/assets/demo/demo.gif)
+![Levels](data/assets/demo/animation.gif)
+![Levels](data/assets/demo/animation2.gif)
+
+![Map](data/assets/demo/map.gif)
+
+![Level Editor](data/assets/demo/level_editor.gif)

@@ -23,6 +23,7 @@ The game features:
 
 ## Demo
 ![Levels](data/assets/demo/animation.gif)
+
 ![Levels](data/assets/demo/animation2.gif)
 
 ![Map](data/assets/demo/map.gif)

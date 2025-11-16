@@ -273,7 +273,7 @@ class Map:
                 if self.show_map:
                     self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_current')
                     self.main.text_handler.activate_text(text_group='map', text_id=f'{collectable_type}_max')
-        if collectables:
+        if self.show_map and collectables:
             self.main.text_handler.activate_text(text_group='map', text_id='collectables')
 
     def draw(self, displays):

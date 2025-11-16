@@ -4,6 +4,7 @@ import pygount
 import shutil
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'True'
+import time
 
 
 def create_project_summary():
@@ -14,9 +15,11 @@ def create_project_summary():
     print(data)
 
 def create_executable():
+    print('creating executable...')
     main = Main(main=False)
     game_name = main.game_name
-    print('creating executable...' + (' (warning: testing mode enabled)' if main.testing else ''))
+    if main.testing:
+        print('warning: testing mode enabled' )
     PyInstaller.__main__.run(['main.py', '--onefile', '--noconsole', f'--name={game_name}', '--icon=data/assets/images/other/icon.ico', '--log-level=WARN'])
     clean_directory(game_name=game_name)
 
@@ -25,18 +28,11 @@ def clean_directory(game_name):
         shutil.move(src=f'dist/{game_name}.exe', dst=f'{game_name}.exe')
     except FileNotFoundError:
         print(f"the system cannot find the path specified: 'dist/{game_name}.exe'")
-    try:
-        shutil.rmtree(path='dist')
-    except FileNotFoundError:
-        pass
-    try:
-        shutil.rmtree(path='build')
-    except FileNotFoundError:
-        pass
-    try:
-        shutil.rmtree(path='__pycache__')
-    except FileNotFoundError:
-        pass
+    for path in ['__pycache__', 'dist', 'build']:
+        try:
+            shutil.rmtree(path=path)
+        except FileNotFoundError:
+            pass
     try:
         os.remove(path=f'{game_name}.spec')
     except FileNotFoundError:

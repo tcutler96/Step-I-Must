@@ -2084,8 +2084,8 @@
       "object": null,
       "player": null,
       "tile": {
-        "name": "gem reseter",
-        "state": "gem reseter"
+        "name": "star reseter",
+        "state": "star reseter"
       },
       "vertical_barrier": null,
       "horizontal_barrier": null
